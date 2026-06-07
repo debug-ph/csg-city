@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSG-City – Werbefläche mieten</title>
+  <link rel="stylesheet" href="/css/main.css"/>
+  <style>
+    .page-hero{background:var(--accent);padding:3.5rem 1.5rem 2.75rem;color:white;}
+    .page-hero-inner{max-width:1160px;margin:0 auto;}
+    .page-hero h1{font-family:var(--font-serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:400;margin-bottom:.5rem;}
+    .page-hero p{color:rgba(255,255,255,.65);font-size:.9375rem;}
+    .werbe-page{max-width:1160px;margin:0 auto;padding:2rem 1.5rem;}
+    @media(max-width:768px){.werbe-page{padding:1.25rem 1rem;}}
+    .werbe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.1rem;}
+    @media(max-width:480px){.werbe-grid{grid-template-columns:1fr;}}
+    .werbe-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:box-shadow .18s,transform .18s;}
+    .werbe-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+    .werbe-preview{height:80px;background:repeating-linear-gradient(45deg,var(--bg),var(--bg) 8px,var(--bg-subtle) 8px,var(--bg-subtle) 16px);display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.775rem;color:var(--text-3);font-weight:500;border-bottom:1px solid var(--border);}
+    .werbe-preview-leer{
+      min-height:140px;
+      background:repeating-linear-gradient(45deg,var(--bg),var(--bg) 8px,var(--bg-subtle) 8px,var(--bg-subtle) 16px);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;padding:1.25rem;gap:.375rem;
+      border-bottom:1px solid var(--border);
+    }
+    .werbe-preview-leer .slogan-head{font-size:.9375rem;font-weight:500;color:var(--text-1);margin:.2rem 0;}
+    .werbe-preview-leer .slogan-sub{font-size:.775rem;color:var(--text-2);line-height:1.4;}
+    .werbe-preview-leer .slogan-size{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);}
+    .werbe-preview.belegt{background:var(--accent-soft);color:var(--accent);border-bottom-color:rgba(74,104,114,.15);}
+    .werbe-info{padding:1rem;}
+    .werbe-name{font-size:.9rem;font-weight:500;margin-bottom:.25rem;display:flex;align-items:center;gap:.5rem;}
+    .werbe-meta{font-size:.75rem;color:var(--text-2);margin-bottom:.5rem;display:flex;align-items:center;gap:.375rem;}
+    .werbe-desc{font-size:.775rem;color:var(--text-3);line-height:1.5;margin-bottom:.75rem;}
+    .werbe-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.75rem;border-top:1px solid var(--border);}
+    .werbe-preis-val{font-family:var(--font-serif);font-size:1.25rem;color:var(--accent);}
+    .werbe-preis-lbl{font-size:.65rem;color:var(--text-3);}
+    .kontakt-section{margin-top:2.5rem;}
+    .kontakt-section h2{font-family:var(--font-serif);font-size:1.5rem;font-weight:400;margin-bottom:1.25rem;display:flex;align-items:center;gap:.625rem;}
+    .kontakt-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;max-width:560px;}
+    .form-stack{display:flex;flex-direction:column;gap:1rem;}
+    .form-input{width:100%;}
+    textarea.form-input{resize:vertical;min-height:90px;}
+    .success-msg{background:var(--accent-soft);border:1px solid rgba(74,104,114,.25);border-radius:var(--radius-sm);padding:.875rem 1rem;font-size:.875rem;color:var(--accent);display:none;margin-top:1rem;align-items:center;gap:.5rem;}
+    .success-msg.show{display:flex;animation:fadeUp .2s ease;}
+    .page-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+    .page-title-row h2{font-family:var(--font-serif);font-size:1.375rem;font-weight:400;}
+    .stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.5rem;}
+    @media(max-width:600px){.stats-row{grid-template-columns:1fr;}}
+    .stat-sm{padding:.875rem 1rem;}
+    .stat-sm-num{font-family:var(--font-serif);font-size:1.625rem;font-weight:400;line-height:1;}
+    .stat-sm-lbl{font-size:.7rem;color:var(--text-2);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem;}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-mark">C</div>
+      <div><div class="brand-name">CSG-City</div><div class="brand-sub">Staatsportal</div></div>
+    </a>
+    <ul class="nav-links" id="desktopNav">
+      <li><a href="/" id="nav_home"></a></li>
+      <li><a href="/stellenangebote" id="nav_stellenangebote"></a></li>
+      <li><a href="/werbung" id="nav_werbung"></a></li>
+      <li><a href="/gesetze" id="nav_gesetze"></a></li>
+      <li><a href="/faq" id="nav_faq"></a></li>
+      <li><a href="/login" id="nav_login"></a></li>
+      </ul>
+    <div class="nav-actions">
+      <button class="theme-btn" id="themeToggle"></button>
+      <button class="burger-btn" id="burgerBtn"></button>
+    </div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-inner" id="mobileNavInner">
+      <a href="/" id="mn1"></a><a href="/stellenangebote" id="mn2"></a>
+      <a href="/werbung" id="mn3"></a><a href="/gesetze" id="mn5g"></a><a href="/faq" id="mn4"></a><a href="/login" id="mn5l"></a>
+    </div>
+  </div>
+
+  <div class="page-wrapper">
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <h1>Werbefläche mieten</h1>
+        <p>Erreiche alle Bürgerinnen und Bürger von CSG-City direkt auf dem Staatsportal</p>
+      </div>
+    </div>
+
+    <div class="werbe-page">
+      <div class="stats-row" id="statsRow"></div>
+      <div class="page-title-row">
+        <h2 id="werbePageTitle"></h2>
+      </div>
+      <div class="werbe-grid" id="werbeGrid"><div class="text-3 text-sm">Laden…</div></div>
+
+      <div class="kontakt-section">
+        <h2 id="kontaktTitle"></h2>
+        <div class="kontakt-card">
+          <div class="form-stack">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+              <div class="form-group"><label class="form-label" id="lName"></label><input class="form-input" id="kName" placeholder="Max Mustermann"/></div>
+              <div class="form-group"><label class="form-label" id="lEmail"></label><input class="form-input" type="email" id="kEmail" placeholder="name@beispiel.de"/></div>
+            </div>
+            <div class="form-group"><label class="form-label" id="lFlaeche"></label><select class="form-input" id="kFlaeche"></select></div>
+            <div class="form-group"><label class="form-label" id="lNachricht"></label><textarea class="form-input" id="kNachricht" placeholder="Kurze Beschreibung Ihres Anliegens…"></textarea></div>
+            <button class="btn btn-primary" id="kSendBtn" style="align-self:flex-start"></button>
+          </div>
+          <div class="success-msg" id="successMsg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/icons.js"></script>
+  <script>
+    (function(){
+      var btn=document.getElementById("themeToggle");
+      // Set correct icon based on current theme
+      var setIcon=function(){ btn.innerHTML=document.documentElement.getAttribute("data-theme")==="dark"?ICONS.sun:ICONS.moon; };
+      setIcon();
+      btn.addEventListener("click",function(){ toggleTheme(); setIcon(); });
+    })();
+
+    // Navbar
+    var _navItems = [
+      {href:"/",               ic:"dashboard",    label:"Dashboard"},
+      {href:"/stellenangebote",ic:"jobs",         label:"Stellenangebote"},
+      {href:"/werbung",        ic:"ads",          label:"Werbefläche mieten"},
+      {href:"/gesetze",        ic:"constitution", label:"Gesetzb\u00fccher"},
+      {href:"/faq",            ic:"question",     label:"FAQ"},
+      {href:"/login",          ic:"admin",        label:"Admin"},
+    ];
+    _navItems.forEach(function(n) {
+      var key = n.href.replace("/","") || "home";
+      var el  = document.getElementById("nav_"+key);
+      var mel = document.getElementById("mnav_"+key);
+      var html = ICONS[n.ic] + " " + n.label;
+      if (el)  { el.innerHTML  = html; if(window.location.pathname===n.href) el.classList.add("active"); }
+      if (mel) { mel.innerHTML = html; if(window.location.pathname===n.href) mel.classList.add("active"); }
+    });
+    checkAuth().then(function(s) {
+      var al  = document.getElementById("nav_login");
+      var mal = document.getElementById("mnav_login");
+      if (s && s.isAdmin) {
+        if (al)  { al.innerHTML  = ICONS.admin + " Admin-Bereich"; al.href = "/admin"; }
+        if (mal) { mal.innerHTML = ICONS.admin + " Admin-Bereich"; mal.href = "/admin"; }
+      }
+    });
+
+    fetch("/api/werbeflaechen").then(r=>r.json()).then(function(data){
+      var frei=data.filter(function(w){return!w.belegt;}).length;
+      var belegt=data.filter(function(w){return w.belegt;}).length;
+      document.getElementById("statsRow").innerHTML=
+        '<div class="card stat-sm"><div class="stat-sm-num">'+data.length+'</div><div class="stat-sm-lbl">Flächen gesamt</div></div>'
+        +'<div class="card stat-sm"><div class="stat-sm-num" style="color:var(--success)">'+frei+'</div><div class="stat-sm-lbl">Verfügbar</div></div>'
+        +'<div class="card stat-sm"><div class="stat-sm-num">'+belegt+'</div><div class="stat-sm-lbl">Belegt</div></div>';
+
+      var select=document.getElementById("kFlaeche");
+      document.getElementById("werbeGrid").innerHTML=data.map(function(w){
+        var preview;
+        if (w.belegt) {
+          preview = '<div class="werbe-preview belegt">'+ICONS.check+' Belegt – '+w.mieter+'</div>';
+        } else {
+          var s = randomSlogan();
+          preview = '<div class="werbe-preview-leer">'
+            +'<div class="slogan-size">'+ICONS.ads+' '+w.groesse+'</div>'
+            +'<div class="slogan-head">'+s.head+'</div>'
+            +'<div class="slogan-sub">'+s.sub+'</div>'
+            +'</div>';
+        }
+        var badge=w.belegt?'<span class="badge badge-neutral">Belegt</span>':'<span class="badge badge-green">Verfügbar</span>';
+        if(!w.belegt){var opt=document.createElement("option");opt.value=w.name;opt.textContent=w.name+" ("+w.groesse+")";select.appendChild(opt);}
+        return '<div class="werbe-card">'+preview
+          +'<div class="werbe-info"><div class="werbe-name">'+w.name+' '+badge+'</div>'
+          +'<div class="werbe-meta">'+ICONS.info+" "+w.groesse+'</div>'
+          +'<div class="werbe-desc">'+(w.beschreibung||"")+'</div>'
+          +'<div class="werbe-footer"><div><div class="werbe-preis-val">'+Number(w.preis).toFixed(2)+' €</div><div class="werbe-preis-lbl">pro Tag</div></div>'
+          +(!w.belegt?'<button class="btn btn-primary btn-sm" onclick="bucheFl(\''+w.name.replace(/'/g,"")+'\')" style="display:flex;align-items:center;gap:.3rem">'+ICONS.arrow_right+' Buchen</button>':'')
+          +'</div></div></div>';
+      }).join("");
+    });
+
+    function bucheFl(name){document.getElementById("kFlaeche").value=name;document.querySelector(".kontakt-section").scrollIntoView({behavior:"smooth"});}
+
+    document.getElementById("kSendBtn").addEventListener("click",async function(){
+      var btn  = this;
+      var name      = document.getElementById("kName").value.trim();
+      var email     = document.getElementById("kEmail").value.trim();
+      var flaeche   = document.getElementById("kFlaeche").value;
+      var nachricht = document.getElementById("kNachricht").value.trim();
+      if(!name||!email){showToast("Bitte Name und E-Mail ausfüllen.","error");return;}
+      btn.disabled=true;
+      btn.innerHTML=ICONS.clock+" Wird gesendet…";
+      try {
+        var res=await fetch("/api/anfragen",{
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({name,email,flaeche,nachricht})
+        });
+        var data=await res.json();
+        if(data.success){
+          document.getElementById("successMsg").classList.add("show");
+          showToast("Anfrage gesendet!");
+          // Reset form
+          ["kName","kEmail","kNachricht"].forEach(function(id){document.getElementById(id).value="";});
+        } else {
+          showToast(data.error||"Fehler beim Senden.","error");
+          btn.disabled=false;
+          btn.innerHTML=ICONS.send+" Anfrage senden";
+        }
+      } catch(e) {
+        showToast("Server nicht erreichbar.","error");
+        btn.disabled=false;
+        btn.innerHTML=ICONS.send+" Anfrage senden";
+      }
+    });
+
+    var burger=document.getElementById("burgerBtn"),mNav=document.getElementById("mobileNav");
+    burger&&burger.addEventListener("click",function(){mNav.classList.toggle("open");document.body.classList.toggle("menu-open");});
+    mNav&&mNav.addEventListener("click",function(e){if(e.target===mNav){mNav.classList.remove("open");document.body.classList.remove("menu-open");}});
+  </script>
+</body>
+</html>

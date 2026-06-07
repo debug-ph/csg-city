@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSG-City – Admin Login</title>
+  <link rel="stylesheet" href="/css/main.css"/>
+  <style>
+    body{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+    .wrap{width:100%;max-width:380px;padding:1.5rem;animation:fadeUp .4s ease;}
+    .top{text-align:center;margin-bottom:2rem;}
+    .mark{width:56px;height:56px;border-radius:14px;background:var(--accent);margin:0 auto 1.1rem;display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:1.7rem;color:white;box-shadow:var(--shadow-md);}
+    .top h1{font-family:var(--font-serif);font-size:1.75rem;font-weight:400;margin-bottom:.25rem;}
+    .top p{font-size:.8rem;color:var(--text-3);}
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;box-shadow:var(--shadow-lg);}
+    .stack{display:flex;flex-direction:column;gap:1rem;}
+    .login-btn{width:100%;padding:.65rem;justify-content:center;font-size:.875rem;}
+    .err{background:#FEF2F2;border:1px solid #FCA5A5;color:#B91C1C;border-radius:var(--radius-sm);padding:.65rem .875rem;font-size:.8rem;display:none;}
+    .err.show{display:block;}
+    .back{display:block;text-align:center;margin-top:1rem;font-size:.8rem;color:var(--text-3);text-decoration:none;}
+    .back:hover{color:var(--text-1);}
+    .theme-fixed{position:fixed;top:1rem;right:1rem;}
+
+    /* 6 Ziffernfelder */
+    .code-wrap{display:flex;gap:.5rem;justify-content:center;}
+    .code-wrap input{
+      width:44px;height:54px;text-align:center;font-size:1.375rem;font-weight:500;
+      border:1px solid var(--border-strong);border-radius:var(--radius-sm);
+      background:var(--bg-card);color:var(--text-1);font-family:var(--font-sans);
+      outline:none;transition:var(--t);
+      -moz-appearance:textfield;
+    }
+    .code-wrap input::-webkit-outer-spin-button,
+    .code-wrap input::-webkit-inner-spin-button{-webkit-appearance:none;}
+    .code-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+    .code-wrap input.filled{border-color:var(--accent);background:var(--accent-soft);}
+    .hint{text-align:center;font-size:.75rem;color:var(--text-3);margin-top:.5rem;}
+
+    /* QR Setup Modal */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:200;padding:1rem;}
+    .setup-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;max-width:360px;width:100%;text-align:center;box-shadow:var(--shadow-lg);}
+    .setup-card h2{font-family:var(--font-serif);font-size:1.5rem;font-weight:400;margin-bottom:.5rem;}
+    .setup-card p{font-size:.8rem;color:var(--text-2);line-height:1.6;margin-bottom:1.25rem;}
+    .qr-img{width:200px;height:200px;border-radius:var(--radius);margin:0 auto 1.25rem;border:1px solid var(--border);display:block;}
+    .secret-box{font-family:monospace;font-size:.8rem;background:var(--bg-subtle);padding:.5rem .75rem;border-radius:var(--radius-sm);color:var(--accent);margin-bottom:1.25rem;word-break:break-all;letter-spacing:.08em;}
+    .steps{text-align:left;font-size:.8rem;color:var(--text-2);line-height:1.8;margin-bottom:1.5rem;}
+    .steps strong{color:var(--text-1);}
+  </style>
+</head>
+<body>
+  <div class="theme-fixed"><button class="theme-btn" id="themeToggle"></button></div>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="mark">C</div>
+      <h1>Admin-Zugang</h1>
+      <p>CSG-City Staatsportal · Eingeschränkter Bereich</p>
+    </div>
+    <div class="card">
+      <div id="err" class="err"></div>
+      <div class="stack">
+        <div class="form-group">
+          <label class="form-label">Benutzername</label>
+          <input class="form-input" id="user" value="Admin" autocomplete="username"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Google Authenticator Code</label>
+          <div class="code-wrap" id="codeWrap"></div>
+          <div class="hint">Öffne Google Authenticator und gib den 6-stelligen Code ein</div>
+        </div>
+        <button class="btn btn-primary login-btn" id="loginBtn">Anmelden</button>
+      </div>
+      <div style="margin-top:1rem;text-align:center">
+        <button class="btn btn-ghost btn-sm" id="setupBtn" style="font-size:.75rem;width:100%">
+          Ersteinrichtung – QR-Code anzeigen
+        </button>
+      </div>
+    </div>
+    <a href="/" class="back">← Zurück zum Staatsportal</a>
+  </div>
+
+  <!-- QR Setup Modal -->
+  <div class="overlay" id="overlay" style="display:none">
+    <div class="setup-card">
+      <h2>Ersteinrichtung</h2>
+      <p>Scanne diesen QR-Code einmalig mit <strong>Google Authenticator</strong> ein.<br>Danach erscheint „CSG-City" in der App.</p>
+      <img class="qr-img" id="qrImg" src="" alt="QR Code"/>
+      <div style="font-size:.7rem;color:var(--text-3);margin-bottom:.375rem">Oder manuell eingeben:</div>
+      <div class="secret-box" id="secretBox">Laden…</div>
+      <div class="steps">
+        <strong>So geht's:</strong><br>
+        1. Google Authenticator öffnen<br>
+        2. „+" → „QR-Code scannen"<br>
+        3. Diesen Code scannen<br>
+        4. „CSG-City (Admin)" erscheint in der App<br>
+        5. Ab jetzt 6-stelligen Code zum Login verwenden
+      </div>
+      <button class="btn btn-primary" id="closeSetup" style="width:100%">Fertig – Zum Login</button>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/icons.js"></script>
+  <script>
+    // Theme - set icon after icons.js loads, no duplicate listener
+    (function(){
+      var btn = document.getElementById("themeToggle");
+      var setIcon = function(){ btn.innerHTML = document.documentElement.getAttribute("data-theme")==="dark" ? ICONS.sun : ICONS.moon; };
+      setIcon();
+      btn.addEventListener("click", function(){ toggleTheme(); setIcon(); });
+    })();
+
+    // Schon eingeloggt?
+    checkAuth().then(function(s){ if(s&&s.isAdmin) window.location.href="/admin"; });
+
+    // 6 Ziffernfelder aufbauen
+    var inputs = [];
+    var wrap = document.getElementById("codeWrap");
+    for (var i = 0; i < 6; i++) {
+      (function(idx){
+        var inp = document.createElement("input");
+        inp.type = "number"; inp.min = 0; inp.max = 9; inp.maxLength = 1;
+        inp.addEventListener("input", function(){
+          var val = this.value.replace(/\D/g,"");
+          // Paste: mehrere Zeichen verteilen
+          if (val.length > 1) {
+            for (var j = 0; j < val.length && idx+j < 6; j++) {
+              inputs[idx+j].value = val[j];
+              inputs[idx+j].classList.toggle("filled", true);
+            }
+            var next = Math.min(idx + val.length, 5);
+            inputs[next].focus();
+            if (getCode().length === 6) doLogin();
+            return;
+          }
+          this.value = val.slice(-1);
+          this.classList.toggle("filled", !!this.value);
+          if (this.value && idx < 5) inputs[idx+1].focus();
+          if (getCode().length === 6) doLogin();
+        });
+        inp.addEventListener("keydown", function(e){
+          if (e.key === "Backspace" && !this.value && idx > 0) inputs[idx-1].focus();
+          if (e.key === "Enter") doLogin();
+        });
+        inp.addEventListener("paste", function(e){
+          e.preventDefault();
+          var text = (e.clipboardData||window.clipboardData).getData("text").replace(/\D/g,"").slice(0,6);
+          text.split("").forEach(function(d,j){ if(inputs[j]){ inputs[j].value=d; inputs[j].classList.add("filled"); } });
+          if (text.length===6) { setTimeout(doLogin, 100); }
+          else if (inputs[text.length]) inputs[text.length].focus();
+        });
+        wrap.appendChild(inp);
+        inputs.push(inp);
+      })(i);
+    }
+    setTimeout(function(){ inputs[0].focus(); }, 100);
+
+    function getCode(){ return inputs.map(function(i){ return i.value; }).join(""); }
+
+    function resetInputs(){
+      inputs.forEach(function(i){ i.value=""; i.classList.remove("filled"); });
+      inputs[0].focus();
+    }
+
+    // Login
+    async function doLogin(){
+      var btn = document.getElementById("loginBtn");
+      var err = document.getElementById("err");
+      var code = getCode();
+      var user = document.getElementById("user").value.trim();
+      err.classList.remove("show");
+      if (code.length !== 6) return;
+      btn.textContent = "Prüfen…"; btn.disabled = true;
+      try {
+        var res = await fetch("/api/login", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ username: user, totp: code })
+        });
+        var data = await res.json();
+        if (data.success) {
+          btn.textContent = "✓ Weiterleitung…";
+          setTimeout(function(){ window.location.href="/admin"; }, 500);
+        } else {
+          err.textContent = data.error || "Ungültiger Code.";
+          err.classList.add("show");
+          resetInputs();
+          btn.textContent = "Anmelden"; btn.disabled = false;
+        }
+      } catch(e) {
+        err.textContent = "Server nicht erreichbar.";
+        err.classList.add("show");
+        btn.textContent = "Anmelden"; btn.disabled = false;
+      }
+    }
+    document.getElementById("loginBtn").addEventListener("click", doLogin);
+
+    // Beim Laden prüfen ob Setup schon erledigt → Button ausblenden
+    fetch("/api/admin/setup-qr", {method:"HEAD"}).then(function(r){
+      if (r.status === 403) document.getElementById("setupBtn").style.display = "none";
+    }).catch(function(){});
+
+    // QR Setup — nur einmal abrufbar, danach gesperrt
+    document.getElementById("setupBtn").addEventListener("click", async function(){
+      document.getElementById("overlay").style.display = "flex";
+      try {
+        var res  = await fetch("/api/admin/setup-qr");
+        var data = await res.json();
+        if (data.error) {
+          document.getElementById("qrImg").style.display = "none";
+          document.getElementById("secretBox").textContent = "Einrichtung bereits abgeschlossen.";
+          document.getElementById("setupBtn").style.display = "none";
+          return;
+        }
+        document.getElementById("qrImg").src = data.qr;
+        document.getElementById("secretBox").textContent = data.secret;
+      } catch(e) {
+        document.getElementById("secretBox").textContent = "Fehler beim Laden";
+      }
+      this.style.display = "none";
+    });
+
+    document.getElementById("closeSetup").addEventListener("click", function(){
+      document.getElementById("overlay").style.display = "none";
+    });
+  </script>
+</body>
+</html>

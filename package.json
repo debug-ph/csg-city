@@ -1,0 +1,16 @@
+{
+  "name": "csg-city",
+  "version": "1.0.0",
+  "description": "Schule als Staat – CSG-City Webportal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "npx nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "otpauth": "^9.5.1",
+    "qrcode": "^1.5.4"
+  }
+}

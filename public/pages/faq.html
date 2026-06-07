@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSG-City – FAQ</title>
+  <link rel="stylesheet" href="/css/main.css"/>
+  <style>
+    /* ── Hero ── */
+    .faq-hero {
+      background: var(--accent);
+      padding: 4rem 1.5rem 3rem;
+      color: white;
+      text-align: center;
+    }
+    .faq-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      margin-bottom: .625rem;
+    }
+    .faq-hero p { font-size: .9375rem; opacity: .7; max-width: 480px; margin: 0 auto; }
+    .faq-hero-search {
+      margin-top: 1.75rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+    .faq-hero-search input {
+      width: 100%;
+      padding: .75rem 1rem .75rem 2.75rem;
+      border-radius: var(--radius);
+      border: none;
+      background: rgba(255,255,255,.15);
+      backdrop-filter: blur(8px);
+      color: white;
+      font-family: var(--font-sans);
+      font-size: .9375rem;
+      outline: none;
+    }
+    .faq-hero-search input::placeholder { color: rgba(255,255,255,.55); }
+    .faq-hero-search input:focus { background: rgba(255,255,255,.22); }
+    .faq-search-icon {
+      position: absolute; left: .875rem; top: 50%; transform: translateY(-50%);
+      color: rgba(255,255,255,.65); pointer-events: none;
+    }
+
+    /* ── Layout ── */
+    .faq-outer {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+    @media(max-width: 640px) { .faq-outer { padding: 1.5rem 1rem; } }
+
+    /* ── Category tabs ── */
+    .faq-tabs {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .faq-tab {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .45rem 1rem;
+      border-radius: 100px;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      font-size: .8125rem;
+      font-family: var(--font-sans);
+      color: var(--text-2);
+      cursor: pointer;
+      transition: var(--t);
+    }
+    .faq-tab:hover { background: var(--bg-subtle); color: var(--text-1); }
+    .faq-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+    /* ── Category section ── */
+    .faq-category { margin-bottom: 2.5rem; }
+    .faq-category-head {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1rem;
+      padding-bottom: .75rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .faq-category-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .faq-category-title {
+      font-family: var(--font-serif);
+      font-size: 1.375rem;
+      font-weight: 400;
+    }
+    .faq-category-count {
+      margin-left: auto;
+      font-size: .75rem;
+      color: var(--text-3);
+    }
+
+    /* ── FAQ Item ── */
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-item:first-child .faq-q { padding-top: 0; }
+
+    .faq-q {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+      cursor: pointer;
+      user-select: none;
+      transition: var(--t);
+    }
+    .faq-q:hover .faq-q-text { color: var(--accent); }
+    .faq-q-text {
+      font-size: .9375rem;
+      font-weight: 500;
+      line-height: 1.45;
+      color: var(--text-1);
+      transition: color .15s;
+    }
+    .faq-chevron {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--bg-subtle);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-3);
+      font-size: .65rem;
+      transition: transform .2s, background .15s;
+      margin-top: .1rem;
+    }
+    .faq-item.open .faq-chevron {
+      transform: rotate(180deg);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .faq-a {
+      display: none;
+      padding: 0 0 1rem 0;
+      font-size: .875rem;
+      color: var(--text-2);
+      line-height: 1.7;
+    }
+    .faq-item.open .faq-a {
+      display: block;
+      animation: fadeUp .2s ease;
+    }
+    .faq-a strong { color: var(--text-1); }
+    .faq-a ul { padding-left: 1.25rem; margin-top: .375rem; }
+    .faq-a ul li { margin-bottom: .25rem; }
+
+    /* ── No results ── */
+    .no-results {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-3);
+      display: none;
+    }
+    .no-results.show { display: block; }
+    .no-results svg { margin-bottom: 1rem; opacity: .4; }
+
+    /* ── Section hidden ── */
+    .faq-category.hidden { display: none; }
+    .faq-item.hidden { display: none; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-mark">C</div>
+      <div><div class="brand-name">CSG-City</div><div class="brand-sub">Staatsportal</div></div>
+    </a>
+    <ul class="nav-links" id="desktopNav">
+      <li><a href="/" id="nav_home"></a></li>
+      <li><a href="/stellenangebote" id="nav_stellenangebote"></a></li>
+      <li><a href="/werbung" id="nav_werbung"></a></li>
+      <li><a href="/gesetze" id="nav_gesetze"></a></li>
+      <li><a href="/faq" id="nav_faq"></a></li>
+      <li><a href="/login" id="nav_login"></a></li>
+      </ul>
+    <div class="nav-actions">
+      <button class="theme-btn" id="themeToggle"></button>
+      <button class="burger-btn" id="burgerBtn"></button>
+    </div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-inner" id="mobileNavInner">
+      <a href="/" id="mnav_home"></a><a href="/stellenangebote" id="mnav_stellenangebote"></a><a href="/werbung" id="mnav_werbung"></a><a href="/gesetze" id="mnav_gesetze"></a><a href="/faq" id="mnav_faq"></a><a href="/login" id="mnav_login"></a>
+      </div>
+  </div>
+
+  <div class="page-wrapper">
+    <!-- Hero mit Suchfeld -->
+    <div class="faq-hero">
+      <h1>Häufig gestellte Fragen</h1>
+      <p>Alles Wichtige zu CSG-City – Grenzkontrollen, Hygiene, Gesetze und mehr</p>
+      <div class="faq-hero-search">
+        <span class="faq-search-icon" id="searchIcon"></span>
+        <input type="text" id="faqSearch" placeholder="Frage suchen…"/>
+      </div>
+    </div>
+
+    <div class="faq-outer">
+      <!-- Kategorie-Tabs -->
+      <div class="faq-tabs">
+        <button class="faq-tab active" data-cat="alle" id="tabAlle"></button>
+        <button class="faq-tab" data-cat="allgemein" id="tabAllgemein"></button>
+        <button class="faq-tab" data-cat="grenze" id="tabGrenze"></button>
+        <button class="faq-tab" data-cat="hygiene" id="tabHygiene"></button>
+        <button class="faq-tab" data-cat="sicherheit" id="tabSicherheit"></button>
+        <button class="faq-tab" data-cat="kultur" id="tabKultur"></button>
+      </div>
+
+      <!-- ── Kategorie: Allgemeines & Ausweispflicht ── -->
+      <div class="faq-category" data-cat="allgemein" id="catAllgemein">
+        <div class="faq-category-head">
+          <div class="faq-category-icon" style="background:var(--accent-soft);color:var(--accent)" id="iconAllgemein"></div>
+          <div class="faq-category-title">Allgemeines &amp; Ausweispflicht</div>
+          <div class="faq-category-count">10 Fragen</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was brauche ich, um den Staat offiziell zu betreten?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Jeder Bürger muss seinen <strong>Personalausweis</strong> vorzeigen, der vom Pass-Registrierungs- und Außenministerium ausgestellt wurde. Der Ausweis muss erfolgreich eingescannt werden. Erst wenn die Grenzpolizei zustimmt, darfst du den Staat betreten.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was passiert, wenn ich meinen Personalausweis vergessen habe?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Du bist verpflichtet, deinen <strong>Vor- und Nachnamen</strong> zu nennen. Die Grenzpolizei gleicht deine Angaben mit dem System ab. Stimmen die Daten überein, wirst du nach deiner <strong>individuellen PIN</strong> gefragt. Stimmen deine Daten <em>nicht</em> überein, wirst du wegen Täuschens eines Grenzpolizisten angeklagt.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wird ein Foto von mir bei der Kontrolle genutzt?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Aktuell (Stand 20.05.26) ist eine Foto-Hinterlegung nicht vorgesehen. Laut Gesetz ist es jedoch genehmigt – falls ein Foto hinterlegt werden soll, wirst du per SchulCloud dazu aufgefordert. Dies gilt nur, sofern eine <strong>Einverständniserklärung der Erziehungsberechtigten</strong> vorliegt.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Welche Daten werden im System erfasst?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">In einem verschlüsselten, cloudbasierten System werden gespeichert:<ul><li>Name, Geburtsmonat und Geburtsjahr</li><li>Klasse sowie Fast-Lane-Berechtigung</li><li>Gerichtliche Beschlüsse/Vorstrafen und individuelle PIN</li><li>Ggf. Lichtbildaufnahme des Gesichts (nur mit Einverständnis)</li><li>Individuelle Nummer und optional Allergien (auf Antrag)</li><li>Exakter Eintrittszeitpunkt und Zeitpunkt des Verlassens</li></ul></div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Werden meine Ein- und Austrittszeiten überwacht?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja. Der exakte Zeitpunkt des Betretens und Verlassens wird <strong>auf die Minute genau</strong> aufgezeichnet – bei Bürgern zur Straftatrückverfolgung und Überprüfung der Pflichtstunden, bei Besuchern über deren Besuchernummer.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wann werden meine Daten wieder gelöscht?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Standardmäßig werden alle Daten <strong>spätestens 3 Tage nach Ende der Projekttage</strong> vollständig gelöscht. Ausnahme: Wenn behördliche Ermittlungen oder Prüfungen laufen oder ein richterlicher Beschluss vorliegt, kann das Löschen auf bis zu <strong>14 Tage</strong> verzögert werden.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was kostet der Personalausweis?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Die Gebühr ist in den eingesammelten <strong>10 €</strong> enthalten. Achtung: Ist die Gebühr zu Beginn des zweiten Projekttages noch nicht eingegangen, wird eine zusätzliche Steuer von <strong>2 €</strong> berechnet.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wer gilt als Besucher?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Besucher sind alle Personen, die den Staat betreten wollen oder sich darin aufhalten, aber <strong>keine dauerhaften Bürger</strong> des Staates sind. Sie erhalten eine Besucherkarte – es dürfen keine personenbezogenen Daten von Besuchern gespeichert werden.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was passiert, wenn ein Besucher gegen Regeln verstößt?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Der Besucher wird vor Gericht gestellt. Es wird eine sachliche Personenbeschreibung angefertigt. Das Gericht darf bei Besuchern ausschließlich den <strong>Ausschluss aus dem Staat</strong> und ein dauerhaftes Einreiseverbot als Höchststrafe verhängen.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Gelten die Grenzkontrollen auch am Aufbau- und Abbautag?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Nein. Am <strong>Aufbautag (20.07.2026)</strong> und dem noch bekannt zu gebenden Abbautag finden keine systematischen Grenzkontrollen statt. Die §§1, 2, 3, 6 und 8 (Abs. 9/10) sind an diesen Tagen außer Kraft. Die Grenzpolizei unterstützt stattdessen den koordinierten Auf- und Abbau.</div>
+        </div>
+      </div>
+
+      <!-- ── Kategorie: Grenzkontrollen & Fast Lane ── -->
+      <div class="faq-category" data-cat="grenze" id="catGrenze">
+        <div class="faq-category-head">
+          <div class="faq-category-icon" style="background:var(--gold-soft);color:var(--gold)" id="iconGrenze"></div>
+          <div class="faq-category-title">Grenzkontrollen &amp; Fast Lane</div>
+          <div class="faq-category-count">8 Fragen</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wo darf ich die Grenze überqueren?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Der Grenzübertritt ist ausschließlich an <strong>offiziell gekennzeichneten und gültigen Grenzübergängen</strong> erlaubt. Jeder andere Grenzübergang wird als illegaler Grenzübertritt geahndet.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wer darf die „Fast Lane" nutzen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Die Fast Lane ist auf <strong>maximal 85 Personen gleichzeitig</strong> begrenzt. Berechtigt sind:<ul><li>Jeder Beamte (Berechtigung direkt im System)</li><li>Personen mit offiziellen Berechtigungsschreiben oder separater Berechtigungskarte</li><li>Jeder Bürger oder Besucher, der die <strong>Pauschalgebühr von 5 €</strong> für alle Staatstage bezahlt hat</li></ul></div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was passiert, wenn ich die Fast Lane ohne Berechtigung nutze?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Wer keine Berechtigung hat, muss die <strong>Standard Lane</strong> benutzen. Bei unberechtigter Nutzung kann die Grenzpolizei eine <strong>mündliche Ermahnung</strong> aussprechen.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Darf die Grenzpolizei meine Taschen durchsuchen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Nur, wenn du <strong>ausdrücklich deine mündliche Einwilligung</strong> dazu gibst. Lehnst du eine Taschenkontrolle ab, ist es den Grenzpolizisten absolut untersagt, deine Tasche zu durchsuchen.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wie lange darf mich die Grenzpolizei an der Grenze festhalten?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a"><strong>Bürger:</strong> Nach erfolgreichem Einscannen maximal <strong>5 Minuten</strong>. Danach darfst du passieren. Bei begründetem Tatverdacht darf die Grenzpolizei dich zur Befragung mitnehmen.<br><br><strong>Besucher:</strong> Dürfen an der Grenze <strong>gar nicht aktiv aufgehalten</strong> werden. Es muss sofort entschieden werden, ob Zutritt gewährt oder verweigert wird.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Welche Rechte hat die Grenzpolizei?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Die Grenzpolizei ist zuständig für die Sicherheit an den Grenzen. Sie arbeitet mit der regulären Polizei zusammen (begrenzt auf Informationsaustausch). In Ausnahmezuständen dürfen sie Verstärkung anfordern. Den Anweisungen der Grenzpolizei ist Folge zu leisten – Widersetzen kann als Widersetzen gegen Vollstreckungsbeamte geahndet werden.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wie wird man Grenzpolizist/-in?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Es werden insgesamt <strong>10 Bewerber</strong> vom Pass-Registrierungs- und Außenminister persönlich ernannt. Die Bewerbung erfolgt durch eine persönliche Vorstellung. Voraussetzungen:<ul><li>Mindestens 7. Klasse</li><li>Verhaltensnote gut oder sehr gut</li></ul>Zwei der 10 werden als Vorgesetzte ernannt.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wie werden Daten der Grenzpolizei geschützt?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Daten werden in einem <strong>verschlüsselten, cloudbasierten System</strong> gespeichert und nicht an Dritte weitergegeben. Beamte unterliegen einer <strong>Schweigepflicht</strong> gegenüber Personen außerhalb der Grenzpolizei. Ein vom Staat bestimmtes Unternehmen ist für Speicherung und Verwaltung verantwortlich.</div>
+        </div>
+      </div>
+
+      <!-- ── Kategorie: Hygiene & Gesundheitsamt ── -->
+      <div class="faq-category" data-cat="hygiene" id="catHygiene">
+        <div class="faq-category-head">
+          <div class="faq-category-icon" style="background:#DCEEE3;color:#1A5C32" id="iconHygiene"></div>
+          <div class="faq-category-title">Hygiene &amp; Gesundheitsamt</div>
+          <div class="faq-category-count">15 Fragen</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Muss ich mir die Hände waschen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja. <strong>Vor Arbeitsbeginn und regelmäßig während der Arbeit</strong> – besonders nach Toilettengang, Pause oder Geldkontakt. (§1 Gesetzbuch Gesundheitsamt)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Darf ich mit offenen Haaren Essen verkaufen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Nur wenn deine Haare kurz sind. <strong>Haare ab Schulterlänge müssen zusammengebunden</strong> oder durch eine geeignete Kopfbedeckung (Mütze, Haarnetz) abgedeckt sein. (§2 Gesetzbuch Gesundheitsamt)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Muss Essen abgedeckt werden?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja, wenn es länger steht. Lebensmittel und Getränke, die über einen längeren Zeitraum gelagert werden, müssen durch <strong>Abdeckungen, Folien oder geschlossene Behälter</strong> vor Verunreinigungen geschützt werden. (§3)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was passiert, wenn mein Arbeitsplatz dreckig ist?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ihr bekommt eine <strong>Aufforderung zum Reinigen</strong>. Bei schlimmeren Verstößen wird es dokumentiert. Arbeitsplätze müssen regelmäßig gereinigt und am Ende des Arbeitstages <strong>ordentlich hinterlassen</strong> werden. (§4)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Darf ich verkaufen, wenn ich krank bin?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Nein. Mit <strong>Fieber, starkem Husten oder Magen-Darm-Problemen</strong> dürft ihr nicht am Lebensmittelverkauf teilnehmen. (§5)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Gibt es Erste Hilfe auf Veranstaltungen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja. Es stehen <strong>drei ausgebildete Erste-Hilfe-Personen</strong> zur Verfügung. Bei größeren Veranstaltungen werden sie auf verschiedene Bereiche verteilt und müssen während der gesamten Dauer eindeutig ansprechbar sein. Das Gesundheitsministerium plant und koordiniert den Einsatz. (§6)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wer kontrolliert die Hygieneregeln?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Mindestens <strong>drei Kontrollpersonen</strong> des Gesundheitsministeriums. Sie sind berechtigt, Unternehmen und Verkaufsstände zu kontrollieren. (§7)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Dürfen die Kontrollpersonen unseren Stand kontrollieren?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja. Sie dürfen <strong>jeden Verkaufsstand und jedes Unternehmen</strong> kontrollieren. Jeder Stand muss <strong>mindestens einmal</strong> während der Veranstaltung kontrolliert werden. (§7, §12)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Müssen kleine Fehler direkt dokumentiert werden?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Nein. <strong>Kleine oder sofort behobene Probleme</strong> müssen nicht extra dokumentiert werden. Nur wesentliche Mängel werden schriftlich festgehalten. Gravierende Verstöße werden zusätzlich <strong>fotografisch dokumentiert</strong>. (§7, §12)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Müssen gekühlte Lebensmittel gekühlt bleiben?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja. Lebensmittel, die gekühlt werden müssen, sind durch geeignete Kühlgeräte oder Kühlboxen aufzubewahren. Die <strong>Kühlkette darf nicht unnötig unterbrochen</strong> werden. (§8)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Dürfen verdorbene Lebensmittel verkauft werden?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Nein. <strong>Verdorbene oder offensichtlich nicht mehr genießbare Lebensmittel</strong> dürfen nicht verkauft werden. (§8)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wer muss Desinfektionsmittel und Reinigungsmittel besorgen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Das <strong>Unternehmen bzw. der Verkaufsstand selbst</strong> ist dafür verantwortlich. Dazu gehören Reinigungsmittel, Müllbehälter und Desinfektionsmittel. (§9)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Braucht jeder Stand eine Ansprechperson?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja. Jeder Verkaufsstand muss eine <strong>explizite Ansprechperson</strong> für die Kontrollpersonen benennen. Diese Person muss eindeutig erreichbar und zuständig sein. (§11)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Werden gefährliche Gegenstände kontrolliert?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja. Kontrollpersonen prüfen die korrekte Nutzung gefährlicher Gegenstände wie <strong>scharfe Messer, Grillgeräte und Fritteusen</strong> gemäß dem Gesetzbuch des Arbeitsministeriums. (§12)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was passiert bei schweren Verstößen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Gravierende Mängel oder Verstöße werden <strong>schriftlich dokumentiert</strong> und zusätzlich durch <strong>Fotos nachgewiesen</strong>. Sie können weitere Konsequenzen nach sich ziehen. (§12)</div>
+        </div>
+      </div>
+
+
+      <!-- ── Kategorie: Innere Sicherheit & Polizei ── -->
+      <div class="faq-category" data-cat="sicherheit" id="catSicherheit">
+        <div class="faq-category-head">
+          <div class="faq-category-icon" style="background:#DCE9F5;color:#164D7A" id="iconSicherheit"></div>
+          <div class="faq-category-title">Innere Sicherheit &amp; Polizei</div>
+          <div class="faq-category-count">9 Fragen</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Darf die Polizei einfach so meinen Rucksack durchsuchen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Nicht einfach so. Dafür braucht die Polizei normalerweise einen <strong>Durchsuchungsbeschluss</strong>, ausgestellt von einem Richter oder dem Innenministerium. Wenn es dringend ist, kann sie Gegenstände (Taschen etc.) zunächst <strong>beschlagnahmen</strong>, bis der Beschluss genehmigt oder abgelehnt wird. (§8 SchulSiG)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Muss ich meinen Namen sagen, wenn die Polizei mich fragt?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja. Die Polizei kann die <strong>Identität von Personen feststellen</strong>, wenn dies zur Gefahrenabwehr oder Strafverfolgung erforderlich ist – besonders in Situationen mit erhöhtem Gefahrenpotenzial. (§10 SchulSiG)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was passiert, wenn ich einfach weggehe?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Das kann Probleme geben. Die Polizei darf dich <strong>vorübergehend festhalten</strong> (freiheitsentziehende Maßnahme), wenn es zur Gefahrenabwehr nötig ist. Die Maßnahme ist auf die kürzest mögliche Zeit zu beschränken und du wirst über den Grund informiert. (§11 SchulSiG)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Können die mich bestrafen, bevor ich etwas gemacht habe?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Nicht bestrafen – aber die Polizei darf <strong>präventive Maßnahmen</strong> ergreifen, wenn es tatsächliche Anhaltspunkte einer drohenden Gefahr gibt. Diese werden dokumentiert und regelmäßig überprüft. (§9 SchulSiG)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Dürfen Kameras mich filmen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja, aber nur wenn es für die Sicherheit <strong>erforderlich und verhältnismäßig</strong> ist. Die Verarbeitung personenbezogener Daten ist nur zulässig, wenn die Rechte der Bürger gewahrt bleiben. (§12 SchulSiG)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was, wenn die Polizei unfair ist?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Du hast das Recht auf <strong>faire Behandlung</strong> und darfst nicht erniedrigt oder unverhältnismäßig behandelt werden. Du kannst dich beim zuständigen <strong>Gericht beschweren</strong>. Das Innenministerium und der City-Rat können jederzeit Berichte anfordern und Kontrollen durchführen. (§11a, §4 SchulSiG)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Darf die Polizei einfach alles entscheiden?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Nein. Die Polizei handelt im Rahmen der Gesetze und unter der <strong>Fach- und Dienstaufsicht des Innenministeriums</strong>. Maßnahmen müssen stets erforderlich und verhältnismäßig sein. (§4, §5 SchulSiG)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was passiert bei richtig großen Problemen (z.B. Eskalation)?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Bei besonderen Gefahrenlagen darf die Polizei <strong>erweiterte Maßnahmen</strong> einsetzen – aber auch dann sind alle Maßnahmen auf das erforderliche Maß zu beschränken und die Grundrechte der Bürger sind zu achten. (§15, §16 SchulSiG)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Kann die Schule oder der Staat einfach neue Regeln machen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja, aber nur der <strong>City-Rat</strong> darf das Gesetz ändern. Änderungen werden durch den City-Rat beschlossen und treten mit Verkündung in Kraft. (§19 SchulSiG)</div>
+        </div>
+      </div>
+
+      <!-- ── Kategorie: Kultur & Wettbewerbe ── -->
+      <div class="faq-category" data-cat="kultur" id="catKultur">
+        <div class="faq-category-head">
+          <div class="faq-category-icon" style="background:var(--gold-soft);color:var(--gold)" id="iconKultur"></div>
+          <div class="faq-category-title">Kultur &amp; Wettbewerbe</div>
+          <div class="faq-category-count">8 Fragen</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was sind die kulturellen Wettbewerbe in CSG-City?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Zur Förderung der kulturellen Mitgestaltung werden <strong>schulweite Wettbewerbe</strong> zur Gestaltung staatlicher Symbole durchgeführt: Personalausweisdesign, Staatswappen und Nationalhymne. Alle Schüler dürfen mitmachen, solange die Entwürfe nicht gegen die Verfassung verstoßen. (§1 Gesetzbuch Kultur)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wer darf an den Wettbewerben teilnehmen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a"><strong>Alle Schüler der Schule</strong> sind berechtigt, Entwürfe einzureichen. Jeder Wettbewerb wird offen, transparent und demokratisch durchgeführt. (§1 Gesetzbuch Kultur)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wie wird über die Gewinner entschieden?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Die Entscheidung erfolgt durch eine <strong>Volksabstimmung aller Schüler</strong> über die einzelnen Klassen. Der Entwurf mit den meisten Stimmen gewinnt. (§1 Gesetzbuch Kultur)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wie gestalte ich den Personalausweis?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Das <strong>Seitenverhältnis muss 1:1,55</strong> betragen (die Größe kann erweitert werden, nur das Verhältnis ist wichtig). Alle Designs werden der Schule vorgestellt und per Volksabstimmung entschieden. Das Design mit den meisten Stimmen wird offizielles Passdesign. (§2 Gesetzbuch Kultur)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was kann ich für das Staatswappen einreichen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Jeden <strong>Wappenentwurf</strong> – alle Schüler sind zur Einreichung berechtigt. Die Entwürfe werden gesammelt, der Schulgemeinschaft vorgestellt und per Volksabstimmung entschieden. Das Wappen mit den meisten Stimmen wird offizielles Staatswappen. (§3 Gesetzbuch Kultur)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Was kann ich für die Nationalhymne einreichen?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Es können <strong>Texte, Melodien oder Kombinationen</strong> davon eingereicht werden. Alle Vorschläge werden vorgestellt und per Volksabstimmung entschieden. Der Vorschlag mit den meisten Stimmen wird zur offiziellen Nationalhymne erklärt. (§4 Gesetzbuch Kultur)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Gibt es einen Preis für den Gewinner?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Ja! Der Einreicher des gewinnenden Entwurfs erhält einen <strong>Preis als Anerkennung</strong>. Art und Umfang des Preises werden zu einem späteren Zeitpunkt festgelegt. Die Preisvergabe erfolgt nach offizieller Bekanntgabe des Abstimmungsergebnisses. (§5 Gesetzbuch Kultur)</div>
+        </div>
+
+        <div class="faq-item" onclick="toggle(this)">
+          <div class="faq-q"><div class="faq-q-text">Wann finden die Wettbewerbe statt?</div><div class="faq-chevron">▾</div></div>
+          <div class="faq-a">Das <strong>Kulturministerium</strong> legt den Zeitpunkt eigenständig fest. Mit dem Inkrafttreten des Gesetzes erfolgt keine automatische Durchführung – die Wettbewerbe werden zeitlich versetzt und nach Maßgabe des Ministeriums abgehalten. (§1 Gesetzbuch Kultur)</div>
+        </div>
+      </div>
+
+      <!-- No results -->
+      <div class="no-results" id="noResults">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="21" cy="21" r="15"/><line x1="32" y1="32" x2="44" y2="44"/><line x1="16" y1="21" x2="26" y2="21" stroke-dasharray="2 3"/></svg>
+        <div style="font-size:1rem;font-weight:500;margin-bottom:.375rem">Keine Ergebnisse</div>
+        <div style="font-size:.875rem">Versuche einen anderen Suchbegriff.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/icons.js"></script>
+  <script>
+    // ── Nav ──────────────────────────────────────────────────
+    (function(){
+      var btn=document.getElementById("themeToggle");
+      // Set correct icon based on current theme
+      var setIcon=function(){ btn.innerHTML=document.documentElement.getAttribute("data-theme")==="dark"?ICONS.sun:ICONS.moon; };
+      setIcon();
+      btn.addEventListener("click",function(){ toggleTheme(); setIcon(); });
+    })();
+    var burger=document.getElementById("burgerBtn"),mNavEl=document.getElementById("mobileNav");
+    burger.addEventListener("click",function(){mNavEl.classList.toggle("open");document.body.classList.toggle("menu-open");});
+    mNavEl.addEventListener("click",function(e){if(e.target===mNavEl){mNavEl.classList.remove("open");document.body.classList.remove("menu-open");}});
+
+    // Navbar
+    var _navItems = [
+      {href:"/",               ic:"dashboard",    label:"Dashboard"},
+      {href:"/stellenangebote",ic:"jobs",         label:"Stellenangebote"},
+      {href:"/werbung",        ic:"ads",          label:"Werbefläche mieten"},
+      {href:"/gesetze",        ic:"constitution", label:"Gesetzb\u00fccher"},
+      {href:"/faq",            ic:"question",     label:"FAQ"},
+      {href:"/login",          ic:"admin",        label:"Admin"},
+    ];
+    _navItems.forEach(function(n) {
+      var key = n.href.replace("/","") || "home";
+      var el  = document.getElementById("nav_"+key);
+      var mel = document.getElementById("mnav_"+key);
+      var html = ICONS[n.ic] + " " + n.label;
+      if (el)  { el.innerHTML  = html; if(window.location.pathname===n.href) el.classList.add("active"); }
+      if (mel) { mel.innerHTML = html; if(window.location.pathname===n.href) mel.classList.add("active"); }
+    });
+    checkAuth().then(function(s) {
+      var al  = document.getElementById("nav_login");
+      var mal = document.getElementById("mnav_login");
+      if (s && s.isAdmin) {
+        if (al)  { al.innerHTML  = ICONS.admin + " Admin-Bereich"; al.href = "/admin"; }
+        if (mal) { mal.innerHTML = ICONS.admin + " Admin-Bereich"; mal.href = "/admin"; }
+      }
+    });
+
+    checkAuth().then(function(s){if(s&&s.isAdmin){var a=document.getElementById("adminNavLink");if(a){a.innerHTML=ICONS.admin+" Admin-Bereich";a.href="/admin";}}});
+
+    // ── Category icons ───────────────────────────────────────
+    document.getElementById("iconAllgemein").innerHTML = ICONS.admin;
+    document.getElementById("iconGrenze").innerHTML    = ICONS.lock;
+    document.getElementById("iconHygiene").innerHTML    = ICONS.check;
+    document.getElementById("iconSicherheit").innerHTML = ICONS.lock;
+    document.getElementById("iconKultur").innerHTML     = ICONS.star;
+    document.getElementById("searchIcon").innerHTML    = ICONS.info;
+
+    // Tab icons
+    document.getElementById("tabAlle").innerHTML      = ICONS.dashboard   + " Alle";
+    document.getElementById("tabAllgemein").innerHTML = ICONS.admin       + " Allgemeines";
+    document.getElementById("tabGrenze").innerHTML    = ICONS.lock        + " Grenzkontrollen";
+    document.getElementById("tabHygiene").innerHTML     = ICONS.check       + " Hygiene";
+    document.getElementById("tabSicherheit").innerHTML  = ICONS.lock        + " Sicherheit";
+    document.getElementById("tabKultur").innerHTML      = ICONS.star        + " Kultur";
+
+    // ── Toggle FAQ item ───────────────────────────────────────
+    function toggle(item) {
+      item.classList.toggle("open");
+    }
+
+    // ── Category filter ───────────────────────────────────────
+    document.querySelectorAll(".faq-tab").forEach(function(tab){
+      tab.addEventListener("click", function(){
+        document.querySelectorAll(".faq-tab").forEach(function(t){t.classList.remove("active");});
+        tab.classList.add("active");
+        var cat = tab.dataset.cat;
+        document.querySelectorAll(".faq-category").forEach(function(sec){
+          sec.classList.toggle("hidden", cat !== "alle" && sec.dataset.cat !== cat);
+        });
+        // Clear search on tab change
+        document.getElementById("faqSearch").value = "";
+        clearSearch();
+      });
+    });
+
+    // ── Search ────────────────────────────────────────────────
+    function clearSearch(){
+      document.querySelectorAll(".faq-item").forEach(function(item){ item.classList.remove("hidden"); });
+      document.getElementById("noResults").classList.remove("show");
+    }
+
+    document.getElementById("faqSearch").addEventListener("input", function(){
+      var q = this.value.trim().toLowerCase();
+      if (!q) { clearSearch(); return; }
+
+      // Switch to "alle" tab
+      document.querySelectorAll(".faq-tab").forEach(function(t){t.classList.remove("active");});
+      document.getElementById("tabAlle").classList.add("active");
+      document.querySelectorAll(".faq-category").forEach(function(s){s.classList.remove("hidden");});
+
+      var found = 0;
+      document.querySelectorAll(".faq-item").forEach(function(item){
+        var question = item.querySelector(".faq-q-text").textContent.toLowerCase();
+        var answer   = (item.querySelector(".faq-a")||{}).textContent || "";
+        answer = answer.toLowerCase();
+        var match = question.includes(q) || answer.includes(q);
+        item.classList.toggle("hidden", !match);
+        if (match) { found++; item.classList.add("open"); }
+        else { item.classList.remove("open"); }
+      });
+
+      // Hide empty categories
+      document.querySelectorAll(".faq-category").forEach(function(cat){
+        var hasVisible = Array.from(cat.querySelectorAll(".faq-item")).some(function(i){ return !i.classList.contains("hidden"); });
+        cat.classList.toggle("hidden", !hasVisible);
+      });
+
+      document.getElementById("noResults").classList.toggle("show", found === 0);
+    });
+  </script>
+</body>
+</html>
