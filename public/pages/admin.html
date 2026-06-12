@@ -224,6 +224,7 @@
         <div class="form-group"><label class="form-label">Kontakt (E-Mail / Ansprechpartner)</label><input class="form-input" id="mSK" placeholder="z.B. name@csg-city.de"/></div>
         <div class="form-group"><label class="form-label">Lohn (€/h)</label><input class="form-input" type="number" id="mSL" step="0.50"/></div>
         <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="mSO"><option value="true">Offen</option><option value="false">Besetzt</option></select></div>
+        <div class="form-group"><label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.875rem;color:var(--text-1)"><input type="checkbox" id="mSG" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0"/> Gewinnanteil</label></div>
       </div>
       <div class="modal-footer"><button class="btn btn-ghost" onclick="cm('mS')">Abbrechen</button><button class="btn btn-primary" id="saveS">Speichern</button></div>
     </div>
@@ -506,12 +507,12 @@
     document.getElementById("btnAddS").addEventListener("click",function(){
       document.getElementById("mSTitle").textContent="Neue Stelle";
       ["mSId","mST","mSA","mSB","mSK","mSL"].forEach(function(i){document.getElementById(i).value="";});
-      document.getElementById("mSO").value="true"; om("mS");
+      document.getElementById("mSO").value="true"; document.getElementById("mSG").checked=false; om("mS");
     });
-    function editS(id){ var s=allS.find(function(x){return x.id===id;}); if(!s)return; document.getElementById("mSTitle").textContent="Stelle bearbeiten"; document.getElementById("mSId").value=s.id; document.getElementById("mST").value=s.titel||""; document.getElementById("mSA").value=s.abteilung||""; document.getElementById("mSB").value=s.beschreibung||""; document.getElementById("mSK").value=s.kontakt||""; document.getElementById("mSL").value=s.lohnProH||0; document.getElementById("mSO").value=s.offen?"true":"false"; om("mS"); }
+    function editS(id){ var s=allS.find(function(x){return x.id===id;}); if(!s)return; document.getElementById("mSTitle").textContent="Stelle bearbeiten"; document.getElementById("mSId").value=s.id; document.getElementById("mST").value=s.titel||""; document.getElementById("mSA").value=s.abteilung||""; document.getElementById("mSB").value=s.beschreibung||""; document.getElementById("mSK").value=s.kontakt||""; document.getElementById("mSL").value=s.lohnProH||0; document.getElementById("mSO").value=s.offen?"true":"false"; document.getElementById("mSG").checked=!!s.gewinnanteil; om("mS"); }
     document.getElementById("saveS").addEventListener("click",async function(){
       var id=document.getElementById("mSId").value;
-      var b={titel:document.getElementById("mST").value.trim(),abteilung:document.getElementById("mSA").value.trim(),beschreibung:document.getElementById("mSB").value.trim(),kontakt:document.getElementById("mSK").value.trim(),lohnProH:parseFloat(document.getElementById("mSL").value)||0,offen:document.getElementById("mSO").value==="true"};
+      var b={titel:document.getElementById("mST").value.trim(),abteilung:document.getElementById("mSA").value.trim(),beschreibung:document.getElementById("mSB").value.trim(),kontakt:document.getElementById("mSK").value.trim(),lohnProH:parseFloat(document.getElementById("mSL").value)||0,offen:document.getElementById("mSO").value==="true",gewinnanteil:document.getElementById("mSG").checked};
       if(!b.titel){showToast("Titel fehlt!","error");return;}
       await apiSave("/api/stellenangebote",id,b); showToast(b.titel+(id?" aktualisiert.":" hinzugefügt.")); cm("mS"); loadS();
     });

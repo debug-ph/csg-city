@@ -131,7 +131,8 @@ const DEFAULT_DATA = {
       "beschreibung": "Aktive Mitgestaltung der Stadtpolitik und Teilnahme an Sitzungen.",
       "lohnProH": 18.5,
       "offen": true,
-      "kontakt": "staatsrat@csg-city.de"
+      "kontakt": "staatsrat@csg-city.de",
+      "gewinnanteil": false
     },
     {
       "id": 2,
@@ -140,7 +141,8 @@ const DEFAULT_DATA = {
       "beschreibung": "Vertretung des Staates bei Gerichtsverfahren.",
       "lohnProH": 22,
       "offen": true,
-      "kontakt": "justiz@csg-city.de"
+      "kontakt": "justiz@csg-city.de",
+      "gewinnanteil": false
     },
     {
       "id": 3,
@@ -149,7 +151,8 @@ const DEFAULT_DATA = {
       "beschreibung": "Überprüfung von Steuererklärungen aller Bürger.",
       "lohnProH": 16.5,
       "offen": true,
-      "kontakt": "finanzen@csg-city.de"
+      "kontakt": "finanzen@csg-city.de",
+      "gewinnanteil": false
     },
     {
       "id": 4,
@@ -158,7 +161,8 @@ const DEFAULT_DATA = {
       "beschreibung": "Aufrechterhaltung von Ordnung und Sicherheit.",
       "lohnProH": 15,
       "offen": true,
-      "kontakt": "polizei@csg-city.de"
+      "kontakt": "polizei@csg-city.de",
+      "gewinnanteil": false
     },
     {
       "id": 5,
@@ -167,7 +171,8 @@ const DEFAULT_DATA = {
       "beschreibung": "Berichte für das offizielle Staatsblatt verfassen.",
       "lohnProH": 14,
       "offen": false,
-      "kontakt": "zeitung@csg-city.de"
+      "kontakt": "zeitung@csg-city.de",
+      "gewinnanteil": false
     },
     {
       "id": 6,
@@ -176,7 +181,8 @@ const DEFAULT_DATA = {
       "beschreibung": "Unabhängige Rechtsprechung im Staatsgericht.",
       "lohnProH": 24,
       "offen": true,
-      "kontakt": "richteramt@csg-city.de"
+      "kontakt": "richteramt@csg-city.de",
+      "gewinnanteil": false
     }
   ],
   "werbeflaechen": [
@@ -661,6 +667,11 @@ function load() {
   // Migrate: add kontakt field to stellenangebote if missing
   if (d.stellenangebote && d.stellenangebote.some(function(s){return s.kontakt===undefined;})) {
     d.stellenangebote.forEach(function(s){if(s.kontakt===undefined)s.kontakt="";});
+    save(d);
+  }
+  // Migrate: add gewinnanteil field to stellenangebote if missing
+  if (d.stellenangebote && d.stellenangebote.some(function(s){return s.gewinnanteil===undefined;})) {
+    d.stellenangebote.forEach(function(s){if(s.gewinnanteil===undefined)s.gewinnanteil=false;});
     save(d);
   }
   return d;

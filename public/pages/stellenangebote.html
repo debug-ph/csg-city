@@ -194,7 +194,8 @@
           +'<div class="stelle-abt">'+ICONS.building+' '+(s.abteilung||"")+'</div>'
           +(s.kontakt?'<div class="stelle-kontakt">'+ICONS.info+' '+(s.kontakt)+'</div>':'')
           +'<div class="stelle-desc">'+(s.beschreibung||"")+'</div>'
-          +'<div class="stelle-foot"><div><div class="stelle-lohn-val">'+Number(s.lohnProH||0).toFixed(2)+' €</div><div class="stelle-lohn-lbl">pro Stunde</div></div>'
+          +'<div class="stelle-foot"><div style="display:flex;align-items:center;gap:.625rem"><div><div class="stelle-lohn-val">'+Number(s.lohnProH||0).toFixed(2)+' €</div><div class="stelle-lohn-lbl">pro Stunde</div></div>'
+          +(s.gewinnanteil?'<span class="badge badge-gold" style="font-size:.7rem">&#10003; Gewinnanteil</span>':'')+'</div>'
           +(s.offen?'<a href="/werbung" class="bewerben-link">Bewerben '+ICONS.arrow_right+'</a>':'')
           +'</div>';
         var hdr = card.querySelector(".stelle-header");
