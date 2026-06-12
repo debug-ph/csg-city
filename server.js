@@ -82,13 +82,13 @@ app.get("/api/dashboard", (_,res) => {
 // Stellenangebote
 app.get("/api/stellenangebote", (_,res) => res.json(db.all("stellenangebote")));
 app.post("/api/stellenangebote", adm, (req,res) => {
-  const { titel, abteilung, beschreibung, lohnProH, offen } = req.body;
+  const { titel, abteilung, beschreibung, lohnProH, offen, kontakt } = req.body;
   if (!titel) return res.status(400).json({ error: "Titel fehlt" });
-  res.json(db.insert("stellenangebote", { titel, abteilung: abteilung||"", beschreibung: beschreibung||"", lohnProH: parseFloat(lohnProH)||0, offen: offen !== false }));
+  res.json(db.insert("stellenangebote", { titel, abteilung: abteilung||"", beschreibung: beschreibung||"", lohnProH: parseFloat(lohnProH)||0, offen: offen !== false, kontakt: kontakt||"" }));
 });
 app.put("/api/stellenangebote/:id", adm, (req,res) => {
-  const { titel, abteilung, beschreibung, lohnProH, offen } = req.body;
-  db.update("stellenangebote", req.params.id, { titel, abteilung, beschreibung, lohnProH: parseFloat(lohnProH)||0, offen });
+  const { titel, abteilung, beschreibung, lohnProH, offen, kontakt } = req.body;
+  db.update("stellenangebote", req.params.id, { titel, abteilung, beschreibung, lohnProH: parseFloat(lohnProH)||0, offen, kontakt: kontakt||"" });
   res.json({ success: true });
 });
 app.delete("/api/stellenangebote/:id", adm, (req,res) => { db.delete("stellenangebote", req.params.id); res.json({ success: true }); });

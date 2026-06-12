@@ -21,13 +21,18 @@
     .stellen-list{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
     @media(max-width:640px){.stellen-list{grid-template-columns:1fr;}}
 
-    .stelle-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:box-shadow .18s,transform .18s;display:flex;flex-direction:column;gap:.5rem;}
-    .stelle-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+    .stelle-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:box-shadow .18s;display:flex;flex-direction:column;gap:.5rem;}
+    .stelle-card:hover{box-shadow:var(--shadow-md);}
     .stelle-card.besetzt{opacity:.6;}
-    .stelle-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;}
-    .stelle-title{font-size:.9375rem;font-weight:500;line-height:1.3;}
+    .stelle-header{cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;user-select:none;}
+    .stelle-title{font-size:1rem;font-weight:600;line-height:1.3;flex:1;}
+    .stelle-badge-row{display:flex;align-items:center;gap:.375rem;flex-shrink:0;}
+    .stelle-chevron{display:inline-block;color:var(--text-3);transition:transform .2s;font-size:.7rem;}
+    .stelle-chevron.open{transform:rotate(180deg);}
     .stelle-abt{font-size:.775rem;color:var(--text-2);display:flex;align-items:center;gap:.3rem;}
-    .stelle-desc{font-size:.8rem;color:var(--text-3);line-height:1.5;flex:1;}
+    .stelle-kontakt{font-size:.775rem;color:var(--text-2);display:flex;align-items:center;gap:.3rem;}
+    .stelle-desc{font-size:.8rem;color:var(--text-3);line-height:1.5;display:none;padding-top:.5rem;margin-top:.125rem;border-top:1px solid var(--border);}
+    .stelle-desc.open{display:block;}
     .stelle-foot{display:flex;align-items:center;justify-content:space-between;padding-top:.5rem;border-top:1px solid var(--border);}
     .stelle-lohn-val{font-size:.9375rem;font-weight:500;color:var(--accent);}
     .stelle-lohn-lbl{font-size:.65rem;color:var(--text-3);}
@@ -182,12 +187,23 @@
         var badge = s.offen
           ? '<span class="badge badge-green">'+ICONS.dot_green+' Offen</span>'
           : '<span class="badge badge-neutral">'+ICONS.dot_gray+' Besetzt</span>';
-        card.innerHTML = '<div class="stelle-head"><div class="stelle-title">'+s.titel+'</div>'+badge+'</div>'
+        card.innerHTML = '<div class="stelle-header">'
+          +'<div class="stelle-title">'+s.titel+'</div>'
+          +'<div class="stelle-badge-row">'+badge+'<span class="stelle-chevron">&#9660;</span></div>'
+          +'</div>'
           +'<div class="stelle-abt">'+ICONS.building+' '+(s.abteilung||"")+'</div>'
+          +(s.kontakt?'<div class="stelle-kontakt">'+ICONS.info+' '+(s.kontakt)+'</div>':'')
           +'<div class="stelle-desc">'+(s.beschreibung||"")+'</div>'
           +'<div class="stelle-foot"><div><div class="stelle-lohn-val">'+Number(s.lohnProH||0).toFixed(2)+' €</div><div class="stelle-lohn-lbl">pro Stunde</div></div>'
           +(s.offen?'<a href="/werbung" class="bewerben-link">Bewerben '+ICONS.arrow_right+'</a>':'')
           +'</div>';
+        var hdr = card.querySelector(".stelle-header");
+        var desc = card.querySelector(".stelle-desc");
+        var chev = card.querySelector(".stelle-chevron");
+        hdr.addEventListener("click", function() {
+          var open = desc.classList.toggle("open");
+          chev.classList.toggle("open", open);
+        });
         list.appendChild(card);
 
         // Every AD_INTERVAL items, insert an ad
