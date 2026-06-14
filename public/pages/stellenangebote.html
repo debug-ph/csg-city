@@ -209,16 +209,22 @@
           : '';
         card.innerHTML =
           '<div class="stelle-head">'
-            +'<div><div class="stelle-title">'+escH(s.titel)+'</div>'+schlagzeileHtml+'</div>'
-            +'<div class="stelle-badges">'+gewinnBadge+statusBadge+chevronSvg+'</div>'
+            +'<div style="flex:1"><div class="stelle-title">'+escH(s.titel)+'</div>'+schlagzeileHtml+'</div>'
+            +chevronSvg
           +'</div>'
-          +'<div class="stelle-abt">'+ICONS.building+' '+escH(s.abteilung||"")+'</div>'
           +'<div class="stelle-foot">'
-            +'<div><div class="stelle-lohn-val">'+Number(s.lohnProH||0).toFixed(2)+' €</div><div class="stelle-lohn-lbl">pro Stunde</div></div>'
+            +'<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">'
+              +'<div><div class="stelle-lohn-val">'+Number(s.lohnProH||0).toFixed(2)+' €</div><div class="stelle-lohn-lbl">pro Stunde</div></div>'
+              +gewinnBadge
+            +'</div>'
             +kontaktHtml
           +'</div>'
           +'<div class="stelle-desc-wrap"><div>'
-            +'<div class="stelle-desc">'+escH(s.beschreibung||"")+'</div>'
+            +'<div class="stelle-desc">'
+              +(s.abteilung ? '<div class="stelle-abt" style="margin-bottom:.5rem">'+ICONS.building+' '+escH(s.abteilung)+'</div>' : '')
+              +'<div style="margin-bottom:.375rem">'+statusBadge+'</div>'
+              +'<div style="white-space:pre-wrap">'+escH(s.beschreibung||"")+'</div>'
+            +'</div>'
             +bewerbenHtml
           +'</div></div>';
         card.addEventListener("click", function(){ card.classList.toggle("open"); });
