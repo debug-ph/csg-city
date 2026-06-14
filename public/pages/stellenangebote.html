@@ -213,7 +213,6 @@
             +(s.abteilung ? '<div class="stelle-abt">'+ICONS.building+' '+escH(s.abteilung)+'</div>' : '')
             +'<div>'+statusBadge+'</div>'
             +(s.beschreibung ? '<div class="stelle-desc-text">'+escH(s.beschreibung)+'</div>' : '')
-            +(s.offen ? '<a href="/werbung" class="bewerben-link" onclick="event.stopPropagation()">Jetzt bewerben '+ICONS.arrow_right+'</a>' : '')
           +'</div></div>';
         card.addEventListener("click", function(){
           card.classList.toggle("open");
