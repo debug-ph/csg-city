@@ -21,18 +21,27 @@
     .stellen-list{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
     @media(max-width:640px){.stellen-list{grid-template-columns:1fr;}}
 
-    .stelle-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:box-shadow .18s,transform .18s;display:flex;flex-direction:column;gap:.5rem;}
-    .stelle-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+    .stelle-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:box-shadow .18s,border-color .18s;display:flex;flex-direction:column;gap:.5rem;cursor:pointer;user-select:none;}
+    .stelle-card:hover{box-shadow:var(--shadow-md);border-color:var(--accent);}
+    .stelle-card.open{border-color:var(--accent);}
     .stelle-card.besetzt{opacity:.6;}
     .stelle-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;}
-    .stelle-title{font-size:.9375rem;font-weight:500;line-height:1.3;}
+    .stelle-title{font-size:1rem;font-weight:600;line-height:1.3;color:var(--text-1);}
+    .stelle-badges{display:flex;align-items:center;gap:.35rem;flex-shrink:0;}
     .stelle-abt{font-size:.775rem;color:var(--text-2);display:flex;align-items:center;gap:.3rem;}
-    .stelle-desc{font-size:.8rem;color:var(--text-3);line-height:1.5;flex:1;}
     .stelle-foot{display:flex;align-items:center;justify-content:space-between;padding-top:.5rem;border-top:1px solid var(--border);}
     .stelle-lohn-val{font-size:.9375rem;font-weight:500;color:var(--accent);}
     .stelle-lohn-lbl{font-size:.65rem;color:var(--text-3);}
-    .bewerben-link{display:flex;align-items:center;gap:.25rem;font-size:.775rem;color:var(--accent);text-decoration:none;}
+    .stelle-kontakt{font-size:.75rem;color:var(--text-2);display:flex;align-items:center;gap:.25rem;}
+    .stelle-chevron{display:flex;align-items:center;color:var(--text-3);transition:transform .25s ease;flex-shrink:0;}
+    .stelle-card.open .stelle-chevron{transform:rotate(180deg);}
+    .stelle-desc-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;}
+    .stelle-desc-wrap>div{overflow:hidden;}
+    .stelle-card.open .stelle-desc-wrap{grid-template-rows:1fr;}
+    .stelle-desc{font-size:.8rem;color:var(--text-3);line-height:1.6;padding-top:.625rem;border-top:1px solid var(--border);margin-top:.125rem;}
+    .bewerben-link{display:inline-flex;align-items:center;gap:.25rem;font-size:.775rem;color:var(--accent);text-decoration:none;margin-top:.5rem;}
     .bewerben-link:hover{text-decoration:underline;}
+    .badge-gold{background:rgba(234,179,8,.15);color:#a16207;border:1px solid rgba(234,179,8,.35);border-radius:100px;padding:.15rem .55rem;font-size:.65rem;font-weight:500;letter-spacing:.03em;}
     .empty{text-align:center;padding:3rem;color:var(--text-3);grid-column:1/-1;font-size:.875rem;}
 
     /* Inline-Werbung: gleiche Größe wie stelle-card, aber als Werbecard */
@@ -134,6 +143,7 @@
     burger.addEventListener("click",function(){mNavEl.classList.toggle("open");document.body.classList.toggle("menu-open");});
     mNavEl.addEventListener("click",function(e){if(e.target===mNavEl){mNavEl.classList.remove("open");document.body.classList.remove("menu-open");}});
 
+    function escH(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
     var allStellen=[], allInlineAds=[];
 
     // Build an inline ad card element
@@ -172,6 +182,8 @@
       list.innerHTML = "";
       if (!data.length) { list.innerHTML='<div class="empty">Keine Stellen in dieser Kategorie.</div>'; return; }
 
+      var chevronSvg = '<svg class="stelle-chevron" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 5.5 7.5 10.5 12.5 5.5"/></svg>';
+
       // Insert items, every AD_INTERVAL stelle add one inline ad
       var AD_INTERVAL = 2 + Math.floor(Math.random() * 2); // 2-3 random
       var adIndex = 0;
@@ -179,15 +191,31 @@
         // Stelle card
         var card = document.createElement("div");
         card.className = "stelle-card" + (s.offen ? "" : " besetzt");
-        var badge = s.offen
+        var statusBadge = s.offen
           ? '<span class="badge badge-green">'+ICONS.dot_green+' Offen</span>'
           : '<span class="badge badge-neutral">'+ICONS.dot_gray+' Besetzt</span>';
-        card.innerHTML = '<div class="stelle-head"><div class="stelle-title">'+s.titel+'</div>'+badge+'</div>'
-          +'<div class="stelle-abt">'+ICONS.building+' '+(s.abteilung||"")+'</div>'
-          +'<div class="stelle-desc">'+(s.beschreibung||"")+'</div>'
-          +'<div class="stelle-foot"><div><div class="stelle-lohn-val">'+Number(s.lohnProH||0).toFixed(2)+' €</div><div class="stelle-lohn-lbl">pro Stunde</div></div>'
-          +(s.offen?'<a href="/werbung" class="bewerben-link">Bewerben '+ICONS.arrow_right+'</a>':'')
-          +'</div>';
+        var gewinnBadge = s.gewinnanteil ? '<span class="badge-gold">Gewinnanteil</span>' : '';
+        var kontaktHtml = s.kontakt
+          ? '<div class="stelle-kontakt">'+ICONS.building+' '+escH(s.kontakt)+'</div>'
+          : '';
+        var bewerbenHtml = s.offen
+          ? '<a href="/werbung" class="bewerben-link" onclick="event.stopPropagation()">Jetzt bewerben '+ICONS.arrow_right+'</a>'
+          : '';
+        card.innerHTML =
+          '<div class="stelle-head">'
+            +'<div class="stelle-title">'+escH(s.titel)+'</div>'
+            +'<div class="stelle-badges">'+gewinnBadge+statusBadge+chevronSvg+'</div>'
+          +'</div>'
+          +'<div class="stelle-abt">'+ICONS.building+' '+escH(s.abteilung||"")+'</div>'
+          +'<div class="stelle-foot">'
+            +'<div><div class="stelle-lohn-val">'+Number(s.lohnProH||0).toFixed(2)+' €</div><div class="stelle-lohn-lbl">pro Stunde</div></div>'
+            +kontaktHtml
+          +'</div>'
+          +'<div class="stelle-desc-wrap"><div>'
+            +'<div class="stelle-desc">'+escH(s.beschreibung||"")+'</div>'
+            +bewerbenHtml
+          +'</div></div>';
+        card.addEventListener("click", function(){ card.classList.toggle("open"); });
         list.appendChild(card);
 
         // Every AD_INTERVAL items, insert an ad

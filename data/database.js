@@ -130,7 +130,9 @@ const DEFAULT_DATA = {
       "abteilung": "Staatsrat",
       "beschreibung": "Aktive Mitgestaltung der Stadtpolitik und Teilnahme an Sitzungen.",
       "lohnProH": 18.5,
-      "offen": true
+      "offen": true,
+      "kontakt": "",
+      "gewinnanteil": false
     },
     {
       "id": 2,
@@ -138,7 +140,9 @@ const DEFAULT_DATA = {
       "abteilung": "Justiz",
       "beschreibung": "Vertretung des Staates bei Gerichtsverfahren.",
       "lohnProH": 22,
-      "offen": true
+      "offen": true,
+      "kontakt": "",
+      "gewinnanteil": false
     },
     {
       "id": 3,
@@ -146,7 +150,9 @@ const DEFAULT_DATA = {
       "abteilung": "Finanzministerium",
       "beschreibung": "Überprüfung von Steuererklärungen aller Bürger.",
       "lohnProH": 16.5,
-      "offen": true
+      "offen": true,
+      "kontakt": "",
+      "gewinnanteil": false
     },
     {
       "id": 4,
@@ -154,7 +160,9 @@ const DEFAULT_DATA = {
       "abteilung": "Polizei",
       "beschreibung": "Aufrechterhaltung von Ordnung und Sicherheit.",
       "lohnProH": 15,
-      "offen": true
+      "offen": true,
+      "kontakt": "",
+      "gewinnanteil": false
     },
     {
       "id": 5,
@@ -162,7 +170,9 @@ const DEFAULT_DATA = {
       "abteilung": "Staatszeitung",
       "beschreibung": "Berichte für das offizielle Staatsblatt verfassen.",
       "lohnProH": 14,
-      "offen": false
+      "offen": false,
+      "kontakt": "",
+      "gewinnanteil": false
     },
     {
       "id": 6,
@@ -170,7 +180,9 @@ const DEFAULT_DATA = {
       "abteilung": "Justiz",
       "beschreibung": "Unabhängige Rechtsprechung im Staatsgericht.",
       "lohnProH": 24,
-      "offen": true
+      "offen": true,
+      "kontakt": "",
+      "gewinnanteil": false
     }
   ],
   "werbeflaechen": [
