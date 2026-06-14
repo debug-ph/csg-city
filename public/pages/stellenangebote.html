@@ -27,6 +27,7 @@
     .stelle-card.besetzt{opacity:.6;}
     .stelle-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;}
     .stelle-title{font-size:1rem;font-weight:600;line-height:1.3;color:var(--text-1);}
+    .stelle-schlagzeile{font-size:.8rem;font-style:italic;color:var(--text-2);margin-top:.15rem;line-height:1.35;}
     .stelle-badges{display:flex;align-items:center;gap:.35rem;flex-shrink:0;}
     .stelle-abt{font-size:.775rem;color:var(--text-2);display:flex;align-items:center;gap:.3rem;}
     .stelle-foot{display:flex;align-items:center;justify-content:space-between;padding-top:.5rem;border-top:1px solid var(--border);}
@@ -194,7 +195,12 @@
         var statusBadge = s.offen
           ? '<span class="badge badge-green">'+ICONS.dot_green+' Offen</span>'
           : '<span class="badge badge-neutral">'+ICONS.dot_gray+' Besetzt</span>';
-        var gewinnBadge = s.gewinnanteil ? '<span class="badge-gold">Gewinnanteil</span>' : '';
+        var gewinnBadge = s.gewinnanteil
+          ? '<span class="badge-gold">Gewinnanteil '+escH(s.gewinnanteil)+'</span>'
+          : '';
+        var schlagzeileHtml = s.schlagzeile
+          ? '<div class="stelle-schlagzeile">'+escH(s.schlagzeile)+'</div>'
+          : '';
         var kontaktHtml = s.kontakt
           ? '<div class="stelle-kontakt">'+ICONS.building+' '+escH(s.kontakt)+'</div>'
           : '';
@@ -203,7 +209,7 @@
           : '';
         card.innerHTML =
           '<div class="stelle-head">'
-            +'<div class="stelle-title">'+escH(s.titel)+'</div>'
+            +'<div><div class="stelle-title">'+escH(s.titel)+'</div>'+schlagzeileHtml+'</div>'
             +'<div class="stelle-badges">'+gewinnBadge+statusBadge+chevronSvg+'</div>'
           +'</div>'
           +'<div class="stelle-abt">'+ICONS.building+' '+escH(s.abteilung||"")+'</div>'

@@ -130,61 +130,67 @@ const DEFAULT_DATA = {
       "id": 1,
       "titel": "Stadtrat-Mitglied",
       "abteilung": "Staatsrat",
+      "schlagzeile": "",
       "beschreibung": "Aktive Mitgestaltung der Stadtpolitik und Teilnahme an Sitzungen.",
       "lohnProH": 18.5,
       "offen": true,
       "kontakt": "",
-      "gewinnanteil": false
+      "gewinnanteil": ""
     },
     {
       "id": 2,
       "titel": "Staatsanwalt/-anwältin",
       "abteilung": "Justiz",
+      "schlagzeile": "",
       "beschreibung": "Vertretung des Staates bei Gerichtsverfahren.",
       "lohnProH": 22,
       "offen": true,
       "kontakt": "",
-      "gewinnanteil": false
+      "gewinnanteil": ""
     },
     {
       "id": 3,
       "titel": "Steuerprüfer/-in",
       "abteilung": "Finanzministerium",
+      "schlagzeile": "",
       "beschreibung": "Überprüfung von Steuererklärungen aller Bürger.",
       "lohnProH": 16.5,
       "offen": true,
       "kontakt": "",
-      "gewinnanteil": false
+      "gewinnanteil": ""
     },
     {
       "id": 4,
       "titel": "Polizeibeamter/-in",
       "abteilung": "Polizei",
+      "schlagzeile": "",
       "beschreibung": "Aufrechterhaltung von Ordnung und Sicherheit.",
       "lohnProH": 15,
       "offen": true,
       "kontakt": "",
-      "gewinnanteil": false
+      "gewinnanteil": ""
     },
     {
       "id": 5,
       "titel": "Redakteur/-in",
       "abteilung": "Staatszeitung",
+      "schlagzeile": "",
       "beschreibung": "Berichte für das offizielle Staatsblatt verfassen.",
       "lohnProH": 14,
       "offen": false,
       "kontakt": "",
-      "gewinnanteil": false
+      "gewinnanteil": ""
     },
     {
       "id": 6,
       "titel": "Richter/-in",
       "abteilung": "Justiz",
+      "schlagzeile": "",
       "beschreibung": "Unabhängige Rechtsprechung im Staatsgericht.",
       "lohnProH": 24,
       "offen": true,
       "kontakt": "",
-      "gewinnanteil": false
+      "gewinnanteil": ""
     }
   ],
   "werbeflaechen": [
