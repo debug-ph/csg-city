@@ -2,15 +2,26 @@ const express  = require("express");
 const session  = require("express-session");
 const path     = require("path");
 const fs       = require("fs");
-const db       = require("./data/database");
 const OTPAuth  = require("otpauth");
 const QRCode   = require("qrcode");
 
+// data/-Ordner sicherstellen bevor require('./data/database') läuft
+fs.mkdirSync(path.join(__dirname, "data"), { recursive: true });
+
+// Falls Volume data/ überschrieben hat: database.js aus Root-Backup wiederherstellen
+if (process.env.DATA_PATH) {
+  fs.mkdirSync(process.env.DATA_PATH, { recursive: true });
+  const dbDst = path.join(__dirname, "data", "database.js");
+  const dbSrc = path.join(__dirname, "database.js");
+  if (!fs.existsSync(dbDst) && fs.existsSync(dbSrc)) {
+    fs.copyFileSync(dbSrc, dbDst);
+  }
+}
+
+const db = require("./data/database");
+
 const app  = express();
 const PORT = 3000;
-
-// DATA_PATH-Ordner erstellen falls gesetzt und nicht vorhanden
-if (process.env.DATA_PATH) fs.mkdirSync(process.env.DATA_PATH, { recursive: true });
 
 // Uploads-Ordner erstellen falls nicht vorhanden
 const uploadsDir = path.join(__dirname, "public", "uploads");
