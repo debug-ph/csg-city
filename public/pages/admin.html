@@ -222,7 +222,8 @@
         <div class="form-group"><label class="form-label">Schlagzeile</label><input class="form-input" id="mSSL" placeholder='z.B. Werde Teil des Staatsrats'/></div>
         <div class="form-group"><label class="form-label">Abteilung</label><input class="form-input" id="mSA"/></div>
         <div class="form-group"><label class="form-label">Beschreibung</label><textarea class="form-input" id="mSB" style="min-height:200px;resize:vertical"></textarea></div>
-        <div class="form-group"><label class="form-label">Lohn (€/h)</label><input class="form-input" type="number" id="mSL" step="0.50"/></div>
+        <div class="form-group"><label class="form-label">Lohn</label><input class="form-input" type="number" id="mSL" step="0.50"/></div>
+        <div class="form-group"><label class="form-label">Lohn-Typ</label><select class="form-input" id="mSLT"><option value="h">pro Stunde (€/h)</option><option value="tag">pro Tag (€/Tag)</option><option value="woche">pro Woche (€/Woche)</option></select></div>
         <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="mSO"><option value="true">Offen</option><option value="false">Besetzt</option></select></div>
         <div class="form-group"><label class="form-label">Kontakt (E-Mail / Ansprechpartner)</label><input class="form-input" id="mSK" placeholder="z.B. jobs@csg-city.de"/></div>
         <div class="form-group"><label class="form-label">Gewinnanteil</label><input class="form-input" id="mSGW" placeholder="z.B. 10% oder variabel — leer lassen wenn keiner"/></div>
@@ -509,12 +510,13 @@
       document.getElementById("mSTitle").textContent="Neue Stelle";
       ["mSId","mST","mSSL","mSA","mSB","mSL","mSK","mSGW"].forEach(function(i){document.getElementById(i).value="";});
       document.getElementById("mSO").value="true";
+      document.getElementById("mSLT").value="h";
       om("mS");
     });
-    function editS(id){ var s=allS.find(function(x){return x.id===id;}); if(!s)return; document.getElementById("mSTitle").textContent="Stelle bearbeiten"; document.getElementById("mSId").value=s.id; document.getElementById("mST").value=s.titel||""; document.getElementById("mSSL").value=s.schlagzeile||""; document.getElementById("mSA").value=s.abteilung||""; document.getElementById("mSB").value=s.beschreibung||""; document.getElementById("mSL").value=s.lohnProH||0; document.getElementById("mSO").value=s.offen?"true":"false"; document.getElementById("mSK").value=s.kontakt||""; document.getElementById("mSGW").value=s.gewinnanteil||""; om("mS"); }
+    function editS(id){ var s=allS.find(function(x){return x.id===id;}); if(!s)return; document.getElementById("mSTitle").textContent="Stelle bearbeiten"; document.getElementById("mSId").value=s.id; document.getElementById("mST").value=s.titel||""; document.getElementById("mSSL").value=s.schlagzeile||""; document.getElementById("mSA").value=s.abteilung||""; document.getElementById("mSB").value=s.beschreibung||""; document.getElementById("mSL").value=s.lohnProH||0; document.getElementById("mSLT").value=s.lohnTyp||"h"; document.getElementById("mSO").value=s.offen?"true":"false"; document.getElementById("mSK").value=s.kontakt||""; document.getElementById("mSGW").value=s.gewinnanteil||""; om("mS"); }
     document.getElementById("saveS").addEventListener("click",async function(){
       var id=document.getElementById("mSId").value;
-      var b={titel:document.getElementById("mST").value.trim(),schlagzeile:document.getElementById("mSSL").value.trim(),abteilung:document.getElementById("mSA").value.trim(),beschreibung:document.getElementById("mSB").value.trim(),lohnProH:parseFloat(document.getElementById("mSL").value)||0,offen:document.getElementById("mSO").value==="true",kontakt:document.getElementById("mSK").value.trim(),gewinnanteil:document.getElementById("mSGW").value.trim()};
+      var b={titel:document.getElementById("mST").value.trim(),schlagzeile:document.getElementById("mSSL").value.trim(),abteilung:document.getElementById("mSA").value.trim(),beschreibung:document.getElementById("mSB").value.trim(),lohnProH:parseFloat(document.getElementById("mSL").value)||0,lohnTyp:document.getElementById("mSLT").value||"h",offen:document.getElementById("mSO").value==="true",kontakt:document.getElementById("mSK").value.trim(),gewinnanteil:document.getElementById("mSGW").value.trim()};
       if(!b.titel){showToast("Titel fehlt!","error");return;}
       await apiSave("/api/stellenangebote",id,b); showToast(b.titel+(id?" aktualisiert.":" hinzugefügt.")); cm("mS"); loadS();
     });

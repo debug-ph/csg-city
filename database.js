@@ -133,6 +133,7 @@ const DEFAULT_DATA = {
       "schlagzeile": "",
       "beschreibung": "Aktive Mitgestaltung der Stadtpolitik und Teilnahme an Sitzungen.",
       "lohnProH": 18.5,
+      "lohnTyp": "h",
       "offen": true,
       "kontakt": "",
       "gewinnanteil": ""
@@ -144,6 +145,7 @@ const DEFAULT_DATA = {
       "schlagzeile": "",
       "beschreibung": "Vertretung des Staates bei Gerichtsverfahren.",
       "lohnProH": 22,
+      "lohnTyp": "h",
       "offen": true,
       "kontakt": "",
       "gewinnanteil": ""
@@ -155,6 +157,7 @@ const DEFAULT_DATA = {
       "schlagzeile": "",
       "beschreibung": "Überprüfung von Steuererklärungen aller Bürger.",
       "lohnProH": 16.5,
+      "lohnTyp": "h",
       "offen": true,
       "kontakt": "",
       "gewinnanteil": ""
@@ -166,6 +169,7 @@ const DEFAULT_DATA = {
       "schlagzeile": "",
       "beschreibung": "Aufrechterhaltung von Ordnung und Sicherheit.",
       "lohnProH": 15,
+      "lohnTyp": "h",
       "offen": true,
       "kontakt": "",
       "gewinnanteil": ""
@@ -177,6 +181,7 @@ const DEFAULT_DATA = {
       "schlagzeile": "",
       "beschreibung": "Berichte für das offizielle Staatsblatt verfassen.",
       "lohnProH": 14,
+      "lohnTyp": "h",
       "offen": false,
       "kontakt": "",
       "gewinnanteil": ""
@@ -188,6 +193,7 @@ const DEFAULT_DATA = {
       "schlagzeile": "",
       "beschreibung": "Unabhängige Rechtsprechung im Staatsgericht.",
       "lohnProH": 24,
+      "lohnTyp": "h",
       "offen": true,
       "kontakt": "",
       "gewinnanteil": ""

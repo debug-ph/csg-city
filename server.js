@@ -96,13 +96,13 @@ app.get("/api/dashboard", (_,res) => {
 // Stellenangebote
 app.get("/api/stellenangebote", (_,res) => res.json(db.all("stellenangebote")));
 app.post("/api/stellenangebote", adm, (req,res) => {
-  const { titel, abteilung, schlagzeile, beschreibung, lohnProH, offen, kontakt, gewinnanteil } = req.body;
+  const { titel, abteilung, schlagzeile, beschreibung, lohnProH, lohnTyp, offen, kontakt, gewinnanteil } = req.body;
   if (!titel) return res.status(400).json({ error: "Titel fehlt" });
-  res.json(db.insert("stellenangebote", { titel, abteilung: abteilung||"", schlagzeile: schlagzeile||"", beschreibung: beschreibung||"", lohnProH: parseFloat(lohnProH)||0, offen: offen !== false, kontakt: kontakt||"", gewinnanteil: gewinnanteil||"" }));
+  res.json(db.insert("stellenangebote", { titel, abteilung: abteilung||"", schlagzeile: schlagzeile||"", beschreibung: beschreibung||"", lohnProH: parseFloat(lohnProH)||0, lohnTyp: lohnTyp||"h", offen: offen !== false, kontakt: kontakt||"", gewinnanteil: gewinnanteil||"" }));
 });
 app.put("/api/stellenangebote/:id", adm, (req,res) => {
-  const { titel, abteilung, schlagzeile, beschreibung, lohnProH, offen, kontakt, gewinnanteil } = req.body;
-  db.update("stellenangebote", req.params.id, { titel, abteilung, schlagzeile: schlagzeile||"", beschreibung, lohnProH: parseFloat(lohnProH)||0, offen, kontakt: kontakt||"", gewinnanteil: gewinnanteil||"" });
+  const { titel, abteilung, schlagzeile, beschreibung, lohnProH, lohnTyp, offen, kontakt, gewinnanteil } = req.body;
+  db.update("stellenangebote", req.params.id, { titel, abteilung, schlagzeile: schlagzeile||"", beschreibung, lohnProH: parseFloat(lohnProH)||0, lohnTyp: lohnTyp||"h", offen, kontakt: kontakt||"", gewinnanteil: gewinnanteil||"" });
   res.json({ success: true });
 });
 app.delete("/api/stellenangebote/:id", adm, (req,res) => { db.delete("stellenangebote", req.params.id); res.json({ success: true }); });
