@@ -9,6 +9,9 @@ const QRCode   = require("qrcode");
 const app  = express();
 const PORT = 3000;
 
+// DATA_PATH-Ordner erstellen falls gesetzt und nicht vorhanden
+if (process.env.DATA_PATH) fs.mkdirSync(process.env.DATA_PATH, { recursive: true });
+
 // Uploads-Ordner erstellen falls nicht vorhanden
 const uploadsDir = path.join(__dirname, "public", "uploads");
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
