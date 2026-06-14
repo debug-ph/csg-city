@@ -5,12 +5,14 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start:prod": "pm2 start server.js --name csg-city --no-daemon",
     "dev": "npx nodemon server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "otpauth": "^9.5.1",
+    "pm2": "^5.4.3",
     "qrcode": "^1.5.4"
   }
 }

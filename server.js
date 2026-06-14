@@ -210,5 +210,11 @@ app.put("/api/faq", adm, (req,res) => {
   res.json({ success: true });
 });
 
-app.listen(PORT, () => console.log("Server läuft auf http://localhost:" + PORT));
+app.listen(PORT, () => {
+  console.log("Server läuft auf http://localhost:" + PORT);
+  // Auto-Save alle 30 Sekunden (wichtig für Railway ohne persistentes Volume)
+  setInterval(() => {
+    try { db.saveRaw(db.getRaw()); } catch(e) { console.error("Auto-Save Fehler:", e); }
+  }, 30000);
+});
 

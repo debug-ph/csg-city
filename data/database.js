@@ -1,6 +1,8 @@
 const fs   = require("fs");
 const path = require("path");
-const DB_FILE = path.join(__dirname, "db.json");
+const DB_FILE = process.env.DATA_PATH
+  ? path.join(process.env.DATA_PATH, "db.json")
+  : path.join(__dirname, "db.json");
 
 const DEFAULT_DATA = {
   "teilnehmer": [
