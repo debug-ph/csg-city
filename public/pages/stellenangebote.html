@@ -36,11 +36,13 @@
     .stelle-kontakt{font-size:.75rem;color:var(--text-2);display:flex;align-items:center;gap:.25rem;}
     .stelle-chevron{display:flex;align-items:center;color:var(--text-3);transition:transform .25s ease;flex-shrink:0;}
     .stelle-card.open .stelle-chevron{transform:rotate(180deg);}
-    .stelle-desc-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;}
-    .stelle-desc-wrap>div{overflow:hidden;}
-    .stelle-card.open .stelle-desc-wrap{grid-template-rows:1fr;}
-    .stelle-desc{font-size:.8rem;color:var(--text-3);line-height:1.6;padding-top:.625rem;border-top:1px solid var(--border);margin-top:.125rem;}
-    .bewerben-link{display:inline-flex;align-items:center;gap:.25rem;font-size:.775rem;color:var(--accent);text-decoration:none;margin-top:.5rem;}
+    .stelle-lohn{font-size:.9375rem;font-weight:500;color:var(--accent);}
+    .stelle-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.125rem;}
+    .stelle-bottom-row{display:flex;align-items:center;justify-content:space-between;margin-top:.375rem;}
+    .stelle-details{max-height:0;overflow:hidden;transition:max-height .28s ease;}
+    .stelle-details-inner{padding-top:.625rem;border-top:1px solid var(--border);margin-top:.375rem;display:flex;flex-direction:column;gap:.375rem;}
+    .stelle-desc-text{font-size:.8rem;color:var(--text-2);line-height:1.6;white-space:pre-wrap;}
+    .bewerben-link{display:inline-flex;align-items:center;gap:.25rem;font-size:.775rem;color:var(--accent);text-decoration:none;margin-top:.25rem;}
     .bewerben-link:hover{text-decoration:underline;}
     .badge-gold{background:rgba(234,179,8,.15);color:#a16207;border:1px solid rgba(234,179,8,.35);border-radius:100px;padding:.15rem .55rem;font-size:.65rem;font-weight:500;letter-spacing:.03em;}
     .empty{text-align:center;padding:3rem;color:var(--text-3);grid-column:1/-1;font-size:.875rem;}
@@ -189,45 +191,35 @@
       var AD_INTERVAL = 2 + Math.floor(Math.random() * 2); // 2-3 random
       var adIndex = 0;
       data.forEach(function(s, i) {
-        // Stelle card
         var card = document.createElement("div");
         card.className = "stelle-card" + (s.offen ? "" : " besetzt");
+        var lohnTypStr = {tag:"Tag",woche:"Woche"}[s.lohnTyp] || "h";
         var statusBadge = s.offen
           ? '<span class="badge badge-green">'+ICONS.dot_green+' Offen</span>'
           : '<span class="badge badge-neutral">'+ICONS.dot_gray+' Besetzt</span>';
-        var gewinnBadge = s.gewinnanteil
-          ? '<span class="badge-gold">Gewinnanteil '+escH(s.gewinnanteil)+'</span>'
-          : '';
-        var schlagzeileHtml = s.schlagzeile
-          ? '<div class="stelle-schlagzeile">'+escH(s.schlagzeile)+'</div>'
-          : '';
-        var kontaktHtml = s.kontakt
-          ? '<div class="stelle-kontakt">'+ICONS.building+' '+escH(s.kontakt)+'</div>'
-          : '';
-        var bewerbenHtml = s.offen
-          ? '<a href="/werbung" class="bewerben-link" onclick="event.stopPropagation()">Jetzt bewerben '+ICONS.arrow_right+'</a>'
-          : '';
         card.innerHTML =
-          '<div class="stelle-head">'
-            +'<div style="flex:1"><div class="stelle-title">'+escH(s.titel)+'</div>'+schlagzeileHtml+'</div>'
+          '<div class="stelle-title">'+escH(s.titel)+'</div>'
+          +(s.schlagzeile ? '<div class="stelle-schlagzeile">'+escH(s.schlagzeile)+'</div>' : '')
+          +'<div class="stelle-meta">'
+            +'<span class="stelle-lohn">'+Number(s.lohnProH||0).toFixed(2)+' &euro;/'+lohnTypStr+'</span>'
+            +(s.gewinnanteil ? '<span class="badge-gold">Gewinnanteil '+escH(s.gewinnanteil)+'</span>' : '')
+          +'</div>'
+          +(s.kontakt ? '<div class="stelle-kontakt">&#9993; '+escH(s.kontakt)+'</div>' : '')
+          +'<div class="stelle-bottom-row">'
+            +'<span style="font-size:.7rem;color:var(--text-3)">Details anzeigen</span>'
             +chevronSvg
           +'</div>'
-          +'<div class="stelle-foot">'
-            +'<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">'
-              +'<div><div class="stelle-lohn-val">'+Number(s.lohnProH||0).toFixed(2)+' €/'+({tag:"Tag",woche:"Woche"}[s.lohnTyp]||"h")+'</div></div>'
-              +gewinnBadge
-            +'</div>'
-            +kontaktHtml
-          +'</div>'
-          +'<div class="stelle-desc-wrap"><div>'
-            +'<div class="stelle-desc">'
-              +(s.abteilung ? '<div class="stelle-abt" style="margin-bottom:.5rem">'+ICONS.building+' '+escH(s.abteilung)+'</div>' : '')
-              +'<div style="margin-bottom:.375rem">'+statusBadge+'</div>'
-              +'<div style="white-space:pre-wrap">'+escH(s.beschreibung||"")+'</div>'
-            +'</div>'
-            +bewerbenHtml
+          +'<div class="stelle-details"><div class="stelle-details-inner">'
+            +(s.abteilung ? '<div class="stelle-abt">'+ICONS.building+' '+escH(s.abteilung)+'</div>' : '')
+            +'<div>'+statusBadge+'</div>'
+            +(s.beschreibung ? '<div class="stelle-desc-text">'+escH(s.beschreibung)+'</div>' : '')
+            +(s.offen ? '<a href="/werbung" class="bewerben-link" onclick="event.stopPropagation()">Jetzt bewerben '+ICONS.arrow_right+'</a>' : '')
           +'</div></div>';
-        card.addEventListener("click", function(){ card.classList.toggle("open"); });
+        card.addEventListener("click", function(){
+          card.classList.toggle("open");
+          var det = card.querySelector(".stelle-details");
+          det.style.maxHeight = card.classList.contains("open") ? det.scrollHeight + "px" : "0";
+        });
         list.appendChild(card);
 
         // Every AD_INTERVAL items, insert an ad
