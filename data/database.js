@@ -1,8 +1,6 @@
 const fs   = require("fs");
 const path = require("path");
-const DB_FILE = process.env.DATA_PATH
-  ? path.join(process.env.DATA_PATH, "db.json")
-  : path.join(__dirname, "db.json");
+const DB_FILE = path.join(__dirname, "db.json");
 
 const DEFAULT_DATA = {
   "teilnehmer": [
@@ -130,73 +128,49 @@ const DEFAULT_DATA = {
       "id": 1,
       "titel": "Stadtrat-Mitglied",
       "abteilung": "Staatsrat",
-      "schlagzeile": "",
       "beschreibung": "Aktive Mitgestaltung der Stadtpolitik und Teilnahme an Sitzungen.",
       "lohnProH": 18.5,
-      "lohnTyp": "h",
-      "offen": true,
-      "kontakt": "",
-      "gewinnanteil": ""
+      "offen": true
     },
     {
       "id": 2,
       "titel": "Staatsanwalt/-anwältin",
       "abteilung": "Justiz",
-      "schlagzeile": "",
       "beschreibung": "Vertretung des Staates bei Gerichtsverfahren.",
       "lohnProH": 22,
-      "lohnTyp": "h",
-      "offen": true,
-      "kontakt": "",
-      "gewinnanteil": ""
+      "offen": true
     },
     {
       "id": 3,
       "titel": "Steuerprüfer/-in",
       "abteilung": "Finanzministerium",
-      "schlagzeile": "",
       "beschreibung": "Überprüfung von Steuererklärungen aller Bürger.",
       "lohnProH": 16.5,
-      "lohnTyp": "h",
-      "offen": true,
-      "kontakt": "",
-      "gewinnanteil": ""
+      "offen": true
     },
     {
       "id": 4,
       "titel": "Polizeibeamter/-in",
       "abteilung": "Polizei",
-      "schlagzeile": "",
       "beschreibung": "Aufrechterhaltung von Ordnung und Sicherheit.",
       "lohnProH": 15,
-      "lohnTyp": "h",
-      "offen": true,
-      "kontakt": "",
-      "gewinnanteil": ""
+      "offen": true
     },
     {
       "id": 5,
       "titel": "Redakteur/-in",
       "abteilung": "Staatszeitung",
-      "schlagzeile": "",
       "beschreibung": "Berichte für das offizielle Staatsblatt verfassen.",
       "lohnProH": 14,
-      "lohnTyp": "h",
-      "offen": false,
-      "kontakt": "",
-      "gewinnanteil": ""
+      "offen": false
     },
     {
       "id": 6,
       "titel": "Richter/-in",
       "abteilung": "Justiz",
-      "schlagzeile": "",
       "beschreibung": "Unabhängige Rechtsprechung im Staatsgericht.",
       "lohnProH": 24,
-      "lohnTyp": "h",
-      "offen": true,
-      "kontakt": "",
-      "gewinnanteil": ""
+      "offen": true
     }
   ],
   "werbeflaechen": [
@@ -306,7 +280,360 @@ const DEFAULT_DATA = {
     "staatssiegel": "Gemeinsam stark – Gerechtigkeit für alle Bürger",
     "praembel": "Wir, die Bürgerinnen und Bürger von <strong>CSG-City</strong>, haben uns diese Verfassung gegeben.",
     "artikel": [],
-    "gesetze": []
+    "gesetze": [
+    {
+      "id": 1,
+      "titel": "Gesetzbuch zum Grenzschutz",
+      "aktenzeichen": "GrenzSG-001",
+      "status": "In Kraft",
+      "kategorie": "grenze",
+      "paragraphen": [
+        { "id": "g1p1", "nr": "§ 1", "titel": "Ausweispflicht", "absaetze": [
+          { "nr": "1.", "text": "Jeder Bürger muss seinen Personalausweis ausgestellt vom Pass-Registrierung und Außenministerium an der Grenze vorzeigen und erfolgreich einscannen lassen. Erst nach Zustimmung durch die Grenzpolizei darf der Bürger den Staat betreten. Bei Widersetzen kann der Bürger wegen Widersetzen gegen Grenzpolizisten angeklagt werden." },
+          { "nr": "2.", "text": "Wenn ein Bürger seinen Personalausweis nicht vorzeigen kann, so ist dieser verpflichtet seinen Vor- und Nachnamen zu nennen. Die Grenzpolizei ist verpflichtet, die im System gespeicherten Daten mit dem Bürger abzugleichen. Wenn die Daten im System nicht mit denen des Bürgers übereinstimmen, so wird der Bürger wegen Täuschen eines Grenzpolizisten angeklagt. Sofern die Daten übereinstimmen, wird die individuelle PIN abgefragt." },
+          { "nr": "3.", "text": "Im System ist eine Lichtbildaufnahme des Bürgers von dessen Gesicht gespeichert, sofern eine Einverständniserklärung der Erziehungsberechtigten des Bürgers vorliegt." }
+        ]},
+        { "id": "g1p2", "nr": "§ 2", "titel": "Registrieren von Besuchern", "absaetze": [
+          { "nr": "1.", "text": "Besucher sind Personen, die den Staat betreten wollen oder sich im Staat aufhalten und keine Bürger sind." },
+          { "nr": "2.", "text": "Den Besuchern wird eine Besucherkarte ausgehändigt. Es dürfen keine personenbezogenen Daten von Besuchern aufgenommen und gespeichert werden." },
+          { "nr": "3.", "text": "Der Besucher kann bei einem illegalen Grenzübertritt und Täuschen eines Vollstreckungsbeamten angeklagt werden." }
+        ]},
+        { "id": "g1p3", "nr": "§ 3", "titel": "Grenzübertritte", "absaetze": [
+          { "nr": "1.", "text": "Grenzübertritte dürfen nur an den offiziell gekennzeichneten und gültigen Grenzübergängen erfolgen. Andere Grenzübertritte werden als illegale Grenzübertritte geahndet." },
+          { "nr": "2.", "text": "Die sogenannte Fast Lane darf nur mit einer offiziellen Berechtigung benutzt werden. Personen ohne diese Berechtigung müssen die Standard Lane benutzen. Die Höchstanzahl der Personen, welche berechtigt sind, die Fast Lane zu nutzen, beträgt 85." },
+          { "nr": "3.", "text": "Beim eigentlichen Grenzübertritt sind §1 bzw. §2 dieses Gesetzbuches zu beachten." }
+        ]},
+        { "id": "g1p4", "nr": "§ 4", "titel": "Speichern der Daten", "absaetze": [
+          { "nr": "1.", "text": "Folgende Daten eines Bürgers sind in einem internen, cloudbasierten System gespeichert: Name, Geburtsmonat und Geburtsjahr, Klasse, Allergien (optional), Recht zur Benutzung der Fastlane, gerichtliche Beschlüsse/Vorstrafen, individuelle PIN, Lichtbildaufnahme von Gesicht, individuelle Nummer, Eintritts- und Austrittszeitpunkt." },
+          { "nr": "2.", "text": "Spätestens 3 Tage nach Ende der Projekttage werden alle Daten aus dem System gelöscht. Das Löschen kann auf 14 Tage herausgezögert werden, wenn behördliche Ermittlungen laufen, behördliche Prüfungen laufen oder ein richterlicher Beschluss vorliegt." },
+          { "nr": "3.", "text": "Daten werden in einem verschlüsselten, cloudbasierten System gespeichert und nicht an Dritte weitergegeben. Beamte unterliegen einer Schweigepflicht." }
+        ]},
+        { "id": "g1p5", "nr": "§ 5", "titel": "Aushändigen und Gestaltung des Personalausweises", "absaetze": [
+          { "nr": "1.", "text": "Die Personalausweise werden vom Pass-Registrierung und Außenministerium an das Schulpersonal und die Lehrer ausgehändigt. Den Klassenlehrern und Tutoren werden auch die Personalausweise ihrer Schüler übergeben." },
+          { "nr": "2.", "text": "Zum Decken der Kosten für die Personalausweise wird eine Aushändigungsgebühr erhoben." },
+          { "nr": "3.", "text": "Ist die Aushändigungsgebühr eines Bürgers am Anfang des zweiten Tages noch nicht eingegangen, so kann eine Steuer von umgerechnet 2 € berechnet werden." },
+          { "nr": "4.", "text": "Der Hintergrund der Personalausweise kann von den Bürgern gestaltet werden. Die Maße müssen mindestens 58mm x 90mm betragen." },
+          { "nr": "5.", "text": "Zusätzlich zu den Personalausweisen wird jedem Bürger eine individuelle PIN mitgeteilt. Diese hat sich der Bürger einzuprägen." }
+        ]},
+        { "id": "g1p6", "nr": "§ 6", "titel": "Verurteilen von Besuchern", "absaetze": [
+          { "nr": "1.", "text": "Besucher dürfen angeklagt werden." },
+          { "nr": "2.", "text": "Wenn ein Besucher bei der Verletzung der Hausordnung, Gesetze oder Verfassung ertappt wird, ist dieser vor Gericht anzuklagen. Es wird eine Personenbeschreibung angefertigt (geschätztes Alter, Geschlecht, Haarfarbe, Körpergröße, Augenfarbe, Statur, Hautfarbe, besondere Merkmale)." },
+          { "nr": "3.", "text": "Gerichte dürfen bei Besuchern nur den Ausschluss aus dem Staat und ein dauerhaftes Einreiseverbot als Höchststrafe verhängen." }
+        ]},
+        { "id": "g1p7", "nr": "§ 7", "titel": "Zoll", "absaetze": [
+          { "nr": "1.", "text": "Alle Zollbestimmungen sind im Gesetzbuch zu Finanzen aufzufinden." }
+        ]},
+        { "id": "g1p8", "nr": "§ 8", "titel": "Rechte und Besoldung der Grenzpolizei", "absaetze": [
+          { "nr": "1.", "text": "Die Grenzpolizei ist zuständig für die Sicherheit an den Grenzen und stellt die ordnungsgemäßen Abläufe der Grenzkontrollen sicher." },
+          { "nr": "2.", "text": "Es besteht eine Zusammenarbeit zwischen Polizei und Grenzpolizei, begrenzt auf den Austausch von internen Informationen und personenbezogenen Daten." },
+          { "nr": "3.", "text": "In Ausnahmezuständen dürfen Polizei und Grenzpolizei gegenseitig Verstärkung anfordern." },
+          { "nr": "6.", "text": "Es werden insgesamt 10 Bewerber als Grenzpolizisten ernannt. Zwei werden als Vorgesetzte ernannt. Bedingungen: Mindestens 7. Klasse, Verhaltensnote gut oder sehr gut." },
+          { "nr": "8.", "text": "Grenzpolizisten haben das Recht, um Erlaubnis für eine Taschenkontrolle zu fragen. Wird sie abgelehnt, ist die Kontrolle untersagt." },
+          { "nr": "9.", "text": "Die Grenzpolizei hat das Recht einen Bürger nach dem erfolgreichen Einscannen für maximal 5 Minuten an der Grenze aufzuhalten. Bei begründetem Tatverdacht darf der Bürger zur weiteren Befragung mitgenommen werden." },
+          { "nr": "10.", "text": "Die Grenzpolizei muss bei einem Besucher sofort entscheiden, ob dieser das Recht hat den Staat zu betreten. Ein Besucher darf an der Grenze nicht aufgehalten werden." }
+        ]},
+        { "id": "g1p9", "nr": "§ 9", "titel": "Betriebszeiten und Gültigkeit", "absaetze": [
+          { "nr": "1.", "text": "Dieses Gesetz gilt für alle Staatstage. Sonderregelungen gelten für den Aufbautag und den Abbautag." },
+          { "nr": "2.", "text": "Sonderregelungen für den Aufbau- und Abbautag: §1, §2, §3, §6, §8 Absatz 9 und §8 Absatz 10 treten außer Kraft." },
+          { "nr": "4.", "text": "Das Datum für den Aufbautag ist der 20.07.2026. Das Datum für den Abbautag wird durch eine Durchsage, durch den Klassenlehrer oder durch einen schriftlichen Informationszettel bekannt gegeben." },
+          { "nr": "6.", "text": "Das Gesetz tritt mit seiner Verabschiedung im City-Rat in Kraft." }
+        ]}
+      ]
+    },
+    {
+      "id": 2,
+      "titel": "Gesetzbuch Gesundheitsamt",
+      "aktenzeichen": "GesundSG-001",
+      "status": "In Kraft",
+      "kategorie": "hygiene",
+      "paragraphen": [
+        { "id": "g2p1", "nr": "§ 1", "titel": "Händehygiene", "absaetze": [
+          { "nr": "(1)", "text": "Alle Personen, die mit Lebensmitteln oder Getränken arbeiten, sind verpflichtet, sich vor Arbeitsbeginn sowie regelmäßig während der Tätigkeit gründlich die Hände zu waschen oder zu desinfizieren." },
+          { "nr": "(2)", "text": "Die Händehygiene ist insbesondere nach Toilettengängen, Pausen sowie nach dem Kontakt mit Geld durchzuführen." }
+        ]},
+        { "id": "g2p2", "nr": "§ 2", "titel": "Kleidung und Haare", "absaetze": [
+          { "nr": "(1)", "text": "Beim Verkauf von Lebensmitteln ist saubere und hygienische Kleidung zu tragen." },
+          { "nr": "(2)", "text": "Haare ab Schulterlänge müssen zusammengebunden oder durch eine geeignete Kopfbedeckung (z. B. Mütze oder Haarnetz) ausreichend abgedeckt sein." },
+          { "nr": "(3)", "text": "Unhygienische oder stark verschmutzte Kleidung ist unzulässig." }
+        ]},
+        { "id": "g2p3", "nr": "§ 3", "titel": "Abdeckung von Speisen", "absaetze": [
+          { "nr": "(1)", "text": "Lebensmittel und Getränke die über einen längeren Zeitraum gelagert werden, dürfen nicht ungeschützt offenstehen." },
+          { "nr": "(2)", "text": "Sie sind durch geeignete Maßnahmen, wie Abdeckungen, Folien oder geschlossene Behälter, vor Verunreinigungen zu schützen." }
+        ]},
+        { "id": "g2p4", "nr": "§ 4", "titel": "Sauberkeit des Arbeitsplatzes", "absaetze": [
+          { "nr": "(1)", "text": "Arbeitsplätze sind regelmäßig zu reinigen und hygienisch sauber zu halten." },
+          { "nr": "(2)", "text": "Am Ende des Arbeitstages sind die Arbeitsplätze ordentlich zu hinterlassen." },
+          { "nr": "(3)", "text": "Abfälle sind fachgerecht und hygienisch zu entsorgen." }
+        ]},
+        { "id": "g2p5", "nr": "§ 5", "titel": "Krankheit", "absaetze": [
+          { "nr": "(1)", "text": "Personen mit ansteckenden Krankheitssymptomen, insbesondere Fieber, starkem Husten oder Magen-Darm-Beschwerden, dürfen nicht am Lebensmittelverkauf teilnehmen." }
+        ]},
+        { "id": "g2p6", "nr": "§ 6", "titel": "Erste Hilfe und Zuständigkeit", "absaetze": [
+          { "nr": "(1)", "text": "Für Veranstaltungen stehen drei ausgebildete Erste-Hilfe-Personen zur Verfügung." },
+          { "nr": "(2)", "text": "Der Einsatz sowie die räumliche Verteilung der Erste-Hilfe-Personen richten sich nach der Größe und Art der jeweiligen Veranstaltung." },
+          { "nr": "(3)", "text": "Das Gesundheitsministerium ist für die Planung, Organisation und Einteilung der medizinischen Erstversorgung bei Veranstaltungen zuständig." },
+          { "nr": "(4)", "text": "Es legt insbesondere den Einsatz sowie die räumliche Verteilung der Erste-Hilfe-Personen fest und ist berechtigt, Veranstaltungsanmeldungen zu verlangen sowie eine geschätzte Teilnehmerzahl abzufragen." }
+        ]},
+        { "id": "g2p7", "nr": "§ 7", "titel": "Hygienekontrollen", "absaetze": [
+          { "nr": "(1)", "text": "Zur Überprüfung der Einhaltung dieser Verordnung werden mindestens drei Kontrollpersonen durch das Gesundheitsministerium bestimmt." },
+          { "nr": "(2)", "text": "Die Kontrollpersonen sind berechtigt, Unternehmen und Verkaufsstände zu kontrollieren." },
+          { "nr": "(3)", "text": "Festgestellte wesentliche Mängel sind von den Kontrollpersonen schriftlich zu dokumentieren." },
+          { "nr": "(4)", "text": "Kleine oder vorübergehende Reinigungsaktionen müssen nicht dokumentiert werden." },
+          { "nr": "(5)", "text": "Die Kontrollen umfassen insbesondere: die Einhaltung der Händehygiene, saubere Kleidung sowie ordnungsgemäß gebundene oder abgedeckte Haare, den Schutz und die Abdeckung der Lebensmittel, die Sauberkeit des Arbeitsplatzes, den Ausschluss erkrankter Personen vom Lebensmittelverkauf, die Organisation der Ersten Hilfe." }
+        ]},
+        { "id": "g2p8", "nr": "§ 8", "titel": "Kühlung und Lagerung", "absaetze": [
+          { "nr": "(1)", "text": "Lebensmittel, die gekühlt gelagert werden müssen, sind durch geeignete Kühlgeräte oder Kühlboxen aufzubewahren." },
+          { "nr": "(2)", "text": "Die Kühlkette darf während der Verkaufszeit nicht unnötig unterbrochen werden." },
+          { "nr": "(3)", "text": "Verdorbene oder offensichtlich nicht mehr genießbare Lebensmittel dürfen nicht verkauft werden." }
+        ]},
+        { "id": "g2p9", "nr": "§ 9", "titel": "Eigenverantwortung der Unternehmen", "absaetze": [
+          { "nr": "(1)", "text": "Unternehmen sind selbst dafür verantwortlich, die notwendigen Hygienemittel bereitzustellen." },
+          { "nr": "(2)", "text": "Dazu gehören insbesondere: Reinigungsmittel, Müllbehälter, Desinfektionsmittel." }
+        ]},
+        { "id": "g2p10", "nr": "§ 10", "titel": "Interne Richtlinien für Kontrollpersonen", "absaetze": [
+          { "nr": "(1)", "text": "Die Kontrollpersonen handeln nach internen Richtlinien des Gesundheitsministeriums." },
+          { "nr": "(2)", "text": "Diese Richtlinien regeln insbesondere: den Ablauf der Kontrollen, die Bewertung von Hygienemängeln, die Dokumentation von Auffälligkeiten." }
+        ]},
+        { "id": "g2p11", "nr": "§ 11", "titel": "Hygieneverantwortliche Person", "absaetze": [
+          { "nr": "(1)", "text": "Jeder Verkaufsstand benennt eine explizite Ansprechperson für die Kontrollpersonen." },
+          { "nr": "(2)", "text": "Diese Person ist eindeutig erreichbar und zuständig für Fragen oder Hinweise während der Kontrolle." }
+        ]},
+        { "id": "g2p12", "nr": "§ 12", "titel": "Nutzung gefährlicher Gegenstände & Kontrolldokumentation", "absaetze": [
+          { "nr": "(1)", "text": "Die Kontrollpersonen prüfen die korrekte Nutzung gefährlicher Gegenstände (z. B. scharfe Messer, Grillgeräte, Fritteusen) gemäß dem Gesetzbuch des Arbeitsministeriums." },
+          { "nr": "(2)", "text": "Jeder Verkaufsstand/Unternehmen muss mindestens einmal während der Veranstaltung kontrolliert werden." },
+          { "nr": "(3)", "text": "Gravierende Mängel oder Verstöße sind schriftlich zu dokumentieren und zusätzlich durch Fotos nachzuweisen." }
+        ]}
+      ]
+    },
+    {
+      "id": 3,
+      "titel": "Gesetz über die innere Sicherheit und Ordnung",
+      "aktenzeichen": "SchulSiG-003",
+      "status": "In Kraft",
+      "kategorie": "sicherheit",
+      "paragraphen": [
+        { "id": "g3p1", "nr": "§ 1", "titel": "Zweck des Gesetzes", "absaetze": [
+          { "nr": "(1)", "text": "Dieses Gesetz dient der Gewährleistung der öffentlichen Sicherheit und Ordnung im Schulstaat." },
+          { "nr": "(2)", "text": "Es regelt Zuständigkeiten, Aufgaben und Befugnisse der Sicherheitsbehörden sowie deren Zusammenwirken." }
+        ]},
+        { "id": "g3p2", "nr": "§ 2", "titel": "Grundsätze der Sicherheitsverwaltung", "absaetze": [
+          { "nr": "(1)", "text": "Die Aufgaben der inneren Sicherheit werden durch die zuständigen staatlichen Behörden im Rahmen der verfassungsmäßigen Ordnung wahrgenommen." },
+          { "nr": "(2)", "text": "Die Gesamtverantwortung für die Sicherheitsverwaltung obliegt dem für innere Angelegenheiten zuständigen Ministerium." }
+        ]},
+        { "id": "g3p3", "nr": "§ 3", "titel": "Innenministerium", "absaetze": [
+          { "nr": "(1)", "text": "Das Innenministerium ist oberste staatliche Behörde für die innere Sicherheit." },
+          { "nr": "(2)", "text": "Es bestimmt die Richtlinien der Sicherheits- und Ordnungspolitik." },
+          { "nr": "(3)", "text": "Es führt die Fach- und Dienstaufsicht über die Polizeibehörden." },
+          { "nr": "(4)", "text": "Es kann Verwaltungsvorschriften, Dienstanweisungen und organisatorische Vorgaben erlassen." },
+          { "nr": "(5)", "text": "Es kann Organisation, Zuständigkeiten und Strukturen der Polizei festlegen oder ändern." },
+          { "nr": "(6)", "text": "In besonderen Lagen kann es unmittelbar steuernd in polizeiliche Maßnahmen eingreifen." },
+          { "nr": "(7)", "text": "Es ist zuständig für die Bewertung und Auswertung polizeilicher Maßnahmen im Rahmen interner Prüfverfahren." }
+        ]},
+        { "id": "g3p4", "nr": "§ 4", "titel": "Aufsicht und Kontrolle", "absaetze": [
+          { "nr": "(1)", "text": "Die Polizei unterliegt der Fach- und Dienstaufsicht des Innenministeriums." },
+          { "nr": "(2)", "text": "Das Innenministerium sowie der City-Rat können jederzeit auf Anfrage Berichte anfordern sowie Vorgänge einsehen." },
+          { "nr": "(3)", "text": "Prüfungen und Kontrollen können jederzeit, auch unangekündigt, erfolgen." },
+          { "nr": "(4)", "text": "Die Ergebnisse sind Grundlage für dienstliche und organisatorische Entscheidungen." }
+        ]},
+        { "id": "g3p5", "nr": "§ 5", "titel": "Stellung der Polizei", "absaetze": [
+          { "nr": "(1)", "text": "Die Polizei ist die Vollzugsbehörde der inneren Sicherheit." },
+          { "nr": "(2)", "text": "Sie handelt im Rahmen der Gesetze sowie der Vorgaben des Innenministeriums." },
+          { "nr": "(3)", "text": "Sie berichtet regelmäßig und auf Anforderung an das Innenministerium." }
+        ]},
+        { "id": "g3p6", "nr": "§ 6", "titel": "Organisation der Polizei", "absaetze": [
+          { "nr": "(1)", "text": "Aufbau, Gliederung und Führungsstruktur werden durch das Innenministerium bestimmt." },
+          { "nr": "(2)", "text": "Ernennung, Versetzung und Abberufung von Leitungspersonal erfolgen durch das Innenministerium oder nach dessen Vorgaben." },
+          { "nr": "(3)", "text": "Die Besoldung richtet sich nach einer festgelegten Besoldungstabelle." },
+          { "nr": "(4)", "text": "Durch bestimmte Leistungen oder Aufgaben können Boni durch das Innenministerium verteilt werden." }
+        ]},
+        { "id": "g3p7", "nr": "§ 7", "titel": "Aufgaben der Polizei", "absaetze": [
+          { "nr": "(1)", "text": "Abwehr von Gefahren für die öffentliche Sicherheit und Ordnung." },
+          { "nr": "(2)", "text": "Durchsetzung der geltenden Rechtsvorschriften." },
+          { "nr": "(3)", "text": "Verhinderung und Verfolgung von Regelverstößen." },
+          { "nr": "(4)", "text": "Schutz von Personen, Einrichtungen und Sachwerten." },
+          { "nr": "(5)", "text": "Wahrnehmung weiterer Vollzugsaufgaben nach Maßgabe der Gesetze." }
+        ]},
+        { "id": "g3p8", "nr": "§ 8", "titel": "Allgemeine Befugnisse", "absaetze": [
+          { "nr": "(1)", "text": "Die Polizei kann die erforderlichen und verhältnismäßigen Maßnahmen zur Gefahrenabwehr und zur Durchsetzung der geltenden Regeln treffen." },
+          { "nr": "(2)", "text": "Hierzu gehören insbesondere Identitätsfeststellungen, Platzverweise, Durchsuchungen, und Sicherstellungen." },
+          { "nr": "(3)", "text": "Durchsuchungen benötigen einen Durchsuchungsbeschluss, ausgestellt von einem Richter oder dem Innenministerium. Falls dieser nicht vorliegt, dürfen Gegenstände (Taschen, etc.) beschlagnahmt werden, bis dieser genehmigt beziehungsweise nicht genehmigt wird. Gebäude/Räume dürfen abgesperrt werden, bis dieser genehmigt beziehungsweise nicht genehmigt wird." },
+          { "nr": "(4)", "text": "Körperlicher Zwang ist nur zulässig, wenn eine unmittelbare Gefahr für andere Personen oder den Ablauf des Schulbetriebs besteht und mildere Mittel nicht ausreichen." }
+        ]},
+        { "id": "g3p8a", "nr": "§ 8a", "titel": "Zwangsmittel", "absaetze": [
+          { "nr": "(1)", "text": "Die Polizei darf einfache Zwangsmittel anwenden, wenn dies zur Gefahrenabwehr erforderlich ist." },
+          { "nr": "(2)", "text": "Handschellen dürfen verwendet werden, wenn eine Person sich aggressiv verhält oder andere gefährdet und mildere Mittel nicht ausreichen." },
+          { "nr": "(3)", "text": "Die Anwendung ist zeitlich zu begrenzen und sofort zu beenden, sobald die Voraussetzungen entfallen." },
+          { "nr": "(4)", "text": "Die Maßnahme ist zu dokumentieren." }
+        ]},
+        { "id": "g3p9", "nr": "§ 9", "titel": "Präventive Maßnahmen", "absaetze": [
+          { "nr": "(1)", "text": "Maßnahmen können bereits bei tatsächlichen Anhaltspunkten einer drohenden Gefahr getroffen werden." },
+          { "nr": "(2)", "text": "Diese sind zu dokumentieren und regelmäßig zu überprüfen." },
+          { "nr": "(3)", "text": "Das Innenministerium kann hierzu verbindliche Vorgaben erlassen." }
+        ]},
+        { "id": "g3p10", "nr": "§ 10", "titel": "Identitätsfeststellung", "absaetze": [
+          { "nr": "(1)", "text": "Die Polizei kann die Identität von Personen feststellen, wenn dies zur Gefahrenabwehr oder Strafverfolgung erforderlich ist." },
+          { "nr": "(2)", "text": "Dies gilt insbesondere in Situationen mit erhöhtem Gefahrenpotenzial." },
+          { "nr": "(3)", "text": "Maßnahmen sind auf das erforderliche Maß zu beschränken." }
+        ]},
+        { "id": "g3p11", "nr": "§ 11", "titel": "Freiheitsentziehende Maßnahmen", "absaetze": [
+          { "nr": "(1)", "text": "Personen können vorübergehend in einem dafür vorgesehenen Raum untergebracht werden, wenn dies zur Gefahrenabwehr oder zur Sicherung eines Verfahrens erforderlich ist." },
+          { "nr": "(2)", "text": "Eine Unterbringung gegen den Willen der Person ist nur zulässig, wenn eine unmittelbare Gefahr für andere besteht oder ein schwerer Regelverstoß vorliegt." },
+          { "nr": "(3)", "text": "Die Maßnahme ist auf die kürzest mögliche Zeit zu beschränken." },
+          { "nr": "(4)", "text": "Die betroffene Person ist über den Grund der Maßnahme zu informieren." },
+          { "nr": "(5)", "text": "Die Maßnahme ist zu dokumentieren und dem zuständigen Gericht vorzulegen." }
+        ]},
+        { "id": "g3p11a", "nr": "§ 11a", "titel": "Rechte der betroffenen Person", "absaetze": [
+          { "nr": "(1)", "text": "Jede betroffene Person hat das Recht auf eine faire Behandlung." },
+          { "nr": "(2)", "text": "Sie darf nicht erniedrigt oder unverhältnismäßig behandelt werden." },
+          { "nr": "(3)", "text": "Sie kann sich beim zuständigen Gericht über Maßnahmen beschweren." }
+        ]},
+        { "id": "g3p12", "nr": "§ 12", "titel": "Technische Mittel und Datenverarbeitung", "absaetze": [
+          { "nr": "(1)", "text": "Die Polizei darf technische Systeme zur Unterstützung ihrer Aufgaben einsetzen." },
+          { "nr": "(2)", "text": "Hierzu gehören insbesondere Videoüberwachung, digitale Auswertungssysteme und Datenanalyseverfahren." },
+          { "nr": "(3)", "text": "Die Verarbeitung personenbezogener Daten ist nur zulässig, wenn sie erforderlich und verhältnismäßig ist und die Rechte der Bürgerinnen und Bürger gewahrt bleiben." },
+          { "nr": "(4)", "text": "Der Zugriff auf Kommunikations- und Verkehrsdaten erfolgt nur nach gesetzlichen Vorgaben." },
+          { "nr": "(5)", "text": "Näheres regelt das Innenministerium." }
+        ]},
+        { "id": "g3p13", "nr": "§ 13", "titel": "Zusammenarbeit der Sicherheitsbehörden", "absaetze": [
+          { "nr": "(1)", "text": "Die Polizei arbeitet mit anderen Sicherheitsorganen eng zusammen." },
+          { "nr": "(2)", "text": "Zuständigkeiten können zur effektiven Aufgabenerfüllung koordiniert werden." },
+          { "nr": "(3)", "text": "Das Innenministerium regelt die Zusammenarbeit verbindlich." }
+        ]},
+        { "id": "g3p14", "nr": "§ 14", "titel": "Zusammenarbeit mit der Grenzpolizei", "absaetze": [
+          { "nr": "(1)", "text": "Die Polizei arbeitet eng mit der Grenzpolizei zusammen." },
+          { "nr": "(2)", "text": "Sie kann im gesamten Staatsgebiet einschließlich Grenzbereichen Maßnahmen der Gefahrenabwehr durchführen." },
+          { "nr": "(3)", "text": "Sie kann Aufgaben der Grenzpolizei übernehmen, soweit dies erforderlich ist." },
+          { "nr": "(4)", "text": "Die Grenzpolizei stellt erforderliche Informationen und Unterstützung bereit." },
+          { "nr": "(5)", "text": "Näheres regelt das Innenministerium." }
+        ]},
+        { "id": "g3p15", "nr": "§ 15", "titel": "Besondere Gefahrenlagen", "absaetze": [
+          { "nr": "(1)", "text": "Bei erheblichen Gefahren für die öffentliche Sicherheit können besondere Maßnahmen ergriffen werden." },
+          { "nr": "(2)", "text": "Eine besondere Gefahrenlage liegt insbesondere vor, wenn die Funktionsfähigkeit der Sicherheitsstruktur beeinträchtigt sein könnte." },
+          { "nr": "(3)", "text": "Die Feststellung erfolgt durch die zuständigen Stellen der Sicherheitsverwaltung." },
+          { "nr": "(4)", "text": "Auch in besonderen Gefahrenlagen sind Maßnahmen nur zulässig, wenn sie erforderlich und verhältnismäßig sind." },
+          { "nr": "(5)", "text": "Die Grundrechte der Bürger sind zu achten." }
+        ]},
+        { "id": "g3p16", "nr": "§ 16", "titel": "Erweiterte Maßnahmen", "absaetze": [
+          { "nr": "(1)", "text": "Während besonderer Gefahrenlagen können polizeiliche Maßnahmen in erweitertem Umfang erfolgen." },
+          { "nr": "(2)", "text": "Zuständigkeiten und Abläufe können vorübergehend angepasst werden." },
+          { "nr": "(3)", "text": "Maßnahmen sind auf das erforderliche Maß zu beschränken." }
+        ]},
+        { "id": "g3p17", "nr": "§ 17", "titel": "Außergewöhnliche Lagen", "absaetze": [
+          { "nr": "(1)", "text": "In außergewöhnlichen Lagen können Verfahren beschleunigt und Zuständigkeiten gebündelt werden." },
+          { "nr": "(2)", "text": "Maßnahmen sind regelmäßig zu überprüfen und zu beenden, sobald die Lage es zulässt." }
+        ]},
+        { "id": "g3p18", "nr": "§ 18", "titel": "Verwaltungsvorschriften", "absaetze": [
+          { "nr": "(1)", "text": "Das Innenministerium erlässt die zur Durchführung dieses Gesetzes erforderlichen Verwaltungsvorschriften." },
+          { "nr": "(2)", "text": "Diese regeln insbesondere Verfahren, Zuständigkeiten und Einsatzstandards." }
+        ]},
+        { "id": "g3p19", "nr": "§ 19", "titel": "Änderungen des Gesetzes", "absaetze": [
+          { "nr": "(1)", "text": "Änderungen werden durch den City-Rat beschlossen und treten mit Verkündung in Kraft." },
+          { "nr": "(2)", "text": "Frühere Regelungen treten außer Kraft, soweit sie widersprechen." }
+        ]},
+        { "id": "g3p20", "nr": "§ 20", "titel": "Inkrafttreten", "absaetze": [
+          { "nr": "(1)", "text": "Dieses Gesetz tritt mit Verkündung in Kraft." }
+        ]}
+      ]
+    },
+    {
+      "id": 4,
+      "titel": "Gesetzbuch zur Kultur",
+      "aktenzeichen": "KulturSG-001",
+      "status": "In Kraft",
+      "kategorie": "kultur",
+      "paragraphen": [
+        { "id": "g4p1", "nr": "§ 1", "titel": "Allgemeine Bestimmungen", "absaetze": [
+          { "nr": "(1)", "text": "Zur Förderung der kulturellen Mitgestaltung werden schulweite Wettbewerbe zur Gestaltung staatlicher Symbole und Dokumente durchgeführt." },
+          { "nr": "(2)", "text": "Alle Schüler der Schule sind berechtigt, Entwürfe für die jeweiligen Wettbewerbe einzureichen — wichtig ist dabei, dass diese nicht gegen die Verfassung verstoßen." },
+          { "nr": "(3)", "text": "Jeder Wettbewerb wird offen, transparent und demokratisch durchgeführt." },
+          { "nr": "(4)", "text": "Die Entscheidung über die Gewinner erfolgt durch eine Volksabstimmung aller Schüler." },
+          { "nr": "(5)", "text": "Das für Kultur zuständige Ministerium legt den Zeitpunkt der Durchführung der einzelnen Wettbewerbe eigenständig fest. Mit dem Inkrafttreten dieses Gesetzes erfolgt keine automatische Durchführung oder Abstimmung der Wettbewerbe." }
+        ]},
+        { "id": "g4p2", "nr": "§ 2", "titel": "Wettbewerb zum Personalausweisdesign", "absaetze": [
+          { "nr": "(1)", "text": "Gegenstand dieses Wettbewerbs ist die Gestaltung des staatlichen Passes." },
+          { "nr": "(2)", "text": "Vorgaben zur genauen Größe, zum Format und zu technischen Einzelheiten des Passes belaufen sich auf 1:1,55. Wichtig hierbei ist ausschließlich das Seitenverhältnis, die Größe kann auch erweitert werden." },
+          { "nr": "(3)", "text": "Alle eingereichten Passdesigns werden gesammelt und der Schule vorgestellt." },
+          { "nr": "(4)", "text": "Die Abstimmung über das endgültige Passdesign erfolgt per Volksabstimmung über die einzelnen Klassen." },
+          { "nr": "(5)", "text": "Das Design mit den meisten Stimmen wird als offizielles Passdesign übernommen." }
+        ]},
+        { "id": "g4p3", "nr": "§ 3", "titel": "Wettbewerb zum Staatswappen", "absaetze": [
+          { "nr": "(1)", "text": "Gegenstand dieses Wettbewerbs ist die Gestaltung des Staatswappens." },
+          { "nr": "(2)", "text": "Alle Schüler sind zur Einreichung eines Wappenentwurfs berechtigt." },
+          { "nr": "(3)", "text": "Die eingereichten Staatswappen werden gesammelt und der Schulgemeinschaft vorgestellt." },
+          { "nr": "(4)", "text": "Die Entscheidung erfolgt durch eine Volksabstimmung über die einzelnen Klassen." },
+          { "nr": "(5)", "text": "Das Wappen mit den meisten Stimmen wird zum offiziellen Staatswappen erklärt." }
+        ]},
+        { "id": "g4p4", "nr": "§ 4", "titel": "Wettbewerb zur Nationalhymne", "absaetze": [
+          { "nr": "(1)", "text": "Gegenstand dieses Wettbewerbs ist die Auswahl oder Gestaltung der Nationalhymne." },
+          { "nr": "(2)", "text": "Es können Texte, Melodien oder Kombinationen davon eingereicht werden." },
+          { "nr": "(3)", "text": "Alle Vorschläge werden vorgestellt." },
+          { "nr": "(4)", "text": "Die Entscheidung erfolgt per Volksabstimmung über die einzelnen Klassen." },
+          { "nr": "(5)", "text": "Der Vorschlag mit den meisten Stimmen wird zur offiziellen Nationalhymne erklärt." }
+        ]},
+        { "id": "g4p5", "nr": "§ 5", "titel": "Preisvergabe", "absaetze": [
+          { "nr": "(1)", "text": "Der Einreicher des jeweils gewinnenden Entwurfs erhält einen Preis als Anerkennung." },
+          { "nr": "(2)", "text": "Art und Umfang des Preises sind zum Zeitpunkt dieses Gesetzbuches noch nicht festgelegt und werden zu einem späteren Zeitpunkt bestimmt." },
+          { "nr": "(3)", "text": "Die Preisvergabe erfolgt nach offizieller Bekanntgabe des Abstimmungsergebnisses." }
+        ]},
+        { "id": "g4p6", "nr": "§ 6", "titel": "Schlussbestimmungen", "absaetze": [
+          { "nr": "(1)", "text": "Alle durch Volksabstimmung beschlossenen Designs treten nach Verkündung in Kraft." },
+          { "nr": "(2)", "text": "Offene Punkte, insbesondere zu Größen, Stückelungen und technischen Details, können durch ergänzende Regelungen festgelegt werden." }
+        ]}
+      ]
+    },
+    {
+      "id": 5,
+      "titel": "Finanzgesetzbuch",
+      "aktenzeichen": "FinanzSG-001",
+      "status": "In Kraft",
+      "kategorie": "finanzen",
+      "paragraphen": [
+        { "id": "g5p1", "nr": "§ 1", "titel": "Allgemeines und gleiches Steuersystem", "absaetze": [
+          { "nr": "(1)", "text": "Im Staatsgebiet wird ein allgemeines und gleiches Steuersystem für alle natürlichen Personen sowie Unternehmen eingeführt." },
+          { "nr": "(2)", "text": "Jede natürliche Person ist verpflichtet, täglich zehn Prozent ihres Einkommens oder Lohnes an den Staat abzuführen." }
+        ]},
+        { "id": "g5p2", "nr": "§ 2", "titel": "Förderung von Start-up-Unternehmen", "absaetze": [
+          { "nr": "(1)", "text": "Der Staat stellt finanzielle Förderungen und Zuschüsse für Start-up-Unternehmen bereit." },
+          { "nr": "(2)", "text": "Die Vergabe der Fördermittel erfolgt in Zusammenarbeit zwischen dem Finanzministerium und dem Wirtschaftsministerium." },
+          { "nr": "(3)", "text": "Unternehmen, die sich vollständig oder teilweise im Besitz von Politikern befinden, sind von der staatlichen Förderung ausgeschlossen." }
+        ]},
+        { "id": "g5p3", "nr": "§ 3", "titel": "Abschaffung von Einkommens- und Gewinnobergrenzen", "absaetze": [
+          { "nr": "(1)", "text": "Sämtliche Obergrenzen für Unternehmensgewinne werden aufgehoben." },
+          { "nr": "(2)", "text": "Ebenso werden alle Obergrenzen für Einkommen und Löhne natürlicher Personen abgeschafft." }
+        ]},
+        { "id": "g5p4", "nr": "§ 4", "titel": "Unabhängige Wirtschaftsprüfung", "absaetze": [
+          { "nr": "(1)", "text": "Zur Kontrolle wirtschaftlicher Tätigkeiten werden unabhängige Wirtschaftsprüfer ernannt." },
+          { "nr": "(2)", "text": "Diese Wirtschaftsprüfer sind befugt, die Gewinne von Unternehmen zu überprüfen und deren Legalität festzustellen." },
+          { "nr": "(3)", "text": "Die beauftragten Beamten sind berechtigt, täglich mehrere Unternehmen zu prüfen." }
+        ]},
+        { "id": "g5p5", "nr": "§ 5", "titel": "Grundsteuersystem", "absaetze": [
+          { "nr": "(1)", "text": "Es wird ein Grundsteuersystem mit sechs unterschiedlichen Grundsteuersätzen eingeführt." },
+          { "nr": "(2)", "text": "Die Höhe der Grundsteuer richtet sich nach der Lage des Grundstücks, insbesondere nach dem Stockwerk, sowie nach der Größe des Grundstücks." },
+          { "nr": "(3)", "text": "Die Grundsteuer beträgt je nach Einstufung zwischen zehn und sechzig Einheiten der inländischen Währung." }
+        ]},
+        { "id": "g5p6", "nr": "§ 6", "titel": "Finanzprotokolle von Unternehmen", "absaetze": [
+          { "nr": "(1)", "text": "Unternehmen sind verpflichtet, eigene Finanzprotokolle zu führen." },
+          { "nr": "(2)", "text": "Die Finanzprotokolle müssen sämtliche Einnahmen, Ausgaben und Gewinne vollständig und wahrheitsgemäß dokumentieren." }
+        ]},
+        { "id": "g5p7", "nr": "§ 7", "titel": "Energiesteuer für Unternehmen", "absaetze": [
+          { "nr": "(1)", "text": "Für Unternehmen, die Energie benötigen, wird ein einheitlicher Energiesteuersatz eingeführt." },
+          { "nr": "(2)", "text": "Der Energiesteuersatz beträgt zehn Einheiten der Staatswährung pro Tag." }
+        ]},
+        { "id": "g5p8", "nr": "§ 8", "titel": "Zoll auf Lebensmittel und Getränke", "absaetze": [
+          { "nr": "(1)", "text": "Auf Lebensmittel und Getränke für den Privatkonsum wird ein Zoll in Höhe von 50 Cent erhoben." },
+          { "nr": "(2)", "text": "Von dieser Regelung ausgenommen sind Wasser, Sprudel sowie mitgebrachte eigene Flaschen." },
+          { "nr": "(3)", "text": "Lebensmittel und Getränke, die für den Unternehmensgebrauch bestimmt sind, sind vom Zoll befreit." },
+          { "nr": "(4)", "text": "Für Personen mit nachgewiesenen Allergien entfällt der Zoll gemäß Absatz 1." }
+        ]},
+        { "id": "g5p9", "nr": "§ 9", "titel": "Währungsumtausch und Wechselkurs", "absaetze": [
+          { "nr": "(1)", "text": "Am ersten Tag besteht eine einmalige Pflicht zum Umtausch von zehn Euro in die inländische Währung." },
+          { "nr": "(2)", "text": "Fünfzig Prozent des umgetauschten Betrags werden in inländischer Währung zurückerstattet." },
+          { "nr": "(3)", "text": "Für jeden Umtausch von inländischer Währung in Euro wird eine Gebühr in Höhe von zehn Prozent erhoben." },
+          { "nr": "(4)", "text": "Der Wechselkurs zwischen Euro und inländischer Währung beträgt eins zu zehn." }
+        ]}
+      ]
+    }
+  ]
   },
   "faq": [
     {
@@ -439,7 +766,7 @@ const DEFAULT_DATA = {
     "stellenangebote": 7,
     "werbeflaechen": 9,
     "anfragen": 1,
-    "gesetze": 3
+    "gesetze": 6
   },
   "gesetze": [
     {
