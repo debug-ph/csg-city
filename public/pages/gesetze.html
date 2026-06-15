@@ -175,7 +175,7 @@
       h+='</div></div>';
       if(!paras.length){h+='<div class="law-empty" style="padding:2rem">Noch keine Paragraphen</div>';}
       else paras.forEach(function(p){
-        h+='<div class="law-para"><div class="law-para-head"><span class="law-para-num">§'+escH(String(p.nummer||""))+'</span><span class="law-para-title">'+hl(p.titel||"",term)+'</span><span class="law-para-abs-count">'+(p.absaetze||[]).length+' Abs.</span><span class="law-chevron">'+ICONS.arrow_right+'</span></div><div class="law-para-body">';
+        h+='<div class="law-para"><div class="law-para-head"><span class="law-para-num">'+escH(String(p.nummer||""))+'</span><span class="law-para-title">'+hl(p.titel||"",term)+'</span><span class="law-para-abs-count">'+(p.absaetze||[]).length+' Abs.</span><span class="law-chevron">'+ICONS.arrow_right+'</span></div><div class="law-para-body">';
         (p.absaetze||[]).forEach(function(a,i){
           var aText = typeof a === "string" ? a : (a.text || "");
           h+='<div class="law-abs"><span class="law-abs-num">('+String(i+1)+')</span><div>'+hl(aText,term);

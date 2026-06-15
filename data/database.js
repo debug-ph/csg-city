@@ -996,6 +996,76 @@ const DEFAULT_DATA = {
           ]
         }
       ]
+    },
+    {
+      "id": 3,
+      "name": "Gesetz über die innere Sicherheit",
+      "kurzname": "SchulSiG-003",
+      "ministerium": "Innenministerium",
+      "icon": "lock",
+      "version": "003",
+      "_nextPid": 21,
+      "paragraphen": [
+        { "id": 1,  "nummer": "§1",  "titel": "Zweck des Gesetzes", "absaetze": ["(1) Dieses Gesetz dient der Gewährleistung der öffentlichen Sicherheit und Ordnung im Schulstaat.", "(2) Es regelt Zuständigkeiten, Aufgaben und Befugnisse der Sicherheitsbehörden sowie deren Zusammenwirken."] },
+        { "id": 2,  "nummer": "§2",  "titel": "Grundsätze der Sicherheitsverwaltung", "absaetze": ["(1) Die Aufgaben der inneren Sicherheit werden durch die zuständigen staatlichen Behörden im Rahmen der verfassungsmäßigen Ordnung wahrgenommen.", "(2) Die Gesamtverantwortung für die Sicherheitsverwaltung obliegt dem für innere Angelegenheiten zuständigen Ministerium."] },
+        { "id": 3,  "nummer": "§3",  "titel": "Innenministerium", "absaetze": ["(1) Das Innenministerium ist oberste staatliche Behörde für die innere Sicherheit.", "(2) Es bestimmt die Richtlinien der Sicherheits- und Ordnungspolitik.", "(3) Es führt die Fach- und Dienstaufsicht über die Polizeibehörden.", "(4) Es kann Verwaltungsvorschriften, Dienstanweisungen und organisatorische Vorgaben erlassen.", "(5) Es kann Organisation, Zuständigkeiten und Strukturen der Polizei festlegen oder ändern.", "(6) In besonderen Lagen kann es unmittelbar steuernd in polizeiliche Maßnahmen eingreifen.", "(7) Es ist zuständig für die Bewertung und Auswertung polizeilicher Maßnahmen im Rahmen interner Prüfverfahren."] },
+        { "id": 4,  "nummer": "§4",  "titel": "Aufsicht und Kontrolle", "absaetze": ["(1) Die Polizei unterliegt der Fach- und Dienstaufsicht des Innenministeriums.", "(2) Das Innenministerium sowie der City-Rat können jederzeit auf Anfrage Berichte anfordern sowie Vorgänge einsehen.", "(3) Prüfungen und Kontrollen können jederzeit, auch unangekündigt, erfolgen.", "(4) Die Ergebnisse sind Grundlage für dienstliche und organisatorische Entscheidungen."] },
+        { "id": 5,  "nummer": "§5",  "titel": "Stellung der Polizei", "absaetze": ["(1) Die Polizei ist die Vollzugsbehörde der inneren Sicherheit.", "(2) Sie handelt im Rahmen der Gesetze sowie der Vorgaben des Innenministeriums.", "(3) Sie berichtet regelmäßig und auf Anforderung an das Innenministerium."] },
+        { "id": 6,  "nummer": "§6",  "titel": "Organisation der Polizei", "absaetze": ["(1) Aufbau, Gliederung und Führungsstruktur werden durch das Innenministerium bestimmt.", "(2) Ernennung, Versetzung und Abberufung von Leitungspersonal erfolgen durch das Innenministerium oder nach dessen Vorgaben.", "(3) Die Besoldung richtet sich nach einer festgelegten Besoldungstabelle.", "(4) Durch bestimmte Leistungen oder Aufgaben können Boni durch das Innenministerium verteilt werden."] },
+        { "id": 7,  "nummer": "§7",  "titel": "Aufgaben der Polizei", "absaetze": ["(1) Abwehr von Gefahren für die öffentliche Sicherheit und Ordnung.", "(2) Durchsetzung der geltenden Rechtsvorschriften.", "(3) Verhinderung und Verfolgung von Regelverstößen.", "(4) Schutz von Personen, Einrichtungen und Sachwerten.", "(5) Wahrnehmung weiterer Vollzugsaufgaben nach Maßgabe der Gesetze."] },
+        { "id": 8,  "nummer": "§8",  "titel": "Allgemeine Befugnisse", "absaetze": ["(1) Die Polizei kann die erforderlichen und verhältnismäßigen Maßnahmen zur Gefahrenabwehr und zur Durchsetzung der geltenden Regeln treffen.", "(2) Hierzu gehören insbesondere Identitätsfeststellungen, Platzverweise, Durchsuchungen und Sicherstellungen.", "(3) Durchsuchungen benötigen einen Durchsuchungsbeschluss, ausgestellt von einem Richter oder dem Innenministerium. Falls dieser nicht vorliegt, dürfen Gegenstände beschlagnahmt und Räume abgesperrt werden, bis der Beschluss genehmigt oder abgelehnt wird.", "(4) Körperlicher Zwang ist nur zulässig, wenn eine unmittelbare Gefahr für andere Personen besteht und mildere Mittel nicht ausreichen."] },
+        { "id": 9,  "nummer": "§8a", "titel": "Zwangsmittel", "absaetze": ["(1) Die Polizei darf einfache Zwangsmittel anwenden, wenn dies zur Gefahrenabwehr erforderlich ist.", "(2) Handschellen dürfen verwendet werden, wenn eine Person sich aggressiv verhält oder andere gefährdet und mildere Mittel nicht ausreichen.", "(3) Die Anwendung ist zeitlich zu begrenzen und sofort zu beenden, sobald die Voraussetzungen entfallen.", "(4) Die Maßnahme ist zu dokumentieren."] },
+        { "id": 10, "nummer": "§9",  "titel": "Präventive Maßnahmen", "absaetze": ["(1) Maßnahmen können bereits bei tatsächlichen Anhaltspunkten einer drohenden Gefahr getroffen werden.", "(2) Diese sind zu dokumentieren und regelmäßig zu überprüfen.", "(3) Das Innenministerium kann hierzu verbindliche Vorgaben erlassen."] },
+        { "id": 11, "nummer": "§10", "titel": "Identitätsfeststellung", "absaetze": ["(1) Die Polizei kann die Identität von Personen feststellen, wenn dies zur Gefahrenabwehr oder Strafverfolgung erforderlich ist.", "(2) Dies gilt insbesondere in Situationen mit erhöhtem Gefahrenpotenzial.", "(3) Maßnahmen sind auf das erforderliche Maß zu beschränken."] },
+        { "id": 12, "nummer": "§11", "titel": "Freiheitsentziehende Maßnahmen", "absaetze": ["(1) Personen können vorübergehend in einem dafür vorgesehenen Raum untergebracht werden, wenn dies zur Gefahrenabwehr oder zur Sicherung eines Verfahrens erforderlich ist.", "(2) Eine Unterbringung gegen den Willen der Person ist nur zulässig, wenn eine unmittelbare Gefahr für andere besteht oder ein schwerer Regelverstoß vorliegt.", "(3) Die Maßnahme ist auf die kürzest mögliche Zeit zu beschränken.", "(4) Die betroffene Person ist über den Grund der Maßnahme zu informieren.", "(5) Die Maßnahme ist zu dokumentieren und dem zuständigen Gericht vorzulegen."] },
+        { "id": 13, "nummer": "§11a","titel": "Rechte der betroffenen Person", "absaetze": ["(1) Jede betroffene Person hat das Recht auf eine faire Behandlung.", "(2) Sie darf nicht erniedrigt oder unverhältnismäßig behandelt werden.", "(3) Sie kann sich beim zuständigen Gericht über Maßnahmen beschweren."] },
+        { "id": 14, "nummer": "§12", "titel": "Technische Mittel und Datenverarbeitung", "absaetze": ["(1) Die Polizei darf technische Systeme zur Unterstützung ihrer Aufgaben einsetzen.", "(2) Hierzu gehören insbesondere Videoüberwachung, digitale Auswertungssysteme und Datenanalyseverfahren.", "(3) Die Verarbeitung personenbezogener Daten ist nur zulässig, wenn sie erforderlich und verhältnismäßig ist und die Rechte der Bürgerinnen und Bürger gewahrt bleiben.", "(4) Der Zugriff auf Kommunikations- und Verkehrsdaten erfolgt nur nach gesetzlichen Vorgaben.", "(5) Näheres regelt das Innenministerium."] },
+        { "id": 15, "nummer": "§13", "titel": "Zusammenarbeit der Sicherheitsbehörden", "absaetze": ["(1) Die Polizei arbeitet mit anderen Sicherheitsorganen eng zusammen.", "(2) Zuständigkeiten können zur effektiven Aufgabenerfüllung koordiniert werden.", "(3) Das Innenministerium regelt die Zusammenarbeit verbindlich."] },
+        { "id": 16, "nummer": "§14", "titel": "Zusammenarbeit mit der Grenzpolizei", "absaetze": ["(1) Die Polizei arbeitet eng mit der Grenzpolizei zusammen.", "(2) Sie kann im gesamten Staatsgebiet einschließlich Grenzbereichen Maßnahmen der Gefahrenabwehr durchführen.", "(3) Sie kann Aufgaben der Grenzpolizei übernehmen, soweit dies erforderlich ist.", "(4) Die Grenzpolizei stellt erforderliche Informationen und Unterstützung bereit.", "(5) Näheres regelt das Innenministerium."] },
+        { "id": 17, "nummer": "§15", "titel": "Besondere Gefahrenlagen", "absaetze": ["(1) Bei erheblichen Gefahren für die öffentliche Sicherheit können besondere Maßnahmen ergriffen werden.", "(2) Eine besondere Gefahrenlage liegt insbesondere vor, wenn die Funktionsfähigkeit der Sicherheitsstruktur beeinträchtigt sein könnte.", "(3) Die Feststellung erfolgt durch die zuständigen Stellen der Sicherheitsverwaltung.", "(4) Auch in besonderen Gefahrenlagen sind Maßnahmen nur zulässig, wenn sie erforderlich und verhältnismäßig sind.", "(5) Die Grundrechte der Bürger sind zu achten."] },
+        { "id": 18, "nummer": "§16", "titel": "Erweiterte Maßnahmen", "absaetze": ["(1) Während besonderer Gefahrenlagen können polizeiliche Maßnahmen in erweitertem Umfang erfolgen.", "(2) Zuständigkeiten und Abläufe können vorübergehend angepasst werden.", "(3) Maßnahmen sind auf das erforderliche Maß zu beschränken."] },
+        { "id": 19, "nummer": "§17", "titel": "Außergewöhnliche Lagen", "absaetze": ["(1) In außergewöhnlichen Lagen können Verfahren beschleunigt und Zuständigkeiten gebündelt werden.", "(2) Maßnahmen sind regelmäßig zu überprüfen und zu beenden, sobald die Lage es zulässt."] },
+        { "id": 20, "nummer": "§18", "titel": "Verwaltungsvorschriften", "absaetze": ["(1) Das Innenministerium erlässt die zur Durchführung dieses Gesetzes erforderlichen Verwaltungsvorschriften.", "(2) Diese regeln insbesondere Verfahren, Zuständigkeiten und Einsatzstandards."] },
+        { "id": 21, "nummer": "§19", "titel": "Änderungen des Gesetzes", "absaetze": ["(1) Änderungen werden durch den City-Rat beschlossen und treten mit Verkündung in Kraft.", "(2) Frühere Regelungen treten außer Kraft, soweit sie widersprechen."] },
+        { "id": 22, "nummer": "§20", "titel": "Inkrafttreten", "absaetze": ["(1) Dieses Gesetz tritt mit Verkündung in Kraft."] }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Gesetzbuch zur Kultur",
+      "kurzname": "KulturG",
+      "ministerium": "Kulturministerium",
+      "icon": "star",
+      "version": "1.0",
+      "_nextPid": 7,
+      "paragraphen": [
+        { "id": 1, "nummer": "§1", "titel": "Allgemeine Bestimmungen", "absaetze": ["(1) Zur Förderung der kulturellen Mitgestaltung werden schulweite Wettbewerbe zur Gestaltung staatlicher Symbole und Dokumente durchgeführt.", "(2) Alle Schüler der Schule sind berechtigt, Entwürfe einzureichen — wichtig ist dabei, dass diese nicht gegen die Verfassung verstoßen.", "(3) Jeder Wettbewerb wird offen, transparent und demokratisch durchgeführt.", "(4) Die Entscheidung über die Gewinner erfolgt durch eine Volksabstimmung aller Schüler.", "(5) Das für Kultur zuständige Ministerium legt den Zeitpunkt der Durchführung eigenständig fest. Mit dem Inkrafttreten dieses Gesetzes erfolgt keine automatische Durchführung der Wettbewerbe."] },
+        { "id": 2, "nummer": "§2", "titel": "Wettbewerb zum Personalausweisdesign", "absaetze": ["(1) Gegenstand dieses Wettbewerbs ist die Gestaltung des staatlichen Passes.", "(2) Das Seitenverhältnis des Passes muss 1:1,55 betragen. Die Größe kann erweitert werden, nur das Verhältnis ist maßgeblich.", "(3) Alle eingereichten Passdesigns werden gesammelt und der Schule vorgestellt.", "(4) Die Abstimmung über das endgültige Passdesign erfolgt per Volksabstimmung über die einzelnen Klassen.", "(5) Das Design mit den meisten Stimmen wird als offizielles Passdesign übernommen."] },
+        { "id": 3, "nummer": "§3", "titel": "Wettbewerb zum Staatswappen", "absaetze": ["(1) Gegenstand dieses Wettbewerbs ist die Gestaltung des Staatswappens.", "(2) Alle Schüler sind zur Einreichung eines Wappenentwurfs berechtigt.", "(3) Die eingereichten Staatswappen werden gesammelt und der Schulgemeinschaft vorgestellt.", "(4) Die Entscheidung erfolgt durch eine Volksabstimmung über die einzelnen Klassen.", "(5) Das Wappen mit den meisten Stimmen wird zum offiziellen Staatswappen erklärt."] },
+        { "id": 4, "nummer": "§4", "titel": "Wettbewerb zur Nationalhymne", "absaetze": ["(1) Gegenstand dieses Wettbewerbs ist die Auswahl oder Gestaltung der Nationalhymne.", "(2) Es können Texte, Melodien oder Kombinationen davon eingereicht werden.", "(3) Alle Vorschläge werden vorgestellt.", "(4) Die Entscheidung erfolgt per Volksabstimmung über die einzelnen Klassen.", "(5) Der Vorschlag mit den meisten Stimmen wird zur offiziellen Nationalhymne erklärt."] },
+        { "id": 5, "nummer": "§5", "titel": "Preisvergabe", "absaetze": ["(1) Der Einreicher des jeweils gewinnenden Entwurfs erhält einen Preis als Anerkennung.", "(2) Art und Umfang des Preises werden zu einem späteren Zeitpunkt festgelegt.", "(3) Die Preisvergabe erfolgt nach offizieller Bekanntgabe des Abstimmungsergebnisses."] },
+        { "id": 6, "nummer": "§6", "titel": "Schlussbestimmungen", "absaetze": ["(1) Alle durch Volksabstimmung beschlossenen Designs treten nach Verkündung in Kraft.", "(2) Offene Punkte, insbesondere zu Größen und technischen Details, können durch ergänzende Regelungen festgelegt werden."] }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Finanzgesetzbuch",
+      "kurzname": "FinanzG",
+      "ministerium": "Finanzministerium",
+      "icon": "coin",
+      "version": "1.0",
+      "_nextPid": 10,
+      "paragraphen": [
+        { "id": 1, "nummer": "§1", "titel": "Allgemeines und gleiches Steuersystem", "absaetze": ["(1) Im Staatsgebiet wird ein allgemeines und gleiches Steuersystem für alle natürlichen Personen sowie Unternehmen eingeführt.", "(2) Jede natürliche Person ist verpflichtet, täglich zehn Prozent ihres Einkommens oder Lohnes an den Staat abzuführen."] },
+        { "id": 2, "nummer": "§2", "titel": "Förderung von Start-up-Unternehmen", "absaetze": ["(1) Der Staat stellt finanzielle Förderungen und Zuschüsse für Start-up-Unternehmen bereit.", "(2) Die Vergabe der Fördermittel erfolgt in Zusammenarbeit zwischen dem Finanzministerium und dem Wirtschaftsministerium.", "(3) Unternehmen, die sich vollständig oder teilweise im Besitz von Politikern befinden, sind von der staatlichen Förderung ausgeschlossen."] },
+        { "id": 3, "nummer": "§3", "titel": "Abschaffung von Einkommens- und Gewinnobergrenzen", "absaetze": ["(1) Sämtliche Obergrenzen für Unternehmensgewinne werden aufgehoben.", "(2) Ebenso werden alle Obergrenzen für Einkommen und Löhne natürlicher Personen abgeschafft."] },
+        { "id": 4, "nummer": "§4", "titel": "Unabhängige Wirtschaftsprüfung", "absaetze": ["(1) Zur Kontrolle wirtschaftlicher Tätigkeiten werden unabhängige Wirtschaftsprüfer ernannt.", "(2) Diese Wirtschaftsprüfer sind befugt, die Gewinne von Unternehmen zu überprüfen und deren Legalität festzustellen.", "(3) Die beauftragten Beamten sind berechtigt, täglich mehrere Unternehmen zu prüfen."] },
+        { "id": 5, "nummer": "§5", "titel": "Grundsteuersystem", "absaetze": ["(1) Es wird ein Grundsteuersystem mit sechs unterschiedlichen Grundsteuersätzen eingeführt.", "(2) Die Höhe der Grundsteuer richtet sich nach der Lage des Grundstücks, insbesondere nach dem Stockwerk, sowie nach der Größe des Grundstücks.", "(3) Die Grundsteuer beträgt je nach Einstufung zwischen zehn und sechzig Einheiten der inländischen Währung."] },
+        { "id": 6, "nummer": "§6", "titel": "Finanzprotokolle von Unternehmen", "absaetze": ["(1) Unternehmen sind verpflichtet, eigene Finanzprotokolle zu führen.", "(2) Die Finanzprotokolle müssen sämtliche Einnahmen, Ausgaben und Gewinne vollständig und wahrheitsgemäß dokumentieren."] },
+        { "id": 7, "nummer": "§7", "titel": "Energiesteuer für Unternehmen", "absaetze": ["(1) Für Unternehmen, die Energie benötigen, wird ein einheitlicher Energiesteuersatz eingeführt.", "(2) Der Energiesteuersatz beträgt zehn Einheiten der Staatswährung pro Tag."] },
+        { "id": 8, "nummer": "§8", "titel": "Zoll auf Lebensmittel und Getränke", "absaetze": ["(1) Auf Lebensmittel und Getränke für den Privatkonsum wird ein Zoll in Höhe von 50 Cent erhoben.", "(2) Von dieser Regelung ausgenommen sind Wasser, Sprudel sowie mitgebrachte eigene Flaschen.", "(3) Lebensmittel und Getränke, die für den Unternehmensgebrauch bestimmt sind, sind vom Zoll befreit.", "(4) Für Personen mit nachgewiesenen Allergien entfällt der Zoll gemäß Absatz 1."] },
+        { "id": 9, "nummer": "§9", "titel": "Währungsumtausch und Wechselkurs", "absaetze": ["(1) Am ersten Tag besteht eine einmalige Pflicht zum Umtausch von zehn Euro in die inländische Währung.", "(2) Fünfzig Prozent des umgetauschten Betrags werden in inländischer Währung zurückerstattet.", "(3) Für jeden Umtausch von inländischer Währung in Euro wird eine Gebühr in Höhe von zehn Prozent erhoben.", "(4) Der Wechselkurs zwischen Euro und inländischer Währung beträgt eins zu zehn."] }
+      ]
     }
   ]
 };
@@ -1003,8 +1073,18 @@ const DEFAULT_DATA = {
 function load() {
   if (!fs.existsSync(DB_FILE)) { fs.writeFileSync(DB_FILE, JSON.stringify(DEFAULT_DATA, null, 2)); return JSON.parse(JSON.stringify(DEFAULT_DATA)); }
   const d = JSON.parse(fs.readFileSync(DB_FILE, "utf-8"));
+  let changed = false;
   // Migrate: add werbeflaechen if missing
-  if (!d.werbeflaechen) { d.werbeflaechen = DEFAULT_DATA.werbeflaechen; d._nextId.werbeflaechen = 4; save(d); }
+  if (!d.werbeflaechen) { d.werbeflaechen = DEFAULT_DATA.werbeflaechen; d._nextId.werbeflaechen = 4; changed = true; }
+  // Migrate: add missing Gesetzbücher (ids 3–5: SchulSiG, Kultur, Finanzen)
+  if (!d.gesetze) { d.gesetze = []; changed = true; }
+  [3, 4, 5].forEach(function(bid) {
+    if (!d.gesetze.find(function(g){ return g.id === bid; })) {
+      var book = DEFAULT_DATA.gesetze.find(function(b){ return b.id === bid; });
+      if (book) { d.gesetze.push(book); changed = true; }
+    }
+  });
+  if (changed) save(d);
   return d;
 }
 function save(data) { fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2)); }
