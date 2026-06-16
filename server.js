@@ -23,6 +23,9 @@ const db = require("./data/database");
 const app  = express();
 const PORT = 3000;
 
+const DB_FILE   = path.join(__dirname, "data", "db.json");
+const BACKUP_DIR = process.env.DATA_PATH || path.join(__dirname, "data");
+
 // Uploads-Ordner erstellen falls nicht vorhanden
 const uploadsDir = path.join(__dirname, "public", "uploads");
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
@@ -224,11 +227,54 @@ app.put("/api/faq", adm, (req,res) => {
   res.json({ success: true });
 });
 
+// Backup & Restore
+app.get("/api/admin/backup", adm, (req, res) => {
+  const date = new Date().toISOString().split("T")[0];
+  res.setHeader("Content-Disposition", `attachment; filename="csg-city-backup-${date}.json"`);
+  res.setHeader("Content-Type", "application/json");
+  res.sendFile(DB_FILE);
+});
+
+app.get("/api/admin/backup/status", adm, (req, res) => {
+  try {
+    const files = fs.readdirSync(BACKUP_DIR)
+      .filter(f => f.startsWith("backup-") && f.endsWith(".json"))
+      .sort().reverse();
+    res.json({ lastBackup: files[0] || null, count: files.length });
+  } catch(e) { res.json({ lastBackup: null, count: 0 }); }
+});
+
+app.post("/api/admin/restore", adm, (req, res) => {
+  try {
+    const data = req.body;
+    if (!data || typeof data !== "object" || Array.isArray(data))
+      return res.status(400).json({ error: "Ungültige JSON-Datei" });
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf8");
+    res.json({ success: true });
+    setTimeout(() => process.exit(0), 500);
+  } catch(e) { res.status(500).json({ error: "Fehler: " + e.message }); }
+});
+
+function autoBackup() {
+  try {
+    if (!fs.existsSync(DB_FILE)) return;
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-").substring(0, 19);
+    fs.copyFileSync(DB_FILE, path.join(BACKUP_DIR, `backup-${stamp}.json`));
+    const files = fs.readdirSync(BACKUP_DIR)
+      .filter(f => f.startsWith("backup-") && f.endsWith(".json")).sort();
+    if (files.length > 5)
+      files.slice(0, files.length - 5).forEach(f => {
+        try { fs.unlinkSync(path.join(BACKUP_DIR, f)); } catch(e) {}
+      });
+    console.log("Auto-Backup gespeichert:", stamp);
+  } catch(e) { console.error("Auto-Backup Fehler:", e); }
+}
+
 app.listen(PORT, () => {
   console.log("Server läuft auf http://localhost:" + PORT);
-  // Auto-Save alle 30 Sekunden (wichtig für Railway ohne persistentes Volume)
   setInterval(() => {
     try { db.saveRaw(db.getRaw()); } catch(e) { console.error("Auto-Save Fehler:", e); }
   }, 30000);
+  setInterval(autoBackup, 6 * 60 * 60 * 1000);
 });
 

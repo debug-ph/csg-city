@@ -89,6 +89,10 @@
         <div class="sidebar-link" data-sec="faq" id="sl-faq"></div>
       </div>
       <div class="sidebar-section">
+        <div class="sidebar-label">System</div>
+        <div class="sidebar-link" data-sec="backup" id="sl-backup"></div>
+      </div>
+      <div class="sidebar-section">
         <div class="sidebar-label">Links</div>
         <a href="/" class="sidebar-link" id="sl-portal"></a>
         <a href="/faq" class="sidebar-link" id="sl-verf"></a>
@@ -179,6 +183,38 @@
           <button class="btn btn-primary" id="btnAddFaqKat"></button>
         </div>
         <div id="faqAdminList"><div class="empty-state">Laden…</div></div>
+      </div>
+
+      <!-- BACKUP -->
+      <div class="admin-section" id="sec-backup">
+        <div class="page-header">
+          <h2 id="h-backup"></h2>
+          <p>Datenbank sichern und wiederherstellen</p>
+        </div>
+        <div class="grid-2" style="gap:1rem">
+          <div class="card">
+            <div class="card-body">
+              <div style="font-weight:500;margin-bottom:.375rem">Backup herunterladen</div>
+              <div style="font-size:.8rem;color:var(--text-2);margin-bottom:.5rem">Aktuelle Datenbank als JSON-Datei speichern</div>
+              <div style="font-size:.75rem;color:var(--text-3);margin-bottom:.875rem" id="backupStatusInfo">Letztes automatisches Backup: Laden…</div>
+              <button class="btn btn-primary" id="btnDownloadBackup"></button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div style="font-weight:500;margin-bottom:.375rem">Backup wiederherstellen</div>
+              <div style="font-size:.8rem;color:var(--text-2);margin-bottom:.5rem">JSON-Backup-Datei hochladen und einspielen</div>
+              <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:var(--radius-sm);padding:.5rem .875rem;font-size:.775rem;color:#ef4444;margin-bottom:.75rem">
+                Alle aktuellen Daten werden überschrieben!
+              </div>
+              <div class="upload-area" onclick="document.getElementById('backupFileInput').click()" style="margin-bottom:.75rem">
+                <input type="file" id="backupFileInput" accept=".json"/>
+                <label class="upload-label" id="backupUploadLabel">JSON-Datei auswählen</label>
+              </div>
+              <button class="btn btn-danger" id="btnRestoreBackup" disabled></button>
+            </div>
+          </div>
+        </div>
       </div>
 
     </main>
@@ -362,7 +398,8 @@
       werbung:    {ic:"ads",      l:"Werbeflächen"},
       anfragen:   {ic:"megaphone",l:"Werbe-Anfragen"},
       gesetze:    {ic:"constitution",l:"Gesetzbücher"},
-      faq:        {ic:"question",    l:"FAQ bearbeiten"}
+      faq:        {ic:"question",    l:"FAQ bearbeiten"},
+      backup:     {ic:"star",        l:"Backup & Restore"}
     };
     Object.keys(slDefs).forEach(function(k){
       var el = document.getElementById("sl-"+k);
@@ -375,10 +412,11 @@
       "h-nachrichten":{ic:"megaphone",l:"Mitteilungen"},
       "h-termine":    {ic:"calendar", l:"Termine & Fristen"},
       "h-stellen":    {ic:"jobs",     l:"Stellenangebote"},
-            "h-werbung":    {ic:"ads",      l:"Werbeflächen"},
+      "h-werbung":    {ic:"ads",      l:"Werbeflächen"},
       "h-anfragen":   {ic:"megaphone",l:"Werbe-Anfragen"},
       "h-gesetze":    {ic:"constitution",l:"Gesetzbücher"},
-      "h-faq":        {ic:"question",    l:"FAQ bearbeiten"}
+      "h-faq":        {ic:"question",    l:"FAQ bearbeiten"},
+      "h-backup":     {ic:"star",        l:"Backup & Restore"}
     };
     Object.keys(headDefs).forEach(function(k){
       var el=document.getElementById(k); if(el) el.innerHTML=ICONS[headDefs[k].ic]+" "+headDefs[k].l;
@@ -398,9 +436,10 @@
     });
 
     document.getElementById("uploadLabel").innerHTML = ICONS.star + " Bild auswählen oder hierher ziehen";
+    document.getElementById("backupUploadLabel").innerHTML = ICONS.star + " JSON-Datei auswählen";
 
     // ── Sidebar nav ───────────────────────────────────────────
-    var secNames={nachrichten:"Mitteilungen",termine:"Termine",stellen:"Stellenangebote",werbung:"Werbeflächen",anfragen:"Werbe-Anfragen",gesetze:"Gesetzbücher",faq:"FAQ bearbeiten"};
+    var secNames={nachrichten:"Mitteilungen",termine:"Termine",stellen:"Stellenangebote",werbung:"Werbeflächen",anfragen:"Werbe-Anfragen",gesetze:"Gesetzbücher",faq:"FAQ bearbeiten",backup:"Backup & Restore"};
     document.querySelectorAll(".sidebar-link[data-sec]").forEach(function(l){
       l.addEventListener("click", function(){
         document.querySelectorAll(".sidebar-link").forEach(function(x){x.classList.remove("active");});
@@ -966,6 +1005,87 @@
     async function saveFaqAll(faqData){
       await fetch("/api/faq",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(faqData)});
     }
+
+    // ── BACKUP & RESTORE ─────────────────────────────────────
+    (function(){
+      var fileInput = document.getElementById("backupFileInput");
+      var restoreBtn = document.getElementById("btnRestoreBackup");
+      var downloadBtn = document.getElementById("btnDownloadBackup");
+      var uploadLabel = document.getElementById("backupUploadLabel");
+      var statusEl = document.getElementById("backupStatusInfo");
+      var pendingRestore = null;
+
+      downloadBtn.innerHTML = ICONS.star + " Backup herunterladen";
+      restoreBtn.innerHTML  = ICONS.check + " Wiederherstellen";
+
+      downloadBtn.addEventListener("click", function(){
+        var a = document.createElement("a");
+        a.href = "/api/admin/backup";
+        a.download = "csg-city-backup-" + today() + ".json";
+        a.click();
+      });
+
+      fileInput.addEventListener("change", function(){
+        var file = this.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(e){
+          try {
+            pendingRestore = JSON.parse(e.target.result);
+            uploadLabel.textContent = file.name;
+            restoreBtn.disabled = false;
+          } catch(err){
+            showToast("Ungültige JSON-Datei!", "error");
+            restoreBtn.disabled = true;
+            pendingRestore = null;
+          }
+        };
+        reader.readAsText(file);
+      });
+
+      restoreBtn.addEventListener("click", async function(){
+        if (!pendingRestore) return;
+        if (!confirm("Wirklich wiederherstellen? Alle aktuellen Daten werden überschrieben!")) return;
+        restoreBtn.disabled = true;
+        restoreBtn.textContent = "Wird wiederhergestellt…";
+        try {
+          var r = await fetch("/api/admin/restore", {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify(pendingRestore)
+          });
+          var j = await r.json();
+          if (j.success) {
+            showToast("Backup wiederhergestellt! Server startet neu…");
+          } else {
+            showToast(j.error || "Fehler!", "error");
+            restoreBtn.disabled = false;
+            restoreBtn.innerHTML = ICONS.check + " Wiederherstellen";
+          }
+        } catch(e){
+          showToast("Verbindungsfehler!", "error");
+          restoreBtn.disabled = false;
+          restoreBtn.innerHTML = ICONS.check + " Wiederherstellen";
+        }
+      });
+
+      async function loadBackupStatus(){
+        try {
+          var r = await fetch("/api/admin/backup/status");
+          var j = await r.json();
+          if (j.lastBackup) {
+            var parts = j.lastBackup.replace("backup-","").replace(".json","").split("-");
+            var d = parts[0]+"-"+parts[1]+"-"+parts[2]+" "+parts[3]+":"+parts[4];
+            statusEl.textContent = "Letztes Auto-Backup: " + d + " ("+j.count+" gespeichert)";
+          } else {
+            statusEl.textContent = "Noch kein automatisches Backup erstellt";
+          }
+        } catch(e){ statusEl.textContent = ""; }
+      }
+
+      document.querySelector(".sidebar-link[data-sec='backup']").addEventListener("click", loadBackupStatus);
+      loadBackupStatus();
+    })();
 
     loadN(); loadT(); loadS(); loadW(); loadG(); loadFaq();
   </script>
