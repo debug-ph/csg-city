@@ -67,6 +67,7 @@
     </ul>
     <div class="nav-actions">
       <button class="theme-btn" id="themeToggle"></button>
+      <button class="burger-btn" id="burgerBtn"></button>
     </div>
   </nav>
   <div class="mobile-nav" id="mobileNav">
@@ -96,12 +97,18 @@
   <script src="/js/app.js"></script>
   <script src="/js/icons.js"></script>
   <script>
-    document.getElementById("themeToggle").innerHTML = ICONS.moon;
-    document.getElementById("themeToggle").addEventListener("click", function(){
-      toggleTheme();
-      this.innerHTML = document.documentElement.getAttribute("data-theme")==="dark" ? ICONS.sun : ICONS.moon;
-    });
+    (function(){
+      var btn = document.getElementById("themeToggle");
+      var setIcon = function(){ btn.innerHTML = document.documentElement.getAttribute("data-theme")==="dark" ? ICONS.sun : ICONS.moon; };
+      setIcon();
+      btn.addEventListener("click", function(){ toggleTheme(); setIcon(); });
+    })();
     document.getElementById("searchIcon").innerHTML = ICONS.question;
+
+    var burger = document.getElementById("burgerBtn");
+    var mNavEl = document.getElementById("mobileNav");
+    if (burger) burger.addEventListener("click", function(){ mNavEl.classList.toggle("open"); document.body.classList.toggle("menu-open"); });
+    if (mNavEl) mNavEl.addEventListener("click", function(e){ if(e.target===mNavEl){ mNavEl.classList.remove("open"); document.body.classList.remove("menu-open"); } });
 
     // Navbar
     var _navItems = [

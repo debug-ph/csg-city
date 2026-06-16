@@ -73,8 +73,8 @@
   </nav>
   <div class="mobile-nav" id="mobileNav">
     <div class="mobile-nav-inner" id="mobileNavInner">
-      <a href="/" id="mn1"></a><a href="/stellenangebote" id="mn2"></a>
-      <a href="/werbung" id="mn3"></a><a href="/gesetze" id="mn5g"></a><a href="/faq" id="mn4"></a><a href="/login" id="mn5l"></a>
+      <a href="/" id="mnav_home"></a><a href="/stellenangebote" id="mnav_stellenangebote"></a>
+      <a href="/werbung" id="mnav_werbung"></a><a href="/gesetze" id="mnav_gesetze"></a><a href="/faq" id="mnav_faq"></a><a href="/login" id="mnav_login"></a>
     </div>
   </div>
 
@@ -139,6 +139,23 @@
       if (el)  { el.innerHTML  = html; if(window.location.pathname===n.href) el.classList.add("active"); }
       if (mel) { mel.innerHTML = html; if(window.location.pathname===n.href) mel.classList.add("active"); }
     });
+    checkAuth().then(function(s) {
+      var al  = document.getElementById("nav_login");
+      var mal = document.getElementById("mnav_login");
+      if (s && s.isAdmin) {
+        if (al)  { al.innerHTML  = ICONS.admin + " Admin-Bereich"; al.href = "/admin"; }
+        if (mal) { mal.innerHTML = ICONS.admin + " Admin-Bereich"; mal.href = "/admin"; }
+      }
+    });
+
+    document.getElementById("werbePageTitle").innerHTML = ICONS.ads + " Verfügbare Werbeflächen";
+    document.getElementById("kontaktTitle").innerHTML   = ICONS.send + " Anfrage senden";
+    document.getElementById("lName").textContent      = "Name *";
+    document.getElementById("lEmail").textContent     = "E-Mail *";
+    document.getElementById("lFlaeche").textContent   = "Gewünschte Fläche";
+    document.getElementById("lNachricht").textContent = "Nachricht";
+    document.getElementById("kSendBtn").innerHTML     = ICONS.send + " Anfrage senden";
+
     checkAuth().then(function(s) {
       var al  = document.getElementById("nav_login");
       var mal = document.getElementById("mnav_login");

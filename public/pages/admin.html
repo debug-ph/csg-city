@@ -91,6 +91,7 @@
       <div class="sidebar-section">
         <div class="sidebar-label">System</div>
         <div class="sidebar-link" data-sec="backup" id="sl-backup"></div>
+        <div class="sidebar-link" data-sec="logs" id="sl-logs"></div>
       </div>
       <div class="sidebar-section">
         <div class="sidebar-label">Links</div>
@@ -191,7 +192,7 @@
           <h2 id="h-backup"></h2>
           <p>Datenbank sichern und wiederherstellen</p>
         </div>
-        <div class="grid-2" style="gap:1rem">
+        <div class="grid-2" style="gap:1rem;margin-bottom:1rem">
           <div class="card">
             <div class="card-body">
               <div style="font-weight:500;margin-bottom:.375rem">Backup herunterladen</div>
@@ -213,6 +214,29 @@
               </div>
               <button class="btn btn-danger" id="btnRestoreBackup" disabled></button>
             </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div style="font-weight:500;margin-bottom:.75rem">Gespeicherte Backups</div>
+            <div id="backupList"><div class="empty-state">Laden…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOGS -->
+      <div class="admin-section" id="sec-logs">
+        <div class="page-header">
+          <h2 id="h-logs"></h2>
+          <p>Server-Ereignisse und Admin-Aktionen</p>
+        </div>
+        <div class="toolbar">
+          <span class="toolbar-info" id="infoLogs"></span>
+          <button class="btn btn-ghost btn-sm" id="btnRefreshLogs"></button>
+        </div>
+        <div class="card">
+          <div id="logsList" style="max-height:520px;overflow-y:auto;font-size:.775rem;font-family:monospace">
+            <div class="empty-state">Laden…</div>
           </div>
         </div>
       </div>
@@ -399,7 +423,8 @@
       anfragen:   {ic:"megaphone",l:"Werbe-Anfragen"},
       gesetze:    {ic:"constitution",l:"Gesetzbücher"},
       faq:        {ic:"question",    l:"FAQ bearbeiten"},
-      backup:     {ic:"star",        l:"Backup & Restore"}
+      backup:     {ic:"info",        l:"Backup & Restore"},
+      logs:       {ic:"clock",       l:"System-Logs"}
     };
     Object.keys(slDefs).forEach(function(k){
       var el = document.getElementById("sl-"+k);
@@ -416,13 +441,14 @@
       "h-anfragen":   {ic:"megaphone",l:"Werbe-Anfragen"},
       "h-gesetze":    {ic:"constitution",l:"Gesetzbücher"},
       "h-faq":        {ic:"question",    l:"FAQ bearbeiten"},
-      "h-backup":     {ic:"star",        l:"Backup & Restore"}
+      "h-backup":     {ic:"info",        l:"Backup & Restore"},
+      "h-logs":       {ic:"clock",       l:"System-Logs"}
     };
     Object.keys(headDefs).forEach(function(k){
       var el=document.getElementById(k); if(el) el.innerHTML=ICONS[headDefs[k].ic]+" "+headDefs[k].l;
     });
 
-    var addBtns={btnAddN:["plus"," Mitteilung"],btnAddT:["plus"," Termin"],btnAddS:["plus"," Stelle"],btnAddW:["plus"," Werbefläche"],btnAddArtikel:["plus"," Artikel"],btnAddGesetz:["plus"," Gesetz"],saveVerfMeta:["check"," Speichern"],saveVerfPraembel:["check"," Speichern"]};
+    var addBtns={btnAddN:["plus"," Mitteilung"],btnAddT:["plus"," Termin"],btnAddS:["plus"," Stelle"],btnAddW:["plus"," Werbefläche"],btnAddGesetzbuch:["plus"," Gesetzbuch"],saveVerfMeta:["check"," Speichern"],saveVerfPraembel:["check"," Speichern"]};
     Object.keys(addBtns).forEach(function(id){
       var el=document.getElementById(id); if(el) el.innerHTML=ICONS[addBtns[id][0]]+addBtns[id][1];
     });
@@ -439,7 +465,7 @@
     document.getElementById("backupUploadLabel").innerHTML = ICONS.star + " JSON-Datei auswählen";
 
     // ── Sidebar nav ───────────────────────────────────────────
-    var secNames={nachrichten:"Mitteilungen",termine:"Termine",stellen:"Stellenangebote",werbung:"Werbeflächen",anfragen:"Werbe-Anfragen",gesetze:"Gesetzbücher",faq:"FAQ bearbeiten",backup:"Backup & Restore"};
+    var secNames={nachrichten:"Mitteilungen",termine:"Termine",stellen:"Stellenangebote",werbung:"Werbeflächen",anfragen:"Werbe-Anfragen",gesetze:"Gesetzbücher",faq:"FAQ bearbeiten",backup:"Backup & Restore",logs:"System-Logs"};
     document.querySelectorAll(".sidebar-link[data-sec]").forEach(function(l){
       l.addEventListener("click", function(){
         document.querySelectorAll(".sidebar-link").forEach(function(x){x.classList.remove("active");});
@@ -449,6 +475,8 @@
         document.getElementById("topbarTitle").textContent = secNames[l.dataset.sec]||"Admin";
         closeSB();
         if (l.dataset.sec==="anfragen") loadA();
+        if (l.dataset.sec==="logs") loadLogs();
+        if (l.dataset.sec==="backup") loadBackupList();
       });
     });
 
@@ -1086,6 +1114,56 @@
       document.querySelector(".sidebar-link[data-sec='backup']").addEventListener("click", loadBackupStatus);
       loadBackupStatus();
     })();
+
+    // ── BACKUP LISTE ──────────────────────────────────────────
+    async function loadBackupList() {
+      try {
+        var r = await fetch("/api/admin/backups");
+        var files = await r.json();
+        var el = document.getElementById("backupList");
+        if (!files.length) { el.innerHTML='<div class="empty-state">Keine automatischen Backups vorhanden</div>'; return; }
+        el.innerHTML = files.map(function(f){
+          var name = f.replace("backup-","").replace(".json","");
+          return '<div class="list-item"><div class="list-item-info"><div class="list-item-title">'+escH(f)+'</div><div class="list-item-sub">'+escH(name)+'</div></div></div>';
+        }).join("");
+      } catch(e) { document.getElementById("backupList").innerHTML='<div class="empty-state">Fehler beim Laden</div>'; }
+    }
+
+    // ── LOGS ──────────────────────────────────────────────────
+    var logsTimer = null;
+    var logColors = { success: "#2D8C4E", error: "#ef4444", info: "var(--text-3)" };
+    var typColors = { login:"#3B82F6", admin:"var(--accent)", backup:"#8B5CF6", system:"var(--text-3)" };
+
+    async function loadLogs() {
+      try {
+        var r = await fetch("/api/admin/logs");
+        var data = await r.json();
+        document.getElementById("infoLogs").textContent = data.length + " Einträge";
+        var el = document.getElementById("logsList");
+        if (!data.length) { el.innerHTML='<div class="empty-state">Keine Log-Einträge</div>'; return; }
+        el.innerHTML = data.map(function(l){
+          var d = new Date(l.timestamp);
+          var ts = d.toLocaleDateString("de-DE",{day:"2-digit",month:"2-digit",year:"numeric"})
+            + " " + d.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+          var col = logColors[l.status] || "var(--text-2)";
+          var typCol = typColors[l.typ] || "var(--text-3)";
+          return '<div style="display:flex;align-items:baseline;gap:.75rem;padding:.5rem .875rem;border-bottom:1px solid var(--border)">'
+            +'<span style="flex-shrink:0;font-size:.7rem;color:var(--text-3);min-width:130px">'+ts+'</span>'
+            +'<span style="flex-shrink:0;font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:'+typCol+';min-width:50px">'+escH(l.typ)+'</span>'
+            +'<span style="color:'+col+'">'+escH(l.nachricht)+'</span>'
+            +'</div>';
+        }).join("");
+      } catch(e) { document.getElementById("logsList").innerHTML='<div class="empty-state">Fehler beim Laden</div>'; }
+    }
+
+    document.getElementById("btnRefreshLogs").innerHTML = ICONS.check + " Aktualisieren";
+    document.getElementById("btnRefreshLogs").addEventListener("click", loadLogs);
+
+    // Auto-Refresh für Logs wenn Logs-Sektion aktiv
+    setInterval(function(){
+      var secEl = document.getElementById("sec-logs");
+      if (secEl && secEl.classList.contains("active")) loadLogs();
+    }, 30000);
 
     loadN(); loadT(); loadS(); loadW(); loadG(); loadFaq();
   </script>
