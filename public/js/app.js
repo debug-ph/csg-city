@@ -2,6 +2,107 @@
 
 // ── Wartungs-Banner (deaktiviert) ─────────────────────────
 
+// ── Beta-Hinweis ───────────────────────────────────────────
+(function () {
+  var path = window.location.pathname;
+  if (path.startsWith("/login") || path.startsWith("/admin")) return;
+
+  // BETA-Badge neben dem Logo
+  function insertBetaBadge() {
+    var brand = document.querySelector(".navbar-brand");
+    if (!brand || document.getElementById("beta-badge")) return;
+    var badge = document.createElement("span");
+    badge.id = "beta-badge";
+    badge.textContent = "BETA";
+    badge.style.cssText = [
+      "display:inline-block",
+      "font-size:0.55rem",
+      "font-weight:700",
+      "letter-spacing:0.08em",
+      "color:var(--accent)",
+      "border:1.5px solid var(--accent)",
+      "border-radius:4px",
+      "padding:1px 5px",
+      "vertical-align:middle",
+      "margin-left:2px",
+      "line-height:1.6",
+      "opacity:0.85",
+      "align-self:flex-end",
+      "margin-bottom:3px"
+    ].join(";");
+    brand.appendChild(badge);
+  }
+
+  // Beta-Modal (einmalig)
+  function showBetaModal() {
+    if (localStorage.getItem("beta_hint_seen")) return;
+
+    var overlay = document.createElement("div");
+    overlay.id = "beta-modal-overlay";
+    overlay.style.cssText = [
+      "position:fixed", "inset:0", "z-index:99998",
+      "display:flex", "align-items:center", "justify-content:center",
+      "background:rgba(0,0,0,0.55)", "backdrop-filter:blur(4px)",
+      "padding:1rem"
+    ].join(";");
+
+    overlay.innerHTML = [
+      '<div style="',
+        "max-width:440px;width:100%;",
+        "background:var(--bg-card);",
+        "border-radius:var(--radius-lg);",
+        "box-shadow:0 20px 60px rgba(0,0,0,.35);",
+        "padding:2.25rem 2rem 1.75rem;",
+        "text-align:center;",
+        "border:1px solid var(--border-strong)",
+      '">',
+        '<div style="',
+          "display:inline-block;",
+          "font-size:0.65rem;font-weight:700;letter-spacing:0.1em;",
+          "color:var(--accent);border:2px solid var(--accent);",
+          "border-radius:6px;padding:3px 10px;margin-bottom:1.25rem",
+        '">BETA</div>',
+        '<h2 style="',
+          "font-family:var(--font-serif);font-size:1.35rem;font-weight:400;",
+          "color:var(--text-1);margin:0 0 .75rem",
+        '">Beta-Version</h2>',
+        '<p style="',
+          "font-size:.9375rem;color:var(--text-2);line-height:1.65;margin:0 0 1.75rem",
+        '">',
+          "Diese Website befindet sich in der <strong>BETA-Version</strong>.<br>",
+          "Es kann zu Fehlern oder unvollständigen Inhalten kommen.",
+        "</p>",
+        '<button id="beta-modal-btn" style="',
+          "background:var(--accent);color:#fff;",
+          "border:none;border-radius:var(--radius-sm);",
+          "padding:.65rem 2rem;font-size:.9375rem;",
+          "font-family:var(--font-sans);cursor:pointer;",
+          "transition:background .15s",
+        '">Verstanden</button>',
+      "</div>"
+    ].join("");
+
+    document.body.appendChild(overlay);
+
+    document.getElementById("beta-modal-btn").addEventListener("click", function () {
+      localStorage.setItem("beta_hint_seen", "1");
+      overlay.style.transition = "opacity .2s";
+      overlay.style.opacity = "0";
+      setTimeout(function () { overlay.remove(); }, 200);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      insertBetaBadge();
+      showBetaModal();
+    });
+  } else {
+    insertBetaBadge();
+    showBetaModal();
+  }
+})();
+
 // ── Dark Mode ─────────────────────────────────────────────
 function initTheme() {
   var saved = localStorage.getItem("csg-theme");
