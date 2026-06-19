@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSG-City – Gesetzbücher</title>
+  <link rel="stylesheet" href="/css/main.css"/>
+  <style>
+    .law-hero{background:var(--accent);padding:4rem 1.5rem 3rem;color:white;position:relative;overflow:hidden;}
+    .law-hero::after{content:'§';position:absolute;right:-1rem;bottom:-3rem;font-family:var(--font-serif);font-size:20rem;color:rgba(255,255,255,0.04);line-height:1;pointer-events:none;}
+    .law-hero-inner{position:relative;max-width:1000px;margin:0 auto;}
+    .law-hero-eye{font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,.5);margin-bottom:.75rem;}
+    .law-hero h1{font-family:var(--font-serif);font-size:clamp(2rem,5vw,3.5rem);font-weight:400;margin-bottom:.625rem;}
+    .law-hero p{font-size:.9375rem;color:rgba(255,255,255,.65);max-width:520px;}
+    .law-search-wrap{margin-top:1.75rem;max-width:480px;position:relative;}
+    .law-search-wrap input{width:100%;padding:.7rem 1rem .7rem 2.75rem;border-radius:var(--radius);border:none;background:rgba(255,255,255,.15);color:white;font-family:var(--font-sans);font-size:.9375rem;outline:none;}
+    .law-search-wrap input::placeholder{color:rgba(255,255,255,.5);}
+    .law-search-wrap input:focus{background:rgba(255,255,255,.22);}
+    .law-search-icon{position:absolute;left:.875rem;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.65);pointer-events:none;}
+    .law-outer{max-width:1000px;margin:0 auto;padding:2.5rem 1.5rem 4rem;}
+    .law-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem;}
+    .law-tab{display:flex;align-items:center;gap:.4rem;padding:.45rem 1.1rem;border-radius:100px;border:1px solid var(--border-strong);background:transparent;font-size:.8125rem;font-family:var(--font-sans);color:var(--text-2);cursor:pointer;transition:var(--t);}
+    .law-tab:hover{background:var(--bg-subtle);color:var(--text-1);}
+    .law-tab.active{background:var(--accent);color:white;border-color:var(--accent);}
+    .law-tab-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;border-radius:100px;font-size:.65rem;font-weight:500;padding:0 .3rem;background:rgba(255,255,255,.25);}
+    .law-tab:not(.active) .law-tab-count{background:var(--bg-subtle);color:var(--text-3);}
+    .law-book{margin-bottom:3rem;}
+    .law-book-head{display:flex;align-items:center;gap:.875rem;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:2px solid var(--accent);}
+    .law-book-icon{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent);}
+    .law-book-title{font-family:var(--font-serif);font-size:1.5rem;font-weight:400;}
+    .law-book-meta{font-size:.75rem;color:var(--text-3);margin-top:.15rem;}
+    .law-para{border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-card);margin-bottom:.75rem;overflow:hidden;}
+    .law-para-head{display:flex;align-items:center;gap:.875rem;padding:1rem 1.25rem;cursor:pointer;user-select:none;transition:background .15s;}
+    .law-para-head:hover{background:var(--bg-subtle);}
+    .law-para-num{flex-shrink:0;font-family:var(--font-serif);font-size:1.1rem;color:var(--accent);min-width:2.5rem;}
+    .law-para-title{font-size:.9rem;font-weight:500;flex:1;}
+    .law-para-abs-count{font-size:.7rem;color:var(--text-3);white-space:nowrap;}
+    .law-chevron{color:var(--text-3);transition:transform .2s;flex-shrink:0;}
+    .law-para.open .law-chevron{transform:rotate(180deg);}
+    .law-para-body{display:none;padding:0 1.25rem 1.25rem;}
+    .law-para.open .law-para-body{display:block;}
+    .law-abs{display:flex;gap:.875rem;padding:.75rem 0;border-bottom:1px solid var(--border);font-size:.8625rem;line-height:1.6;}
+    .law-abs:last-child{border-bottom:none;padding-bottom:0;}
+    .law-abs-num{flex-shrink:0;min-width:1.75rem;font-weight:500;color:var(--accent);font-size:.8rem;padding-top:.1rem;}
+    .law-abs-list{margin-top:.5rem;padding-left:.5rem;display:flex;flex-direction:column;gap:.35rem;}
+    .law-abs-list-item{display:flex;gap:.5rem;font-size:.8375rem;color:var(--text-2);}
+    .law-abs-list-item-key{flex-shrink:0;min-width:1.25rem;font-weight:500;color:var(--text-3);}
+    .law-empty{text-align:center;padding:4rem 2rem;color:var(--text-3);font-size:.875rem;}
+    mark{background:rgba(74,104,114,.2);color:var(--text-1);border-radius:2px;padding:0 2px;}
+    [data-theme="dark"] mark{background:rgba(123,170,181,.25);}
+    .no-results{text-align:center;padding:3rem 2rem;color:var(--text-3);}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-mark">C</div>
+      <div><div class="brand-name">CSG-City</div><div class="brand-sub">Staatsportal</div></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" id="nav_home"></a></li>
+      <li><a href="/stellenangebote" id="nav_stellenangebote"></a></li>
+      <li><a href="/werbung" id="nav_werbung"></a></li>
+      <li><a href="/gesetze" id="nav_gesetze"></a></li>
+      <li><a href="/faq" id="nav_faq"></a></li>
+      <li><a href="/login" id="nav_login"></a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-btn" id="themeToggle"></button>
+    </div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-inner" id="mobileNavInner">
+      <a href="/" id="mnav_home"></a><a href="/stellenangebote" id="mnav_stellenangebote"></a><a href="/werbung" id="mnav_werbung"></a><a href="/gesetze" id="mnav_gesetze"></a><a href="/faq" id="mnav_faq"></a><a href="/login" id="mnav_login"></a>
+    </div>
+  </div>
+
+  <div class="page-wrapper">
+    <div class="law-hero">
+      <div class="law-hero-inner">
+        <div class="law-hero-eye">Offizielles Staatsrecht</div>
+        <h1>Gesetzb&uuml;cher</h1>
+        <p>Alle geltenden Gesetze und Verordnungen von CSG-City</p>
+        <div class="law-search-wrap">
+          <span class="law-search-icon" id="searchIcon"></span>
+          <input type="text" id="searchInput" placeholder="Paragraphen oder Begriffe suchen&hellip;"/>
+        </div>
+      </div>
+    </div>
+    <div class="law-outer">
+      <div class="law-tabs" id="tabsContainer"></div>
+      <div id="booksContainer"><div class="law-empty">Laden&hellip;</div></div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/icons.js"></script>
+  <script>
+    document.getElementById("themeToggle").innerHTML = ICONS.moon;
+    document.getElementById("themeToggle").addEventListener("click", function(){
+      toggleTheme();
+      this.innerHTML = document.documentElement.getAttribute("data-theme")==="dark" ? ICONS.sun : ICONS.moon;
+    });
+    document.getElementById("searchIcon").innerHTML = ICONS.question;
+
+    // Navbar
+    var _navItems = [
+      {href:"/",               ic:"dashboard",    label:"Dashboard"},
+      {href:"/stellenangebote",ic:"jobs",         label:"Stellenangebote"},
+      {href:"/werbung",        ic:"ads",          label:"Werbefläche mieten"},
+      {href:"/gesetze",        ic:"constitution", label:"Gesetzbücher"},
+      {href:"/faq",            ic:"question",     label:"FAQ"},
+      {href:"/login",          ic:"admin",        label:"Admin"},
+    ];
+    _navItems.forEach(function(n) {
+      var key = n.href.replace("/","") || "home";
+      var el  = document.getElementById("nav_"+key);
+      var mel = document.getElementById("mnav_"+key);
+      var html = ICONS[n.ic] + " " + n.label;
+      if (el)  { el.innerHTML  = html; if(window.location.pathname===n.href) el.classList.add("active"); }
+      if (mel) { mel.innerHTML = html; if(window.location.pathname===n.href) mel.classList.add("active"); }
+    });
+    checkAuth().then(function(s) {
+      var al  = document.getElementById("nav_login");
+      var mal = document.getElementById("mnav_login");
+      if (s && s.isAdmin) {
+        if (al)  { al.innerHTML = ICONS.admin + " Admin-Bereich"; al.href = "/admin"; }
+        if (mal) { mal.innerHTML = ICONS.admin + " Admin-Bereich"; mal.href = "/admin"; }
+      }
+    });
+
+    var allBooks = [], activeTab = "all", searchTerm = "";
+
+    function escH(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+    function hl(text, term) {
+      if (!term) return escH(text);
+      var esc = term.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+      return escH(text).replace(new RegExp("("+esc+")","gi"),"<mark>$1</mark>");
+    }
+
+    function buildTabs(books) {
+      var c = document.getElementById("tabsContainer"); c.innerHTML="";
+      var total = books.reduce(function(s,b){return s+(b.paragraphen||[]).length;},0);
+      var all = document.createElement("button");
+      all.className="law-tab"+(activeTab==="all"?" active":""); all.dataset.id="all";
+      all.innerHTML=ICONS.constitution+" Alle <span class='law-tab-count'>"+total+"</span>";
+      all.addEventListener("click",function(){setTab("all");}); c.appendChild(all);
+      books.forEach(function(book){
+        var btn=document.createElement("button");
+        btn.className="law-tab"+(activeTab===String(book.id)?" active":""); btn.dataset.id=String(book.id);
+        btn.innerHTML=(ICONS[book.icon]||ICONS.constitution)+" "+escH(book.kurzname||book.name)+" <span class='law-tab-count'>"+(book.paragraphen||[]).length+"</span>";
+        btn.addEventListener("click",function(){setTab(String(book.id));}); c.appendChild(btn);
+      });
+    }
+    function setTab(id){
+      activeTab=id;
+      document.querySelectorAll(".law-tab").forEach(function(t){t.classList.toggle("active",t.dataset.id===id);});
+      renderBooks();
+    }
+    function renderBooks(){
+      var c=document.getElementById("booksContainer");
+      var term=searchTerm.toLowerCase().trim();
+      var books=activeTab==="all"?allBooks:allBooks.filter(function(b){return String(b.id)===activeTab;});
+      if(!books.length){c.innerHTML='<div class="law-empty">Keine Gesetzbücher vorhanden</div>';return;}
+      c.innerHTML=books.map(function(b){return renderBook(b,term);}).join("");
+      c.querySelectorAll(".law-para-head").forEach(function(h){
+        h.addEventListener("click",function(){h.closest(".law-para").classList.toggle("open");});
+      });
+    }
+    function renderBook(book,term){
+      var ic=ICONS[book.icon]||ICONS.constitution;
+      var paras=book.paragraphen||[];
+      var h='<div class="law-book"><div class="law-book-head"><div class="law-book-icon">'+ic+'</div><div><div class="law-book-title">'+hl(book.name||"",term)+'</div>';
+      if(book.ministerium) h+='<div class="law-book-meta">'+escH(book.ministerium)+(book.version?" · "+escH(book.version):"")+'</div>';
+      h+='</div></div>';
+      if(!paras.length){h+='<div class="law-empty" style="padding:2rem">Noch keine Paragraphen</div>';}
+      else paras.forEach(function(p){
+        h+='<div class="law-para"><div class="law-para-head"><span class="law-para-num">'+escH(String(p.nummer||""))+'</span><span class="law-para-title">'+hl(p.titel||"",term)+'</span><span class="law-para-abs-count">'+(p.absaetze||[]).length+' Abs.</span><span class="law-chevron">'+ICONS.arrow_right+'</span></div><div class="law-para-body">';
+        (p.absaetze||[]).forEach(function(a,i){
+          var aText = typeof a === "string" ? a : (a.text || "");
+          h+='<div class="law-abs"><span class="law-abs-num">('+String(i+1)+')</span><div>'+hl(aText,term);
+          if(typeof a === "object" && a.unterpunkte&&a.unterpunkte.length){
+            h+='<div class="law-abs-list">';
+            a.unterpunkte.forEach(function(u){h+='<div class="law-abs-list-item"><span class="law-abs-list-item-key">'+escH(u.key||"•")+'</span><span>'+hl(u.text||"",term)+'</span></div>';});
+            h+='</div>';
+          }
+          h+='</div></div>';
+        });
+        h+='</div></div>';
+      });
+      h+='</div>';
+      return h;
+    }
+    document.getElementById("searchInput").addEventListener("input",function(){searchTerm=this.value;renderBooks();});
+    fetch("/api/gesetze").then(function(r){return r.json();}).then(function(data){
+      allBooks=data; buildTabs(data); renderBooks();
+    }).catch(function(){
+      document.getElementById("booksContainer").innerHTML='<div class="law-empty">Fehler beim Laden</div>';
+    });
+  </script>
+</body>
+</html>

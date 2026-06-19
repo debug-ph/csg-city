@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSG-City – Stellenangebote</title>
+  <link rel="stylesheet" href="/css/main.css"/>
+  <style>
+    .page-hero{background:var(--accent);padding:3.5rem 1.5rem 2.75rem;color:white;}
+    .page-hero h1{font-family:var(--font-serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:400;margin-bottom:.5rem;}
+    .page-hero p{color:rgba(255,255,255,.65);font-size:.9375rem;}
+    .page-inner{max-width:1160px;margin:0 auto;padding:2rem 1.5rem;}
+    @media(max-width:768px){.page-inner{padding:1.25rem 1rem;}}
+    @media(max-width:480px){.page-inner{padding:1rem .875rem;}}
+
+    .filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+    .filter-btn{display:flex;align-items:center;gap:.375rem;padding:.35rem .875rem;border-radius:100px;border:1px solid var(--border-strong);background:transparent;font-size:.8rem;font-family:var(--font-sans);color:var(--text-2);cursor:pointer;transition:var(--t);}
+    .filter-btn:hover,.filter-btn.active{background:var(--accent);color:white;border-color:var(--accent);}
+
+    /* Cards grid 2 col */
+    .stellen-list{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    @media(max-width:640px){.stellen-list{grid-template-columns:1fr;}}
+
+    .stelle-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:box-shadow .18s,border-color .18s;display:flex;flex-direction:column;gap:.5rem;cursor:pointer;user-select:none;}
+    .stelle-card:hover{box-shadow:var(--shadow-md);border-color:var(--accent);}
+    .stelle-card.open{border-color:var(--accent);}
+    .stelle-card.besetzt{opacity:.6;}
+    .stelle-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;}
+    .stelle-title{font-size:1rem;font-weight:600;line-height:1.3;color:var(--text-1);}
+    .stelle-schlagzeile{font-size:.8rem;font-style:italic;color:var(--text-2);margin-top:.15rem;line-height:1.35;}
+    .stelle-badges{display:flex;align-items:center;gap:.35rem;flex-shrink:0;}
+    .stelle-abt{font-size:.775rem;color:var(--text-2);display:flex;align-items:center;gap:.3rem;}
+    .stelle-foot{display:flex;align-items:center;justify-content:space-between;padding-top:.5rem;border-top:1px solid var(--border);}
+    .stelle-lohn-val{font-size:.9375rem;font-weight:500;color:var(--accent);}
+    .stelle-lohn-lbl{font-size:.65rem;color:var(--text-3);}
+    .stelle-kontakt{font-size:.75rem;color:var(--text-2);display:flex;align-items:center;gap:.25rem;}
+    .stelle-chevron{display:flex;align-items:center;color:var(--text-3);transition:transform .25s ease;flex-shrink:0;}
+    .stelle-card.open .stelle-chevron{transform:rotate(180deg);}
+    .stelle-lohn{font-size:.9375rem;font-weight:500;color:var(--accent);}
+    .stelle-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.125rem;}
+    .stelle-bottom-row{display:flex;align-items:center;justify-content:space-between;margin-top:.375rem;}
+    .stelle-details{max-height:0;overflow:hidden;transition:max-height .28s ease;}
+    .stelle-details-inner{padding-top:.625rem;border-top:1px solid var(--border);margin-top:.375rem;display:flex;flex-direction:column;gap:.375rem;}
+    .stelle-desc-text{font-size:.8rem;color:var(--text-2);line-height:1.6;white-space:pre-wrap;}
+    .bewerben-link{display:inline-flex;align-items:center;gap:.25rem;font-size:.775rem;color:var(--accent);text-decoration:none;margin-top:.25rem;}
+    .bewerben-link:hover{text-decoration:underline;}
+    .badge-gold{background:rgba(234,179,8,.15);color:#a16207;border:1px solid rgba(234,179,8,.35);border-radius:100px;padding:.15rem .55rem;font-size:.65rem;font-weight:500;letter-spacing:.03em;}
+    .empty{text-align:center;padding:3rem;color:var(--text-3);grid-column:1/-1;font-size:.875rem;}
+
+    /* Inline-Werbung: gleiche Größe wie stelle-card, aber als Werbecard */
+    .ad-inline{
+      background:var(--bg-card);
+      border:1.5px dashed var(--border-strong);
+      border-radius:var(--radius);
+      overflow:hidden;
+      display:flex;flex-direction:column;
+      min-height:160px;
+    }
+    .ad-inline.belegt{ border-style:solid; }
+    .ad-inline img{width:100%;height:160px;object-fit:cover;display:block;}
+    .ad-inline-body{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:center;}
+    .ad-inline-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-3);margin-bottom:.35rem;}
+    .ad-inline-head{font-size:.875rem;font-weight:500;color:var(--text-1);margin-bottom:.25rem;}
+    .ad-inline-sub{font-size:.775rem;color:var(--text-2);line-height:1.4;}
+    .ad-inline-cta{display:inline-flex;align-items:center;gap:.25rem;margin-top:.625rem;font-size:.775rem;color:var(--accent);text-decoration:none;font-weight:500;}
+    .ad-inline-cta:hover{text-decoration:underline;}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-mark">C</div>
+      <div><div class="brand-name">CSG-City</div><div class="brand-sub">Staatsportal</div></div>
+    </a>
+    <ul class="nav-links" id="desktopNav">
+      <li><a href="/" id="nav_home"></a></li>
+      <li><a href="/stellenangebote" id="nav_stellenangebote"></a></li>
+      <li><a href="/werbung" id="nav_werbung"></a></li>
+      <li><a href="/gesetze" id="nav_gesetze"></a></li>
+      <li><a href="/faq" id="nav_faq"></a></li>
+      <li><a href="/login" id="nav_login"></a></li>
+      </ul>
+    <div class="nav-actions">
+      <button class="theme-btn" id="themeToggle"></button>
+      <button class="burger-btn" id="burgerBtn"></button>
+    </div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-inner" id="mobileNavInner">
+      <a href="/" id="mnav_home"></a><a href="/stellenangebote" id="mnav_stellenangebote"></a><a href="/werbung" id="mnav_werbung"></a><a href="/gesetze" id="mnav_gesetze"></a><a href="/faq" id="mnav_faq"></a><a href="/login" id="mnav_login"></a>
+      </div>
+  </div>
+
+  <div class="page-wrapper">
+    <div class="page-hero">
+      <div style="max-width:1160px;margin:0 auto">
+        <h1>Stellenangebote</h1>
+        <p>Offene Positionen im Staatsdienst von CSG-City</p>
+      </div>
+    </div>
+    <div class="page-inner">
+      <div class="filter-bar" id="filterBar"></div>
+      <div class="stellen-list" id="stellenList"><div class="empty">Laden…</div></div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/icons.js"></script>
+  <script>
+    // Navbar
+    (function(){
+      var btn=document.getElementById("themeToggle");
+      // Set correct icon based on current theme
+      var setIcon=function(){ btn.innerHTML=document.documentElement.getAttribute("data-theme")==="dark"?ICONS.sun:ICONS.moon; };
+      setIcon();
+      btn.addEventListener("click",function(){ toggleTheme(); setIcon(); });
+    })();
+    var _navItems = [
+      {href:"/",               ic:"dashboard",    label:"Dashboard"},
+      {href:"/stellenangebote",ic:"jobs",         label:"Stellenangebote"},
+      {href:"/werbung",        ic:"ads",          label:"Werbefläche mieten"},
+      {href:"/gesetze",        ic:"constitution", label:"Gesetzb\u00fccher"},
+      {href:"/faq",            ic:"question",     label:"FAQ"},
+      {href:"/login",          ic:"admin",        label:"Admin"},
+    ];
+    _navItems.forEach(function(n) {
+      var key = n.href.replace("/","") || "home";
+      var el  = document.getElementById("nav_"+key);
+      var mel = document.getElementById("mnav_"+key);
+      var html = ICONS[n.ic] + " " + n.label;
+      if (el)  { el.innerHTML  = html; if(window.location.pathname===n.href) el.classList.add("active"); }
+      if (mel) { mel.innerHTML = html; if(window.location.pathname===n.href) mel.classList.add("active"); }
+    });
+    checkAuth().then(function(s) {
+      var al  = document.getElementById("nav_login");
+      var mal = document.getElementById("mnav_login");
+      if (s && s.isAdmin) {
+        if (al)  { al.innerHTML  = ICONS.admin + " Admin-Bereich"; al.href = "/admin"; }
+        if (mal) { mal.innerHTML = ICONS.admin + " Admin-Bereich"; mal.href = "/admin"; }
+      }
+    });
+
+    checkAuth().then(function(s){if(s&&s.isAdmin){var a=document.getElementById("adminNavLink");if(a){a.innerHTML=ICONS.admin+" Admin-Bereich";a.href="/admin";}}});
+
+    var burger=document.getElementById("burgerBtn"),mNavEl=document.getElementById("mobileNav");
+    burger.addEventListener("click",function(){mNavEl.classList.toggle("open");document.body.classList.toggle("menu-open");});
+    mNavEl.addEventListener("click",function(e){if(e.target===mNavEl){mNavEl.classList.remove("open");document.body.classList.remove("menu-open");}});
+
+    function escH(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+    var allStellen=[], allInlineAds=[];
+
+    // Build an inline ad card element
+    function makeInlineAd(w) {
+      var el = document.createElement("div");
+      if (!w || !w.belegt) {
+        var s = randomSlogan();
+        el.className = "ad-inline";
+        el.innerHTML = '<div class="ad-inline-body"><div class="ad-inline-label">Werbefläche · 300×140</div>'
+          +'<div class="ad-inline-head">'+s.head+'</div>'
+          +'<div class="ad-inline-sub">'+s.sub+'</div>'
+          +'<a href="/werbung" class="ad-inline-cta">'+ICONS.arrow_right+' Jetzt buchen</a></div>';
+      } else if (w.bildUrl) {
+        el.className = "ad-inline belegt";
+        el.innerHTML = '<img src="'+w.bildUrl+'" alt="'+w.name+'">'
+          +'<div class="ad-inline-body"><div class="ad-inline-label">Werbung</div>'
+          +'<div class="ad-inline-head">'+w.mieter+'</div>'
+          +'<div class="ad-inline-sub">'+w.beschreibung+'</div></div>';
+      } else {
+        var s = randomSlogan();
+        el.className = "ad-inline belegt";
+        el.innerHTML = '<div class="ad-inline-body"><div class="ad-inline-label">Werbung</div>'
+          +'<div class="ad-inline-head">'+w.mieter+'</div>'
+          +'<div class="ad-inline-sub">'+w.beschreibung+'</div></div>';
+      }
+      return el;
+    }
+
+    function renderStellen(filter) {
+      var data = allStellen.filter(function(s){
+        if(filter==="offen") return s.offen;
+        if(filter==="alle")  return true;
+        return s.abteilung===filter;
+      });
+      var list = document.getElementById("stellenList");
+      list.innerHTML = "";
+      if (!data.length) { list.innerHTML='<div class="empty">Keine Stellen in dieser Kategorie.</div>'; return; }
+
+      var chevronSvg = '<svg class="stelle-chevron" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 5.5 7.5 10.5 12.5 5.5"/></svg>';
+
+      // Insert items, every AD_INTERVAL stelle add one inline ad
+      var AD_INTERVAL = 2 + Math.floor(Math.random() * 2); // 2-3 random
+      var adIndex = 0;
+      data.forEach(function(s, i) {
+        var card = document.createElement("div");
+        card.className = "stelle-card" + (s.offen ? "" : " besetzt");
+        var lohnTypStr = {tag:"Tag",woche:"Woche"}[s.lohnTyp] || "h";
+        var statusBadge = s.offen
+          ? '<span class="badge badge-green">'+ICONS.dot_green+' Offen</span>'
+          : '<span class="badge badge-neutral">'+ICONS.dot_gray+' Besetzt</span>';
+        card.innerHTML =
+          '<div class="stelle-title">'+escH(s.titel)+'</div>'
+          +(s.schlagzeile ? '<div class="stelle-schlagzeile">'+escH(s.schlagzeile)+'</div>' : '')
+          +'<div class="stelle-meta">'
+            +'<span class="stelle-lohn">'+Number(s.lohnProH||0).toFixed(2)+' &euro;/'+lohnTypStr+'</span>'
+            +(s.gewinnanteil ? '<span class="badge-gold">Gewinnanteil '+escH(s.gewinnanteil)+'</span>' : '')
+          +'</div>'
+          +(s.kontakt ? '<div class="stelle-kontakt">&#9993; '+escH(s.kontakt)+'</div>' : '')
+          +'<div class="stelle-bottom-row">'
+            +'<span style="font-size:.7rem;color:var(--text-3)">Details anzeigen</span>'
+            +chevronSvg
+          +'</div>'
+          +'<div class="stelle-details"><div class="stelle-details-inner">'
+            +(s.abteilung ? '<div class="stelle-abt">'+ICONS.building+' '+escH(s.abteilung)+'</div>' : '')
+            +'<div>'+statusBadge+'</div>'
+            +(s.beschreibung ? '<div class="stelle-desc-text">'+escH(s.beschreibung)+'</div>' : '')
+          +'</div></div>';
+        card.addEventListener("click", function(){
+          card.classList.toggle("open");
+          var det = card.querySelector(".stelle-details");
+          det.style.maxHeight = card.classList.contains("open") ? det.scrollHeight + "px" : "0";
+        });
+        list.appendChild(card);
+
+        // Every AD_INTERVAL items, insert an ad
+        if ((i + 1) % AD_INTERVAL === 0) {
+          var ad = allInlineAds[adIndex % (allInlineAds.length || 1)];
+          list.appendChild(makeInlineAd(ad));
+          adIndex++;
+          // New random interval for next insertion
+          AD_INTERVAL = 2 + Math.floor(Math.random() * 2);
+        }
+      });
+    }
+
+    function setFilter(f) {
+      document.querySelectorAll(".filter-btn").forEach(function(b){b.classList.toggle("active",b.dataset.filter===f);});
+      renderStellen(f);
+    }
+
+    Promise.all([
+      fetch("/api/stellenangebote").then(function(r){return r.json();}),
+      fetch("/api/werbeflaechen").then(function(r){return r.json();})
+    ]).then(function(results){
+      allStellen    = results[0];
+      allInlineAds  = results[1].filter(function(w){return w.slot==="stellen_inline_1"||w.slot==="stellen_inline_2"||w.slot==="stellen_inline_3";});
+
+      // Build filter bar
+      var fb = document.getElementById("filterBar");
+      var btnAlle = document.createElement("button");
+      btnAlle.className="filter-btn active"; btnAlle.dataset.filter="alle";
+      btnAlle.innerHTML=ICONS.jobs+' Alle';
+      btnAlle.addEventListener("click",function(){setFilter("alle");});
+      fb.appendChild(btnAlle);
+      var btnOffen = document.createElement("button");
+      btnOffen.className="filter-btn"; btnOffen.dataset.filter="offen";
+      btnOffen.innerHTML=ICONS.dot_green+' Nur offene';
+      btnOffen.addEventListener("click",function(){setFilter("offen");});
+      fb.appendChild(btnOffen);
+
+      var abteilungen=[...new Set(allStellen.map(function(s){return s.abteilung;}).filter(Boolean))];
+      abteilungen.forEach(function(a){
+        var b=document.createElement("button");
+        b.className="filter-btn"; b.dataset.filter=a;
+        b.innerHTML=ICONS.building+' '+a;
+        b.addEventListener("click",function(){setFilter(a);});
+        fb.appendChild(b);
+      });
+
+      renderStellen("alle");
+    });
+  </script>
+</body>
+</html>

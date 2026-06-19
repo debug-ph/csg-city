@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSG-City – Staatsportal</title>
+  <link rel="stylesheet" href="/css/main.css"/>
+  <style>
+    .hero{background:var(--accent);padding:4.5rem 1.5rem 3.5rem;color:white;position:relative;overflow:hidden;}
+    .hero::after{content:'CSG';position:absolute;right:-1rem;bottom:-2rem;font-family:var(--font-serif);font-size:18rem;color:rgba(255,255,255,0.04);line-height:1;pointer-events:none;user-select:none;}
+    .hero-inner{position:relative;max-width:1160px;margin:0 auto;}
+    .hero-eye{font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,.5);margin-bottom:.75rem;}
+    .hero-title{font-family:var(--font-serif);font-size:clamp(2.2rem,5vw,3.75rem);font-weight:400;line-height:1.1;margin-bottom:.625rem;}
+    .hero-title em{font-style:italic;color:rgba(255,255,255,.65);}
+    .hero-sub{font-size:.9375rem;color:rgba(255,255,255,.6);max-width:480px;}
+
+    /* ── Layout ── */
+    .dash-wrap{max-width:1160px;margin:0 auto;}
+    .dash{display:grid;grid-template-columns:1fr 280px;gap:1.25rem;padding:1.75rem 1.5rem 0;}
+    @media(max-width:960px){.dash{grid-template-columns:1fr;padding:1.25rem 1rem 0;}}
+    @media(max-width:480px){.dash{padding:1rem .875rem 0;gap:.875rem;}}
+
+    /* ── Stats ── */
+    .stat-strip{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-bottom:1.25rem;}
+    .stat-box{padding:1.1rem 1.25rem;}
+    .stat-num{font-family:var(--font-serif);font-size:2.25rem;font-weight:400;line-height:1;margin-bottom:.25rem;}
+    .stat-lbl{font-size:.7rem;color:var(--text-2);text-transform:uppercase;letter-spacing:.08em;}
+
+    /* ── News ── */
+    .news-item{padding:.875rem 0;border-bottom:1px solid var(--border);}
+    .news-item:first-child{padding-top:0;}.news-item:last-child{border:none;padding-bottom:0;}
+    .news-head{font-size:.875rem;font-weight:500;margin-bottom:.25rem;}
+    .news-body{font-size:.8rem;color:var(--text-2);line-height:1.5;}
+    .news-date{font-size:.7rem;color:var(--text-3);margin-top:.375rem;display:flex;align-items:center;gap:.3rem;}
+
+    /* ── Termine ── */
+    .termin{display:flex;gap:.875rem;padding:.75rem 0;border-bottom:1px solid var(--border);align-items:flex-start;}
+    .termin:first-child{padding-top:0;}.termin:last-child{border:none;padding-bottom:0;}
+    .t-badge{flex-shrink:0;width:44px;border-radius:var(--radius-sm);background:var(--accent-soft);text-align:center;padding:.3rem .25rem;}
+    .t-day{font-family:var(--font-serif);font-size:1.4rem;font-weight:400;color:var(--accent);line-height:1;}
+    .t-mon{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);}
+    .t-title{font-size:.8125rem;font-weight:500;margin-bottom:.125rem;}
+    .t-desc{font-size:.75rem;color:var(--text-3);}
+
+    /* ── Stellen mini grid ── */
+    .stellen-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+    @media(max-width:640px){.stellen-grid{grid-template-columns:1fr;}}
+    .stelle-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;transition:box-shadow .18s,border-color .18s;cursor:pointer;user-select:none;display:flex;flex-direction:column;gap:.3rem;}
+    .stelle-card:hover{box-shadow:var(--shadow-md);border-color:var(--accent);}
+    .stelle-card.open{border-color:var(--accent);}
+    .stelle-title{font-size:.875rem;font-weight:600;line-height:1.3;color:var(--text-1);}
+    .stelle-schlagzeile{font-size:.75rem;font-style:italic;color:var(--text-2);line-height:1.35;}
+    .stelle-lohn{font-size:.8125rem;font-weight:500;color:var(--accent);}
+    .stelle-kontakt{font-size:.75rem;color:var(--text-2);}
+    .stelle-bottom-row{display:flex;align-items:center;justify-content:space-between;margin-top:.125rem;}
+    .stelle-chevron{display:flex;align-items:center;color:var(--text-3);transition:transform .22s ease;flex-shrink:0;}
+    .stelle-card.open .stelle-chevron{transform:rotate(180deg);}
+    .stelle-details{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+    .stelle-details-inner{padding-top:.5rem;border-top:1px solid var(--border);margin-top:.25rem;display:flex;flex-direction:column;gap:.3rem;}
+    .stelle-abt{font-size:.75rem;color:var(--text-2);display:flex;align-items:center;gap:.3rem;}
+    .stelle-desc-text{font-size:.775rem;color:var(--text-3);line-height:1.5;white-space:pre-wrap;}
+    .mehr-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1rem;padding:.6rem 1.25rem;border-radius:var(--radius-sm);border:1px solid var(--border-strong);background:transparent;color:var(--text-2);font-size:.8125rem;font-family:var(--font-sans);cursor:pointer;text-decoration:none;transition:var(--t);}
+    .mehr-btn:hover{background:var(--bg-subtle);color:var(--text-1);}
+
+    /* ── Sidebar ── */
+    .dash-sidebar{display:flex;flex-direction:column;gap:1.1rem;}
+    @media(min-width:961px){.dash-sidebar{position:sticky;top:76px;align-self:start;}}
+
+    /* ── Werbeflächen (Sidebar) ── Equal height boxes ── */
+    .ad-box{
+      width:100%;
+      height:200px;           /* fixed equal height for all 3 sidebar slots */
+      border-radius:var(--radius);
+      overflow:hidden;
+      position:relative;
+      border:1px solid var(--border);
+    }
+    .ad-box-empty{
+      height:200px;
+      border-radius:var(--radius);
+      border:1.5px dashed var(--border-strong);
+      background:repeating-linear-gradient(45deg,var(--bg),var(--bg) 8px,var(--bg-subtle) 8px,var(--bg-subtle) 16px);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;padding:1rem;gap:.375rem;
+    }
+    .ad-box img{width:100%;height:100%;object-fit:cover;display:block;}
+    .ad-box-inner{width:100%;height:100%;background:var(--bg-card);padding:.875rem;display:flex;flex-direction:column;justify-content:center;}
+    .ad-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-3);}
+    .ad-head{font-size:.875rem;font-weight:500;color:var(--text-1);margin:.25rem 0 .2rem;}
+    .ad-sub{font-size:.75rem;color:var(--text-2);line-height:1.4;}
+    .ad-cta{display:inline-flex;align-items:center;gap:.25rem;margin-top:.625rem;font-size:.75rem;color:var(--accent);text-decoration:none;font-weight:500;}
+    .ad-cta:hover{text-decoration:underline;}
+
+    /* ── Footer Leaderboard ── */
+    .dash-footer{padding:1.25rem 1.5rem 1.75rem;max-width:1160px;margin:0 auto;}
+    @media(max-width:960px){.dash-footer{padding:1rem 1rem 1.25rem;}}
+    .footer-ad{
+      width:100%;
+      min-height:120px;       /* taller than sidebar = matches visual weight of center column */
+      border-radius:var(--radius);
+      overflow:hidden;
+      border:1px solid var(--border);
+    }
+    .footer-ad-empty{
+      min-height:120px;
+      border-radius:var(--radius);
+      border:1.5px dashed var(--border-strong);
+      background:repeating-linear-gradient(45deg,var(--bg),var(--bg) 8px,var(--bg-subtle) 8px,var(--bg-subtle) 16px);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.5rem 2rem;gap:1.5rem;
+    }
+    @media(max-width:640px){.footer-ad-empty{flex-direction:column;align-items:flex-start;}}
+    .footer-ad img{width:100%;height:120px;object-fit:cover;display:block;}
+    .footer-ad-inner{width:100%;min-height:120px;background:var(--bg-card);padding:1.25rem 2rem;display:flex;align-items:center;gap:2rem;}
+
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem;}
+    .section-title{font-family:var(--font-serif);font-size:1.375rem;font-weight:400;}
+    .section-link{font-size:.8rem;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:.25rem;}
+    .section-link:hover{text-decoration:underline;}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-mark">C</div>
+      <div><div class="brand-name">CSG-City</div><div class="brand-sub">Staatsportal</div></div>
+    </a>
+    <ul class="nav-links" id="desktopNav">
+      <li><a href="/" id="nav_home"></a></li>
+      <li><a href="/stellenangebote" id="nav_stellenangebote"></a></li>
+      <li><a href="/werbung" id="nav_werbung"></a></li>
+      <li><a href="/gesetze" id="nav_gesetze"></a></li>
+      <li><a href="/faq" id="nav_faq"></a></li>
+      <li><a href="/login" id="nav_login"></a></li>
+      </ul>
+    <div class="nav-actions">
+      <button class="theme-btn" id="themeToggle" title="Dark Mode"></button>
+      <button class="burger-btn" id="burgerBtn" title="Menü"></button>
+    </div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-inner" id="mobileNavInner">
+      <a href="/" id="mnav_home"></a><a href="/stellenangebote" id="mnav_stellenangebote"></a><a href="/werbung" id="mnav_werbung"></a><a href="/gesetze" id="mnav_gesetze"></a><a href="/faq" id="mnav_faq"></a><a href="/login" id="mnav_login"></a>
+      </div>
+  </div>
+
+  <div class="page-wrapper">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-eye">Offizielles Staatsportal</div>
+        <h1 class="hero-title">Willkommen in<br><em>CSG-City</em></h1>
+        <p class="hero-sub">Schule als Staat – Demokratie erleben und mitgestalten</p>
+      </div>
+    </section>
+
+    <div class="dash-wrap">
+      <div class="dash">
+        <!-- ── Hauptspalte ── -->
+        <div>
+          <div class="stat-strip fade-up">
+            <div class="card stat-box">
+              <div class="stat-num" id="statTermine">–</div>
+              <div class="stat-lbl">Bevorstehende Termine</div>
+            </div>
+            <div class="card stat-box">
+              <div class="stat-num" id="statStellen">–</div>
+              <div class="stat-lbl">Offene Stellen</div>
+            </div>
+          </div>
+
+          <div class="card fade-up delay-1" style="margin-bottom:1.25rem">
+            <div class="card-header">
+              <span class="card-title" id="nachrichtenTitle"></span>
+              <span class="badge badge-green">Aktuell</span>
+            </div>
+            <div class="card-body" id="nachrichtenContainer"><div class="text-3 text-sm">Laden…</div></div>
+          </div>
+
+          <div class="fade-up delay-2">
+            <div class="section-head">
+              <h2 class="section-title">Stellenangebote</h2>
+              <a href="/stellenangebote" class="section-link" id="alleLink"></a>
+            </div>
+            <div class="stellen-grid" id="stellenGrid"><div class="text-3 text-sm">Laden…</div></div>
+            <a href="/stellenangebote" class="mehr-btn" id="mehrBtn"></a>
+          </div>
+        </div>
+
+        <!-- ── Sidebar: Termine + 3 gleich große Werbeflächen ── -->
+        <div class="dash-sidebar">
+          <div class="card fade-up delay-1">
+            <div class="card-header"><span class="card-title" id="termineTitle"></span></div>
+            <div class="card-body" id="termineContainer"><div class="text-3 text-sm">Laden…</div></div>
+          </div>
+          <!-- 3 equal-height sidebar ad slots - show immediately -->
+          <div id="adSlot1"></div>
+          <div id="adSlot2"></div>
+          <div id="adSlot3"></div>
+        </div>
+      </div>
+
+      <!-- ── Footer Leaderboard – unter beiden Spalten, etwas größer ── -->
+      <div class="dash-footer">
+        <div id="adFooter"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/icons.js"></script>
+  <script>
+    
+    document.getElementById("nachrichtenTitle").innerHTML = ICONS.megaphone+" Staatliche Mitteilungen";
+    document.getElementById("termineTitle").innerHTML     = ICONS.calendar+" Termine & Fristen";
+    document.getElementById("alleLink").innerHTML         = "Alle ansehen "+ICONS.arrow_right;
+    document.getElementById("mehrBtn").innerHTML          = ICONS.arrow_right+" Alle Stellenangebote";
+    (function(){
+      var btn=document.getElementById("themeToggle");
+      // Set correct icon based on current theme
+      var setIcon=function(){ btn.innerHTML=document.documentElement.getAttribute("data-theme")==="dark"?ICONS.sun:ICONS.moon; };
+      setIcon();
+      btn.addEventListener("click",function(){ toggleTheme(); setIcon(); });
+    })();
+
+
+    // Navbar
+    var _navItems = [
+      {href:"/",               ic:"dashboard",    label:"Dashboard"},
+      {href:"/stellenangebote",ic:"jobs",         label:"Stellenangebote"},
+      {href:"/werbung",        ic:"ads",          label:"Werbefläche mieten"},
+      {href:"/gesetze",        ic:"constitution", label:"Gesetzb\u00fccher"},
+      {href:"/faq",            ic:"question",     label:"FAQ"},
+      {href:"/login",          ic:"admin",        label:"Admin"},
+    ];
+    var dNav=document.getElementById("desktopNav");
+    var mNav=document.getElementById("mobileNavInner");
+    _navItems.forEach(function(n) {
+      var key = n.href.replace("/","") || "home";
+      var html = ICONS[n.ic] + " " + n.label;
+      // Static ids
+      var el  = document.getElementById("nav_"+key);
+      var mel = document.getElementById("mnav_"+key);
+      if (el)  { el.innerHTML  = html; if(window.location.pathname===n.href) el.classList.add("active"); }
+      if (mel) { mel.innerHTML = html; if(window.location.pathname===n.href) mel.classList.add("active"); }
+      // Dynamic append if ul is empty
+      if (dNav && !el) {
+        var li=document.createElement("li"), a=document.createElement("a");
+        a.href=n.href; a.innerHTML=html;
+        if(window.location.pathname===n.href) a.className="active";
+        li.appendChild(a); dNav.appendChild(li);
+      }
+      if (mNav && !mel) {
+        var ma=document.createElement("a"); ma.href=n.href; ma.innerHTML=html;
+        mNav.appendChild(ma);
+      }
+    });
+    checkAuth().then(function(s) {
+      var al  = document.getElementById("nav_login");
+      var mal = document.getElementById("mnav_login");
+      if (s && s.isAdmin) {
+        if (al)  { al.innerHTML  = ICONS.admin + " Admin-Bereich"; al.href = "/admin"; }
+        if (mal) { mal.innerHTML = ICONS.admin + " Admin-Bereich"; mal.href = "/admin"; }
+      }
+    });
+
+    checkAuth().then(function(s){
+      if(s&&s.isAdmin){ var a=document.getElementById("adminNavLink"); if(a){a.innerHTML=ICONS.admin+" Admin-Bereich";a.href="/admin";} }
+    });
+
+    // ── Ad render helpers ─────────────────────────────────────
+    function adEmpty(size) {
+      var s = randomSlogan();
+      return '<div class="ad-box-empty">'
+        +'<div class="ad-label">Werbefläche · '+size+'</div>'
+        +'<div class="ad-head">'+s.head+'</div>'
+        +'<div class="ad-sub">'+s.sub+'</div>'
+        +'<a href="/werbung" class="ad-cta">'+ICONS.arrow_right+' Jetzt buchen</a>'
+        +'</div>';
+    }
+    function renderSidebarAd(el, w) {
+      if (!el) return;
+      if (!w || !w.belegt) {
+        el.innerHTML = adEmpty(w ? w.groesse : "300×250");
+        return;
+      }
+      if (w.bildUrl) {
+        el.innerHTML = '<div class="ad-box"><img src="'+w.bildUrl+'" alt="'+escH(w.name)+'" style="width:100%;height:200px;object-fit:cover;display:block"/></div>';
+      } else {
+        el.innerHTML = '<div class="ad-box-empty" style="background:var(--accent-soft);border-color:var(--accent)">'
+          +'<div class="ad-label">Werbung</div>'
+          +'<div class="ad-head">'+escH(w.mieter)+'</div>'
+          +'<div class="ad-sub">'+escH(w.beschreibung)+'</div>'
+          +'</div>';
+      }
+    }
+    function renderFooterAd(el, w) {
+      if (!el) return;
+      if (!w || !w.belegt) {
+        var s = randomSlogan();
+        var preis = w ? Number(w.preis).toFixed(2)+" €/Tag" : "ab 6,00 €/Tag";
+        el.innerHTML = '<div class="footer-ad-empty">'
+          +'<div><div class="ad-label">Werbefläche · 728×90 · '+preis+'</div>'
+          +'<div class="ad-head" style="font-size:1rem;font-weight:500;margin:.3rem 0 .2rem">'+s.head+'</div>'
+          +'<div class="ad-sub">'+s.sub+'</div></div>'
+          +'<a href="/werbung" class="btn btn-primary btn-sm" style="flex-shrink:0">'+ICONS.arrow_right+' Jetzt buchen</a>'
+          +'</div>';
+        return;
+      }
+      if (w.bildUrl) {
+        el.innerHTML = '<div class="footer-ad"><img src="'+w.bildUrl+'" alt="'+escH(w.name)+'" style="width:100%;height:120px;object-fit:cover;display:block"/></div>';
+      } else {
+        el.innerHTML = '<div class="footer-ad-empty" style="background:var(--accent-soft);border-color:var(--accent)">'
+          +'<div class="ad-label">Werbung</div>'
+          +'<div style="font-weight:500">'+escH(w.mieter)+'</div>'
+          +'<div class="ad-sub">'+escH(w.beschreibung)+'</div>'
+          +'</div>';
+      }
+    }
+
+    // HTML escape helper
+    function escH(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+    // Pre-render ads immediately with slogans (before API responds)
+    ["adSlot1","adSlot2","adSlot3"].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = adEmpty("300×250");
+    });
+    var footerEl = document.getElementById("adFooter");
+    if (footerEl) {
+      var s0 = randomSlogan();
+      footerEl.innerHTML = '<div class="footer-ad-empty">'
+        +'<div><div class="ad-label">Werbefläche · 728×90</div>'
+        +'<div class="ad-head" style="font-size:1rem;font-weight:500;margin:.3rem 0 .2rem">'+s0.head+'</div>'
+        +'<div class="ad-sub">'+s0.sub+'</div></div>'
+        +'<a href="/werbung" class="btn btn-primary btn-sm" style="flex-shrink:0">'+ICONS.arrow_right+' Jetzt buchen</a>'
+        +'</div>';
+    }
+
+    // ── Load data ─────────────────────────────────────────────
+    fetch("/api/dashboard").then(function(r){return r.json();}).then(function(data){
+      document.getElementById("statTermine").textContent = data.termine.length;
+      document.getElementById("statStellen").textContent = data.stellenangebote.length;
+
+      // Nachrichten
+      document.getElementById("nachrichtenContainer").innerHTML = data.nachrichten.map(function(n){
+        return '<div class="news-item"><div class="news-head">'+n.titel+'</div><div class="news-body">'+(n.inhalt||"")+'</div><div class="news-date">'+ICONS.clock+' '+formatDatum(n.datum)+'</div></div>';
+      }).join("") || '<div class="text-3 text-sm">Keine Mitteilungen</div>';
+
+      // Termine
+      document.getElementById("termineContainer").innerHTML = data.termine.map(function(t){
+        var d=new Date(t.datum);
+        return '<div class="termin"><div class="t-badge"><div class="t-day">'+d.getDate()+'</div><div class="t-mon">'+d.toLocaleDateString("de-DE",{month:"short"})+'</div></div><div><div class="t-title">'+t.titel+'</div><div class="t-desc">'+(t.beschreibung||"")+'</div></div></div>';
+      }).join("") || '<div class="text-3 text-sm">Keine Termine</div>';
+
+      // Stellen
+      var chevSvg = '<svg class="stelle-chevron" width="13" height="13" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 5.5 7.5 10.5 12.5 5.5"/></svg>';
+      var sgEl = document.getElementById("stellenGrid");
+      sgEl.innerHTML = "";
+      if (!data.stellenangebote.length) {
+        sgEl.innerHTML = '<div class="text-3 text-sm">Keine offenen Stellen</div>';
+      } else {
+        data.stellenangebote.forEach(function(s) {
+          var lohnTypStr = {tag:"Tag",woche:"Woche"}[s.lohnTyp] || "h";
+          var statusBadge = s.offen
+            ? '<span class="badge badge-green">'+ICONS.dot_green+' Offen</span>'
+            : '<span class="badge badge-neutral">'+ICONS.dot_gray+' Besetzt</span>';
+          var card = document.createElement("div");
+          card.className = "stelle-card" + (s.offen ? "" : " besetzt");
+          card.innerHTML =
+            '<div class="stelle-title">'+escH(s.titel)+'</div>'
+            +(s.schlagzeile ? '<div class="stelle-schlagzeile">'+escH(s.schlagzeile)+'</div>' : '')
+            +'<div class="stelle-lohn">'+Number(s.lohnProH||0).toFixed(2)+' &euro;/'+lohnTypStr+'</div>'
+            +(s.kontakt ? '<div class="stelle-kontakt">&#9993; '+escH(s.kontakt)+'</div>' : '')
+            +'<div class="stelle-bottom-row">'
+              +'<span style="font-size:.65rem;color:var(--text-3)">Details</span>'
+              +chevSvg
+            +'</div>'
+            +'<div class="stelle-details"><div class="stelle-details-inner">'
+              +(s.abteilung ? '<div class="stelle-abt">'+ICONS.building+' '+escH(s.abteilung)+'</div>' : '')
+              +'<div>'+statusBadge+'</div>'
+              +(s.beschreibung ? '<div class="stelle-desc-text">'+escH(s.beschreibung)+'</div>' : '')
+            +'</div></div>';
+          card.addEventListener("click", function(){
+            card.classList.toggle("open");
+            var det = card.querySelector(".stelle-details");
+            det.style.maxHeight = card.classList.contains("open") ? det.scrollHeight + "px" : "0";
+          });
+          sgEl.appendChild(card);
+        });
+      }
+
+      // Werbeflächen
+      var wf = data.werbeflaechen || [];
+      function findSlot(slot){ return wf.find(function(w){return w.slot===slot;})||null; }
+      renderSidebarAd(document.getElementById("adSlot1"), findSlot("dashboard_sidebar_1"));
+      renderSidebarAd(document.getElementById("adSlot2"), findSlot("dashboard_sidebar_2"));
+      renderSidebarAd(document.getElementById("adSlot3"), findSlot("dashboard_sidebar_3"));
+      renderFooterAd(document.getElementById("adFooter"), findSlot("dashboard_footer"));
+    });
+
+    // ── Burger ────────────────────────────────────────────────
+    var burger=document.getElementById("burgerBtn"), mNavEl=document.getElementById("mobileNav");
+    burger.addEventListener("click",function(){mNavEl.classList.toggle("open");document.body.classList.toggle("menu-open");});
+    mNavEl.addEventListener("click",function(e){if(e.target===mNavEl){mNavEl.classList.remove("open");document.body.classList.remove("menu-open");}});
+  </script>
+</body>
+</html>

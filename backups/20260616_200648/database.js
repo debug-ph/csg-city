@@ -77,18 +77,111 @@ const DEFAULT_DATA = {
       "steuernummer": "CSG-0008"
     }
   ],
-  "nachrichten": [],
-  "termine": [],
-  "stellenangebote":     [],
+  "nachrichten": [
+    {
+      "id": 1,
+      "titel": "Willkommen in CSG-City!",
+      "inhalt": "Das offizielle Staatsportal von CSG-City ist jetzt online. Alle Bürger können sich hier informieren.",
+      "datum": "2025-01-15"
+    },
+    {
+      "id": 2,
+      "titel": "Neue Steuerregeln ab Februar",
+      "inhalt": "Der Staatsrat hat neue Steuersätze beschlossen. Details in der Verfassung unter §12.",
+      "datum": "2025-01-20"
+    },
+    {
+      "id": 3,
+      "titel": "Parlamentssitzung verschoben",
+      "inhalt": "Die nächste Sitzung findet am 5. Februar statt. Alle Abgeordneten sind pünktlich erscheinen.",
+      "datum": "2025-01-22"
+    }
+  ],
+  "termine": [
+    {
+      "id": 1,
+      "titel": "Parlamentssitzung",
+      "beschreibung": "Monatliche Vollversammlung aller Staatsvertreter",
+      "datum": "2025-02-05"
+    },
+    {
+      "id": 2,
+      "titel": "Steuererklärung Frist",
+      "beschreibung": "Abgabefrist für Einkommenserklärungen aller Bürger",
+      "datum": "2025-02-15"
+    },
+    {
+      "id": 3,
+      "titel": "Bürgerforum",
+      "beschreibung": "Offene Diskussion mit dem Staatsrat",
+      "datum": "2025-02-20"
+    },
+    {
+      "id": 4,
+      "titel": "Nationalfeiertag",
+      "beschreibung": "Festlichkeiten zur Staatsgründung von CSG-City",
+      "datum": "2025-03-01"
+    }
+  ],
+  "stellenangebote": [
+    {
+      "id": 1,
+      "titel": "Stadtrat-Mitglied",
+      "abteilung": "Staatsrat",
+      "beschreibung": "Aktive Mitgestaltung der Stadtpolitik und Teilnahme an Sitzungen.",
+      "lohnProH": 18.5,
+      "offen": true
+    },
+    {
+      "id": 2,
+      "titel": "Staatsanwalt/-anwältin",
+      "abteilung": "Justiz",
+      "beschreibung": "Vertretung des Staates bei Gerichtsverfahren.",
+      "lohnProH": 22,
+      "offen": true
+    },
+    {
+      "id": 3,
+      "titel": "Steuerprüfer/-in",
+      "abteilung": "Finanzministerium",
+      "beschreibung": "Überprüfung von Steuererklärungen aller Bürger.",
+      "lohnProH": 16.5,
+      "offen": true
+    },
+    {
+      "id": 4,
+      "titel": "Polizeibeamter/-in",
+      "abteilung": "Polizei",
+      "beschreibung": "Aufrechterhaltung von Ordnung und Sicherheit.",
+      "lohnProH": 15,
+      "offen": true
+    },
+    {
+      "id": 5,
+      "titel": "Redakteur/-in",
+      "abteilung": "Staatszeitung",
+      "beschreibung": "Berichte für das offizielle Staatsblatt verfassen.",
+      "lohnProH": 14,
+      "offen": false
+    },
+    {
+      "id": 6,
+      "titel": "Richter/-in",
+      "abteilung": "Justiz",
+      "beschreibung": "Unabhängige Rechtsprechung im Staatsgericht.",
+      "lohnProH": 24,
+      "offen": true
+    }
+  ],
   "werbeflaechen": [
     {
       "id": 1,
       "name": "Sidebar oben",
       "groesse": "300×250",
       "preis": 5,
-      "belegt": false,
-      "mieter": "",
-      "kontakt": "",
+      "belegt": true,
+      "mieter": "Bäckerei Müller",
+      "kontakt": "mueller@csg.de",
       "beschreibung": "Sidebar oben rechts auf dem Dashboard.",
       "bildUrl": "",
       "slot": "dashboard_sidebar_1"
@@ -122,9 +215,9 @@ const DEFAULT_DATA = {
       "name": "Footer Leaderboard",
       "groesse": "728×90",
       "preis": 6,
-      "belegt": false,
-      "mieter": "",
-      "kontakt": "",
+      "belegt": true,
+      "mieter": "IT-Solutions GmbH",
+      "kontakt": "info@it-sol.de",
       "beschreibung": "Breiter Banner ganz unten auf dem Dashboard.",
       "bildUrl": "",
       "slot": "dashboard_footer"
@@ -168,12 +261,12 @@ const DEFAULT_DATA = {
     {
       "id": 8,
       "name": "Gesetze Sidebar",
-      "groesse": "300×250",
+      "groesse": "300x250",
       "preis": 4.5,
       "belegt": false,
       "mieter": "",
       "kontakt": "",
-      "beschreibung": "Sidebar neben den Gesetzbüchern.",
+      "beschreibung": "Sidebar neben den Gesetzbuechern.",
       "bildUrl": "",
       "slot": "gesetze_sidebar"
     }
@@ -668,9 +761,9 @@ const DEFAULT_DATA = {
   ],
   "_nextId": {
     "teilnehmer": 9,
-    "nachrichten": 1,
-    "termine": 1,
-    "stellenangebote": 1,
+    "nachrichten": 4,
+    "termine": 5,
+    "stellenangebote": 7,
     "werbeflaechen": 9,
     "anfragen": 1,
     "gesetze": 6

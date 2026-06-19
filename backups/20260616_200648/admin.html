@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSG-City – Admin</title>
+  <link rel="stylesheet" href="/css/main.css"/>
+  <style>
+    .layout{display:flex;min-height:100vh;padding-top:60px;}
+    .main{flex:1;padding:1.75rem;overflow-x:hidden;min-width:0;}
+    @media(max-width:1024px){.main{padding:1.25rem;}}
+    @media(max-width:768px){.main{padding:1rem;}.layout{flex-direction:column;}}
+    @media(max-width:480px){.main{padding:.875rem;}}
+    .admin-section{display:none;}
+    .admin-section.active{display:block;animation:fadeUp .25s ease;}
+    .page-header{margin-bottom:1.5rem;}
+    .page-header h2{font-family:var(--font-serif);font-size:1.75rem;font-weight:400;margin-bottom:.2rem;display:flex;align-items:center;gap:.5rem;}
+    .page-header p{font-size:.8rem;color:var(--text-2);}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem;gap:.5rem;flex-wrap:wrap;}
+    .toolbar-info{font-size:.8rem;color:var(--text-2);}
+    .search-input{padding:.45rem .75rem;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--bg-card);color:var(--text-1);font-size:.8rem;outline:none;min-width:180px;transition:var(--t);font-family:var(--font-sans);}
+    .search-input:focus{border-color:var(--accent);}
+    .actions-cell{display:flex;gap:.3rem;}
+    .empty-state{text-align:center;padding:2.5rem;color:var(--text-3);font-size:.875rem;}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+    @media(max-width:480px){.grid-2{grid-template-columns:1fr;}}
+    .list-item{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;padding:.875rem 0;border-bottom:1px solid var(--border);}
+    .list-item:first-child{padding-top:0;}.list-item:last-child{border:none;padding-bottom:0;}
+    .list-item-info{flex:1;min-width:0;}
+    .list-item-title{font-size:.875rem;font-weight:500;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .list-item-sub{font-size:.775rem;color:var(--text-2);}
+    .list-item-right{display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
+    .list-item-date{font-size:.7rem;color:var(--text-3);white-space:nowrap;}
+    .werbe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.875rem;}
+    .werbe-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+    .werbe-preview{height:70px;background:repeating-linear-gradient(45deg,var(--bg),var(--bg) 8px,var(--bg-subtle) 8px,var(--bg-subtle) 16px);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--text-3);border-bottom:1px solid var(--border);}
+    .werbe-preview.belegt{background:var(--accent-soft);color:var(--accent);}
+    .werbe-body{padding:.875rem;}
+    .werbe-name{font-weight:500;font-size:.875rem;margin-bottom:.2rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+    .werbe-meta{font-size:.75rem;color:var(--text-2);margin-bottom:.5rem;}
+    .werbe-desc{font-size:.75rem;color:var(--text-3);margin-bottom:.75rem;line-height:1.45;}
+    .werbe-actions{display:flex;gap:.375rem;}
+    .upload-area{border:1.5px dashed var(--border-strong);border-radius:var(--radius-sm);padding:1.25rem;text-align:center;cursor:pointer;transition:var(--t);}
+    .upload-area:hover{border-color:var(--accent);background:var(--accent-soft);}
+    .upload-area input{display:none;}
+    .upload-label{font-size:.8rem;color:var(--text-2);display:flex;flex-direction:column;align-items:center;gap:.375rem;cursor:pointer;}
+    .upload-preview{width:100%;height:80px;object-fit:cover;border-radius:var(--radius-sm);margin-top:.5rem;display:none;}
+    /* Verfassung Editor */
+    .verf-artikel-item{border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:.75rem;overflow:hidden;}
+    .verf-artikel-head{background:var(--bg-subtle);padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem;cursor:pointer;}
+    .verf-artikel-head:hover{background:var(--border);}
+    .verf-artikel-body{padding:1rem;display:none;}
+    .verf-artikel-item.open .verf-artikel-body{display:block;}
+    .verf-artikel-item.open .verf-chevron{transform:rotate(180deg);}
+    .verf-chevron{transition:transform .2s;color:var(--text-3);font-size:.75rem;margin-left:auto;}
+    .absatz-row{display:grid;grid-template-columns:90px 1fr auto;gap:.5rem;align-items:start;padding:.5rem 0;border-bottom:1px solid var(--border);}
+    .absatz-row:last-child{border-bottom:none;}
+    .admin-topbar{display:none;align-items:center;gap:.75rem;padding:.875rem 0;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
+    .admin-topbar-title{font-family:var(--font-serif);font-size:1.25rem;flex:1;}
+    .stb{display:none;align-items:center;justify-content:center;width:36px;height:36px;flex-shrink:0;background:var(--bg-subtle);border:1px solid var(--border-strong);border-radius:var(--radius-sm);cursor:pointer;}
+    @media(max-width:768px){.admin-topbar{display:flex;}.stb{display:flex;}.sidebar{position:fixed;top:60px;left:0;bottom:0;z-index:95;box-shadow:var(--shadow-lg);display:none;}.sidebar.open{display:block;animation:slideIn .2s ease;}#logoutDesktop{display:none!important;}}
+    @media(min-width:769px){#logoutDesktop{display:inline-flex;}.stb{display:none!important;}.admin-topbar{display:none;}}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-mark">C</div>
+      <div><div class="brand-name">CSG-City</div><div class="brand-sub">Admin</div></div>
+    </a>
+    <ul class="nav-links" id="desktopNav"></ul>
+    <div class="nav-actions">
+      <button class="theme-btn" id="themeToggle"></button>
+      <button class="btn btn-ghost btn-sm" id="logoutDesktop"></button>
+      <button class="stb" id="sidebarToggleBtn"></button>
+    </div>
+  </nav>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Inhalt</div>
+        <div class="sidebar-link active" data-sec="nachrichten" id="sl-nachrichten"></div>
+        <div class="sidebar-link" data-sec="termine" id="sl-termine"></div>
+        <div class="sidebar-link" data-sec="stellen" id="sl-stellen"></div>
+        <div class="sidebar-link" data-sec="werbung" id="sl-werbung"></div>
+        <div class="sidebar-link" data-sec="anfragen" id="sl-anfragen"></div>
+        <div class="sidebar-link" data-sec="gesetze" id="sl-gesetze"></div>
+        <div class="sidebar-link" data-sec="faq" id="sl-faq"></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">System</div>
+        <div class="sidebar-link" data-sec="backup" id="sl-backup"></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Links</div>
+        <a href="/" class="sidebar-link" id="sl-portal"></a>
+        <a href="/faq" class="sidebar-link" id="sl-verf"></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Konto</div>
+        <div class="sidebar-link" id="logoutSide"></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="admin-topbar">
+        <button class="stb" id="stb2"></button>
+        <div class="admin-topbar-title" id="topbarTitle">Mitteilungen</div>
+      </div>
+      <div id="sidebarOverlay" onclick="closeSB()" style="display:none;position:fixed;inset:0;z-index:94;background:rgba(0,0,0,0.3)"></div>
+
+      <!-- NACHRICHTEN -->
+      <div class="admin-section active" id="sec-nachrichten">
+        <div class="page-header"><h2 id="h-nachrichten"></h2><p>Sichtbar für alle Bürger auf dem Dashboard</p></div>
+        <div class="toolbar"><span class="toolbar-info" id="infoN"></span><button class="btn btn-primary" id="btnAddN"></button></div>
+        <div class="card"><div class="card-body" id="listN"><div class="empty-state">Laden…</div></div></div>
+      </div>
+
+      <!-- TERMINE -->
+      <div class="admin-section" id="sec-termine">
+        <div class="page-header"><h2 id="h-termine"></h2><p>Wichtige Daten für alle Bürgerinnen und Bürger</p></div>
+        <div class="toolbar"><span class="toolbar-info" id="infoT"></span><button class="btn btn-primary" id="btnAddT"></button></div>
+        <div class="card"><div class="card-body" id="listT"><div class="empty-state">Laden…</div></div></div>
+      </div>
+
+      <!-- STELLEN -->
+      <div class="admin-section" id="sec-stellen">
+        <div class="page-header"><h2 id="h-stellen"></h2><p>Positionen im Staatsdienst verwalten</p></div>
+        <div class="toolbar"><span class="toolbar-info" id="infoS"></span><button class="btn btn-primary" id="btnAddS"></button></div>
+        <div class="card"><div class="table-wrap"><table>
+          <thead><tr><th>Titel</th><th>Abteilung</th><th>€/h</th><th>Status</th><th></th></tr></thead>
+          <tbody id="tbodyS"><tr><td colspan="5"><div class="empty-state">Laden…</div></td></tr></tbody>
+        </table></div></div>
+      </div>
+
+      <!-- WERBEFLÄCHEN -->
+      <div class="admin-section" id="sec-werbung">
+        <div class="page-header"><h2 id="h-werbung"></h2><p>Werbeplätze verwalten und Bilder hinterlegen</p></div>
+        <div class="toolbar"><span class="toolbar-info" id="infoW"></span><button class="btn btn-primary" id="btnAddW"></button></div>
+        <div class="werbe-grid" id="werbeGrid"><div class="empty-state">Laden…</div></div>
+      </div>
+
+      <!-- ANFRAGEN -->
+      <div class="admin-section" id="sec-anfragen">
+        <div class="page-header">
+          <h2 id="h-anfragen"></h2>
+          <p>Eingehende Werbebuchungs-Anfragen</p>
+        </div>
+        <div class="toolbar">
+          <span class="toolbar-info" id="infoA"></span>
+          <select class="form-input btn-sm" id="filterA" style="min-width:140px">
+            <option value="alle">Alle</option>
+            <option value="neu">Neu</option>
+            <option value="bearbeitung">In Bearbeitung</option>
+            <option value="erledigt">Erledigt</option>
+          </select>
+        </div>
+        <div class="card"><div class="card-body" id="anfragenList"><div class="empty-state">Laden…</div></div></div>
+      </div>
+
+      <!-- GESETZE -->
+      <div class="admin-section" id="sec-gesetze">
+        <div class="page-header">
+          <h2 id="h-gesetze"></h2>
+          <p>Gesetzbücher und Paragraphen bearbeiten</p>
+        </div>
+        <div class="toolbar">
+          <span class="toolbar-info" id="infoG"></span>
+          <button class="btn btn-primary" id="btnAddGesetzbuch"></button>
+        </div>
+        <div id="gesetzeList"><div class="empty-state">Laden…</div></div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="admin-section" id="sec-faq">
+        <div class="page-header">
+          <h2 id="h-faq"></h2>
+          <p>FAQ-Kategorien und Fragen bearbeiten</p>
+        </div>
+        <div class="toolbar">
+          <span class="toolbar-info" id="infoFaq"></span>
+          <button class="btn btn-primary" id="btnAddFaqKat"></button>
+        </div>
+        <div id="faqAdminList"><div class="empty-state">Laden…</div></div>
+      </div>
+
+      <!-- BACKUP -->
+      <div class="admin-section" id="sec-backup">
+        <div class="page-header">
+          <h2 id="h-backup"></h2>
+          <p>Datenbank sichern und wiederherstellen</p>
+        </div>
+        <div class="grid-2" style="gap:1rem">
+          <div class="card">
+            <div class="card-body">
+              <div style="font-weight:500;margin-bottom:.375rem">Backup herunterladen</div>
+              <div style="font-size:.8rem;color:var(--text-2);margin-bottom:.5rem">Aktuelle Datenbank als JSON-Datei speichern</div>
+              <div style="font-size:.75rem;color:var(--text-3);margin-bottom:.875rem" id="backupStatusInfo">Letztes automatisches Backup: Laden…</div>
+              <button class="btn btn-primary" id="btnDownloadBackup"></button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div style="font-weight:500;margin-bottom:.375rem">Backup wiederherstellen</div>
+              <div style="font-size:.8rem;color:var(--text-2);margin-bottom:.5rem">JSON-Backup-Datei hochladen und einspielen</div>
+              <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:var(--radius-sm);padding:.5rem .875rem;font-size:.775rem;color:#ef4444;margin-bottom:.75rem">
+                Alle aktuellen Daten werden überschrieben!
+              </div>
+              <div class="upload-area" onclick="document.getElementById('backupFileInput').click()" style="margin-bottom:.75rem">
+                <input type="file" id="backupFileInput" accept=".json"/>
+                <label class="upload-label" id="backupUploadLabel">JSON-Datei auswählen</label>
+              </div>
+              <button class="btn btn-danger" id="btnRestoreBackup" disabled></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal: Nachricht -->
+  <div class="modal-overlay" id="mN">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title" id="mNTitle">Mitteilung</div><button class="modal-close" id="mNClose"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="mNId"/>
+        <div class="form-group"><label class="form-label">Titel *</label><input class="form-input" id="mNT"/></div>
+        <div class="form-group"><label class="form-label">Inhalt</label><textarea class="form-input" id="mNI" style="min-height:80px;resize:vertical"></textarea></div>
+        <div class="form-group"><label class="form-label">Datum</label><input class="form-input" type="date" id="mND"/></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" onclick="cm('mN')">Abbrechen</button><button class="btn btn-primary" id="saveN">Speichern</button></div>
+    </div>
+  </div>
+
+  <!-- Modal: Termin -->
+  <div class="modal-overlay" id="mTerm">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title" id="mTermTitle">Termin</div><button class="modal-close" id="mTermClose"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="mTermId"/>
+        <div class="form-group"><label class="form-label">Titel *</label><input class="form-input" id="mTermT"/></div>
+        <div class="form-group"><label class="form-label">Beschreibung</label><input class="form-input" id="mTermB"/></div>
+        <div class="form-group"><label class="form-label">Datum *</label><input class="form-input" type="date" id="mTermD"/></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" onclick="cm('mTerm')">Abbrechen</button><button class="btn btn-primary" id="saveTerm">Speichern</button></div>
+    </div>
+  </div>
+
+  <!-- Modal: Stelle -->
+  <div class="modal-overlay" id="mS">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title" id="mSTitle">Stelle</div><button class="modal-close" id="mSClose"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="mSId"/>
+        <div class="form-group"><label class="form-label">Titel *</label><input class="form-input" id="mST"/></div>
+        <div class="form-group"><label class="form-label">Schlagzeile</label><input class="form-input" id="mSSL" placeholder='z.B. Werde Teil des Staatsrats'/></div>
+        <div class="form-group"><label class="form-label">Abteilung</label><input class="form-input" id="mSA"/></div>
+        <div class="form-group"><label class="form-label">Beschreibung</label><textarea class="form-input" id="mSB" style="min-height:200px;resize:vertical"></textarea></div>
+        <div class="form-group"><label class="form-label">Lohn</label><input class="form-input" type="number" id="mSL" step="0.50"/></div>
+        <div class="form-group"><label class="form-label">Lohn-Typ</label><select class="form-input" id="mSLT"><option value="h">pro Stunde (€/h)</option><option value="tag">pro Tag (€/Tag)</option><option value="woche">pro Woche (€/Woche)</option></select></div>
+        <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="mSO"><option value="true">Offen</option><option value="false">Besetzt</option></select></div>
+        <div class="form-group"><label class="form-label">Kontakt (E-Mail / Ansprechpartner)</label><input class="form-input" id="mSK" placeholder="z.B. jobs@csg-city.de"/></div>
+        <div class="form-group"><label class="form-label">Gewinnanteil</label><input class="form-input" id="mSGW" placeholder="z.B. 10% oder variabel — leer lassen wenn keiner"/></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" onclick="cm('mS')">Abbrechen</button><button class="btn btn-primary" id="saveS">Speichern</button></div>
+    </div>
+  </div>
+
+  <!-- Modal: Werbefläche -->
+  <div class="modal-overlay" id="mW">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title" id="mWTitle">Werbefläche</div><button class="modal-close" id="mWClose"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="mWId"/>
+        <div class="form-group"><label class="form-label">Name *</label><input class="form-input" id="mWN"/></div>
+        <div class="form-group"><label class="form-label">Größe (px)</label><input class="form-input" id="mWG" placeholder="z.B. 300×250"/></div>
+        <div class="form-group">
+          <label class="form-label">Slot (Position)</label>
+          <select class="form-input" id="mWSlot">
+            <option value="dashboard_sidebar_1">Dashboard – Sidebar oben (300×250)</option>
+            <option value="dashboard_sidebar_2">Dashboard – Sidebar Mitte (300×250)</option>
+            <option value="dashboard_sidebar_3">Dashboard – Sidebar unten (300×250)</option>
+            <option value="dashboard_footer">Dashboard – Footer Leaderboard (728×90)</option>
+            <option value="stellen_inline_1">Stellenangebote – Inline 1 (300×140)</option>
+            <option value="stellen_inline_2">Stellenangebote – Inline 2 (300×140)</option>
+            <option value="stellen_inline_3">Stellenangebote – Inline 3 (300×140)</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Beschreibung</label><input class="form-input" id="mWB"/></div>
+        <div class="form-group"><label class="form-label">Preis (€/Tag)</label><input class="form-input" type="number" id="mWP" step="0.50"/></div>
+        <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="mWO"><option value="false">Verfügbar</option><option value="true">Belegt</option></select></div>
+        <div class="form-group"><label class="form-label">Mieter</label><input class="form-input" id="mWM" placeholder="Firmenname"/></div>
+        <div class="form-group"><label class="form-label">Kontakt</label><input class="form-input" id="mWK" placeholder="email@beispiel.de"/></div>
+        <div class="form-group">
+          <label class="form-label">Werbebild <span style="color:var(--text-3);font-weight:400" id="werbeGroesseTipp"></span></label>
+          <div class="upload-area" onclick="document.getElementById('bildInput').click()">
+            <input type="file" id="bildInput" accept="image/*"/>
+            <label class="upload-label" id="uploadLabel">Bild auswählen</label>
+          </div>
+          <img id="uploadPreview" class="upload-preview"/>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" onclick="cm('mW')">Abbrechen</button><button class="btn btn-primary" id="saveW">Speichern</button></div>
+    </div>
+  </div>
+
+  <!-- Modal: Gesetzbuch -->
+  <div class="modal-overlay" id="mGB">
+    <div class="modal">
+      <div class="modal-header"><span class="modal-title" id="mGBTitle">Gesetzbuch</span><button class="modal-close"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="mGBId"/>
+        <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="mGBName" placeholder="z.B. Gesetzbuch zum Grenzschutz"/></div>
+        <div class="form-group"><label class="form-label">Kurzname</label><input class="form-input" id="mGBKurz" placeholder="z.B. GrenzG"/></div>
+        <div class="form-group"><label class="form-label">Ministerium</label><input class="form-input" id="mGBMin" placeholder="z.B. Innenministerium"/></div>
+        <div class="form-group"><label class="form-label">Version</label><input class="form-input" id="mGBVer" placeholder="1.0"/></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" onclick="cm('mGB')">Abbrechen</button><button class="btn btn-primary" id="saveGB">Speichern</button></div>
+    </div>
+  </div>
+
+  <!-- Modal: Paragraph -->
+  <div class="modal-overlay" id="mPara">
+    <div class="modal" style="max-width:640px">
+      <div class="modal-header"><span class="modal-title" id="mParaTitle">Paragraph</span><button class="modal-close"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="mParaGBId"/>
+        <input type="hidden" id="mParaId"/>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+          <div class="form-group"><label class="form-label">Nummer</label><input class="form-input" id="mParaNr" placeholder="z.B. §1"/></div>
+          <div class="form-group"><label class="form-label">Titel</label><input class="form-input" id="mParaTitel" placeholder="z.B. Ausweispflicht"/></div>
+        </div>
+        <div class="form-group"><label class="form-label">Absätze (einer pro Zeile)</label><textarea class="form-input" id="mParaAbs" rows="8" style="resize:vertical" placeholder="(1) Erster Absatz...&#10;(2) Zweiter Absatz..."></textarea></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" onclick="cm('mPara')">Abbrechen</button><button class="btn btn-primary" id="savePara">Speichern</button></div>
+    </div>
+  </div>
+
+  <!-- Modal: FAQ Kategorie -->
+  <div class="modal-overlay" id="mFaqKat">
+    <div class="modal">
+      <div class="modal-header"><span class="modal-title" id="mFaqKatTitle">FAQ-Kategorie</span><button class="modal-close"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="mFaqKatId"/>
+        <div class="form-group"><label class="form-label">Kategoriename</label><input class="form-input" id="mFaqKatName" placeholder="z.B. Grenzschutz & Einreise"/></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" onclick="cm('mFaqKat')">Abbrechen</button><button class="btn btn-primary" id="saveFaqKat">Speichern</button></div>
+    </div>
+  </div>
+
+  <!-- Modal: FAQ Frage -->
+  <div class="modal-overlay" id="mFaqF">
+    <div class="modal" style="max-width:600px">
+      <div class="modal-header"><span class="modal-title" id="mFaqFTitle">FAQ-Frage</span><button class="modal-close"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="mFaqFKatId"/>
+        <input type="hidden" id="mFaqFIdx"/>
+        <div class="form-group"><label class="form-label">Frage</label><input class="form-input" id="mFaqFFrage" placeholder="Wie funktioniert...?"/></div>
+        <div class="form-group"><label class="form-label">Antwort</label><textarea class="form-input" id="mFaqFAntwort" rows="5" style="resize:vertical" placeholder="Die Antwort lautet..."></textarea></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" onclick="cm('mFaqF')">Abbrechen</button><button class="btn btn-primary" id="saveFaqF">Speichern</button></div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/icons.js"></script>
+  <script>
+    "use strict";
+    var allN=[], allT=[], allS=[], allW=[], allG=[], allFaq=[], vData=null;
+    var pendingImageData=null, pendingMime=null;
+
+    // ── Icons & Nav ───────────────────────────────────────────
+    (function(){
+      var btn=document.getElementById("themeToggle");
+      // Set correct icon based on current theme
+      var setIcon=function(){ btn.innerHTML=document.documentElement.getAttribute("data-theme")==="dark"?ICONS.sun:ICONS.moon; };
+      setIcon();
+      btn.addEventListener("click",function(){ toggleTheme(); setIcon(); });
+    })();
+    document.getElementById("logoutDesktop").innerHTML = ICONS.logout + " Abmelden";
+    document.getElementById("logoutDesktop").addEventListener("click", logout);
+    document.getElementById("logoutSide").innerHTML   = ICONS.logout + " Abmelden";
+    document.getElementById("logoutSide").addEventListener("click", logout);
+
+    var dNav = document.getElementById("desktopNav");
+    [{href:"/",ic:"dashboard",l:"Staatsportal"},{href:"/faq",ic:"info",l:"FAQ"}].forEach(function(n){
+      var li=document.createElement("li"),a=document.createElement("a");
+      a.href=n.href; a.innerHTML=ICONS[n.ic]+" "+n.l; li.appendChild(a); dNav.appendChild(li);
+    });
+
+    var slDefs = {
+      nachrichten:{ic:"megaphone",l:"Mitteilungen"},
+      termine:    {ic:"calendar", l:"Termine"},
+      stellen:    {ic:"jobs",     l:"Stellenangebote"},
+      verfassung: {ic:"info",l:"FAQ"},
+      werbung:    {ic:"ads",      l:"Werbeflächen"},
+      anfragen:   {ic:"megaphone",l:"Werbe-Anfragen"},
+      gesetze:    {ic:"constitution",l:"Gesetzbücher"},
+      faq:        {ic:"question",    l:"FAQ bearbeiten"},
+      backup:     {ic:"star",        l:"Backup & Restore"}
+    };
+    Object.keys(slDefs).forEach(function(k){
+      var el = document.getElementById("sl-"+k);
+      if (el) el.innerHTML = "<span class='icon'>"+ICONS[slDefs[k].ic]+"</span>"+slDefs[k].l;
+    });
+    document.getElementById("sl-portal").innerHTML = "<span class='icon'>"+ICONS.building+"</span>Staatsportal";
+    document.getElementById("sl-verf").innerHTML   = "<span class='icon'>"+ICONS.info+"</span>FAQ";
+
+    var headDefs = {
+      "h-nachrichten":{ic:"megaphone",l:"Mitteilungen"},
+      "h-termine":    {ic:"calendar", l:"Termine & Fristen"},
+      "h-stellen":    {ic:"jobs",     l:"Stellenangebote"},
+      "h-werbung":    {ic:"ads",      l:"Werbeflächen"},
+      "h-anfragen":   {ic:"megaphone",l:"Werbe-Anfragen"},
+      "h-gesetze":    {ic:"constitution",l:"Gesetzbücher"},
+      "h-faq":        {ic:"question",    l:"FAQ bearbeiten"},
+      "h-backup":     {ic:"star",        l:"Backup & Restore"}
+    };
+    Object.keys(headDefs).forEach(function(k){
+      var el=document.getElementById(k); if(el) el.innerHTML=ICONS[headDefs[k].ic]+" "+headDefs[k].l;
+    });
+
+    var addBtns={btnAddN:["plus"," Mitteilung"],btnAddT:["plus"," Termin"],btnAddS:["plus"," Stelle"],btnAddW:["plus"," Werbefläche"],btnAddArtikel:["plus"," Artikel"],btnAddGesetz:["plus"," Gesetz"],saveVerfMeta:["check"," Speichern"],saveVerfPraembel:["check"," Speichern"]};
+    Object.keys(addBtns).forEach(function(id){
+      var el=document.getElementById(id); if(el) el.innerHTML=ICONS[addBtns[id][0]]+addBtns[id][1];
+    });
+
+    [document.getElementById("sidebarToggleBtn"),document.getElementById("stb2")].forEach(function(b){
+      if(b){b.innerHTML=ICONS.menu; b.addEventListener("click",openSB);}
+    });
+    document.querySelectorAll(".modal-close").forEach(function(btn){
+      btn.innerHTML=ICONS.close;
+      btn.addEventListener("click",function(){cm(btn.closest(".modal-overlay").id);});
+    });
+
+    document.getElementById("uploadLabel").innerHTML = ICONS.star + " Bild auswählen oder hierher ziehen";
+    document.getElementById("backupUploadLabel").innerHTML = ICONS.star + " JSON-Datei auswählen";
+
+    // ── Sidebar nav ───────────────────────────────────────────
+    var secNames={nachrichten:"Mitteilungen",termine:"Termine",stellen:"Stellenangebote",werbung:"Werbeflächen",anfragen:"Werbe-Anfragen",gesetze:"Gesetzbücher",faq:"FAQ bearbeiten",backup:"Backup & Restore"};
+    document.querySelectorAll(".sidebar-link[data-sec]").forEach(function(l){
+      l.addEventListener("click", function(){
+        document.querySelectorAll(".sidebar-link").forEach(function(x){x.classList.remove("active");});
+        document.querySelectorAll(".admin-section").forEach(function(x){x.classList.remove("active");});
+        l.classList.add("active");
+        var secEl=document.getElementById("sec-"+l.dataset.sec); if(secEl) secEl.classList.add("active");
+        document.getElementById("topbarTitle").textContent = secNames[l.dataset.sec]||"Admin";
+        closeSB();
+        if (l.dataset.sec==="anfragen") loadA();
+      });
+    });
+
+    function openSB(){ document.getElementById("sidebar").classList.add("open"); document.getElementById("sidebarOverlay").style.display="block"; document.body.classList.add("menu-open"); }
+    function closeSB(){ document.getElementById("sidebar").classList.remove("open"); document.getElementById("sidebarOverlay").style.display="none"; document.body.classList.remove("menu-open"); }
+    function om(id){ document.getElementById(id).classList.add("open"); }
+    function cm(id){ document.getElementById(id).classList.remove("open"); }
+
+    // Auth guard
+    checkAuth().then(function(s){ if(!s||!s.isAdmin) window.location.href="/login"; });
+
+    // ── Helper: action buttons using data-attributes ──────────
+    function editBtn(fn, id) {
+      return '<button class="btn btn-icon btn-sm act-btn" title="Bearbeiten" data-fn="'+fn+'" data-id="'+id+'">'+ICONS.edit+'</button>';
+    }
+    function delBtn(fn, id, name) {
+      return '<button class="btn btn-danger btn-sm act-btn" title="Löschen" data-fn="'+fn+'" data-id="'+id+'" data-name="'+name.replace(/"/g,"")+'">'+ICONS.trash+'</button>';
+    }
+    function leerenBtn(id, name) {
+      return '<button class="btn btn-ghost btn-sm act-btn" title="Leeren" data-fn="leerenW" data-id="'+id+'" data-name="'+name.replace(/"/g,"")+'">Leeren</button>';
+    }
+
+    document.addEventListener("click", function(e){
+      var btn = e.target.closest(".act-btn");
+      if (!btn) return;
+      var fn=btn.dataset.fn, id=parseInt(btn.dataset.id), name=btn.dataset.name||"";
+      if      (fn==="editN")    editN(id);
+      else if (fn==="delN")     delN(id,name);
+      else if (fn==="editTerm") editTerm(id);
+      else if (fn==="delTerm")  delTerm(id,name);
+      else if (fn==="editS")    editS(id);
+      else if (fn==="delS")     delS(id,name);
+      else if (fn==="editW")    editW(id);
+      else if (fn==="delW")     delW(id,name);
+      else if (fn==="leerenW")  leerenW(id,name);
+    });
+
+    // ── NACHRICHTEN ───────────────────────────────────────────
+    async function loadN(){
+      allN = await(await fetch("/api/nachrichten")).json();
+      document.getElementById("infoN").textContent = allN.length+" Mitteilungen";
+      document.getElementById("listN").innerHTML = allN.length ? allN.map(function(n){
+        return '<div class="list-item"><div class="list-item-info"><div class="list-item-title">'+escH(n.titel)+'</div><div class="list-item-sub">'+escH((n.inhalt||"").substring(0,80))+'</div></div>'
+          +'<div class="list-item-right"><div class="list-item-date">'+formatDatum(n.datum)+'</div>'+editBtn("editN",n.id)+delBtn("delN",n.id,n.titel)+'</div></div>';
+      }).join("") : '<div class="empty-state">Keine Mitteilungen</div>';
+    }
+    document.getElementById("btnAddN").addEventListener("click",function(){
+      document.getElementById("mNTitle").textContent="Neue Mitteilung";
+      document.getElementById("mNId").value=""; document.getElementById("mNT").value="";
+      document.getElementById("mNI").value=""; document.getElementById("mND").value=today();
+      om("mN");
+    });
+    function editN(id){ var n=allN.find(function(x){return x.id===id;}); if(!n)return; document.getElementById("mNTitle").textContent="Mitteilung bearbeiten"; document.getElementById("mNId").value=n.id; document.getElementById("mNT").value=n.titel; document.getElementById("mNI").value=n.inhalt||""; document.getElementById("mND").value=n.datum||""; om("mN"); }
+    document.getElementById("saveN").addEventListener("click",async function(){
+      var id=document.getElementById("mNId").value;
+      var b={titel:document.getElementById("mNT").value.trim(),inhalt:document.getElementById("mNI").value.trim(),datum:document.getElementById("mND").value};
+      if(!b.titel){showToast("Titel fehlt!","error");return;}
+      await apiSave("/api/nachrichten",id,b); showToast(b.titel+(id?" aktualisiert.":" hinzugefügt.")); cm("mN"); loadN();
+    });
+    async function delN(id,t){ if(!confirm('"'+t+'" löschen?'))return; await fetch("/api/nachrichten/"+id,{method:"DELETE"}); showToast(t+" gelöscht.","error"); loadN(); }
+
+    // ── TERMINE ───────────────────────────────────────────────
+    async function loadT(){
+      allT = await(await fetch("/api/termine")).json();
+      document.getElementById("infoT").textContent = allT.length+" Termine";
+      document.getElementById("listT").innerHTML = allT.length ? allT.map(function(t){
+        return '<div class="list-item"><div class="list-item-info"><div class="list-item-title">'+escH(t.titel)+'</div><div class="list-item-sub">'+escH(t.beschreibung||"")+'</div></div>'
+          +'<div class="list-item-right"><div class="list-item-date">'+formatDatum(t.datum)+'</div>'+editBtn("editTerm",t.id)+delBtn("delTerm",t.id,t.titel)+'</div></div>';
+      }).join("") : '<div class="empty-state">Keine Termine</div>';
+    }
+    document.getElementById("btnAddT").addEventListener("click",function(){
+      document.getElementById("mTermTitle").textContent="Neuer Termin";
+      document.getElementById("mTermId").value=""; document.getElementById("mTermT").value="";
+      document.getElementById("mTermB").value=""; document.getElementById("mTermD").value=today();
+      om("mTerm");
+    });
+    function editTerm(id){ var t=allT.find(function(x){return x.id===id;}); if(!t)return; document.getElementById("mTermTitle").textContent="Termin bearbeiten"; document.getElementById("mTermId").value=t.id; document.getElementById("mTermT").value=t.titel; document.getElementById("mTermB").value=t.beschreibung||""; document.getElementById("mTermD").value=t.datum||""; om("mTerm"); }
+    document.getElementById("saveTerm").addEventListener("click",async function(){
+      var id=document.getElementById("mTermId").value;
+      var b={titel:document.getElementById("mTermT").value.trim(),beschreibung:document.getElementById("mTermB").value.trim(),datum:document.getElementById("mTermD").value};
+      if(!b.titel||!b.datum){showToast("Titel und Datum fehlen!","error");return;}
+      await apiSave("/api/termine",id,b); showToast(b.titel+(id?" aktualisiert.":" hinzugefügt.")); cm("mTerm"); loadT();
+    });
+    async function delTerm(id,t){ if(!confirm('"'+t+'" löschen?'))return; await fetch("/api/termine/"+id,{method:"DELETE"}); showToast(t+" gelöscht.","error"); loadT(); }
+
+    // ── STELLENANGEBOTE ───────────────────────────────────────
+    async function loadS(){
+      allS = await(await fetch("/api/stellenangebote")).json();
+      var of=allS.filter(function(s){return s.offen;}).length;
+      document.getElementById("infoS").textContent=allS.length+" Stellen · "+of+" offen";
+      document.getElementById("tbodyS").innerHTML = allS.map(function(s){
+        var b=s.offen?'<span class="badge badge-green">Offen</span>':'<span class="badge badge-neutral">Besetzt</span>';
+        return '<tr><td><strong>'+escH(s.titel)+'</strong></td><td class="text-2">'+escH(s.abteilung||"–")+'</td><td>'+Number(s.lohnProH||0).toFixed(2)+'</td><td>'+b+'</td>'
+          +'<td><div class="actions-cell">'+editBtn("editS",s.id)+delBtn("delS",s.id,s.titel)+'</div></td></tr>';
+      }).join("") || '<tr><td colspan="5"><div class="empty-state">Keine Stellen</div></td></tr>';
+    }
+    document.getElementById("btnAddS").addEventListener("click",function(){
+      document.getElementById("mSTitle").textContent="Neue Stelle";
+      ["mSId","mST","mSSL","mSA","mSB","mSL","mSK","mSGW"].forEach(function(i){document.getElementById(i).value="";});
+      document.getElementById("mSO").value="true";
+      document.getElementById("mSLT").value="h";
+      om("mS");
+    });
+    function editS(id){ var s=allS.find(function(x){return x.id===id;}); if(!s)return; document.getElementById("mSTitle").textContent="Stelle bearbeiten"; document.getElementById("mSId").value=s.id; document.getElementById("mST").value=s.titel||""; document.getElementById("mSSL").value=s.schlagzeile||""; document.getElementById("mSA").value=s.abteilung||""; document.getElementById("mSB").value=s.beschreibung||""; document.getElementById("mSL").value=s.lohnProH||0; document.getElementById("mSLT").value=s.lohnTyp||"h"; document.getElementById("mSO").value=s.offen?"true":"false"; document.getElementById("mSK").value=s.kontakt||""; document.getElementById("mSGW").value=s.gewinnanteil||""; om("mS"); }
+    document.getElementById("saveS").addEventListener("click",async function(){
+      var id=document.getElementById("mSId").value;
+      var b={titel:document.getElementById("mST").value.trim(),schlagzeile:document.getElementById("mSSL").value.trim(),abteilung:document.getElementById("mSA").value.trim(),beschreibung:document.getElementById("mSB").value.trim(),lohnProH:parseFloat(document.getElementById("mSL").value)||0,lohnTyp:document.getElementById("mSLT").value||"h",offen:document.getElementById("mSO").value==="true",kontakt:document.getElementById("mSK").value.trim(),gewinnanteil:document.getElementById("mSGW").value.trim()};
+      if(!b.titel){showToast("Titel fehlt!","error");return;}
+      await apiSave("/api/stellenangebote",id,b); showToast(b.titel+(id?" aktualisiert.":" hinzugefügt.")); cm("mS"); loadS();
+    });
+    async function delS(id,t){ if(!confirm('"'+t+'" löschen?'))return; await fetch("/api/stellenangebote/"+id,{method:"DELETE"}); showToast(t+" gelöscht.","error"); loadS(); }
+
+    // ── WERBEFLÄCHEN ──────────────────────────────────────────
+    var slotLabels={"dashboard_sidebar_1":"Sidebar oben","dashboard_sidebar_2":"Sidebar Mitte","dashboard_sidebar_3":"Sidebar unten","dashboard_footer":"Footer","stellen_inline_1":"Stellen Inline 1","stellen_inline_2":"Stellen Inline 2","stellen_inline_3":"Stellen Inline 3","gesetze_sidebar":"Gesetze Sidebar"};
+    var slotSizes={"dashboard_sidebar_1":"300×250","dashboard_sidebar_2":"300×250","dashboard_sidebar_3":"300×250","dashboard_footer":"728×90","stellen_inline_1":"300×140","stellen_inline_2":"300×140","stellen_inline_3":"300×140","gesetze_sidebar":"300×250"};
+
+    async function loadW(){
+      allW=await(await fetch("/api/werbeflaechen")).json();
+      var frei=allW.filter(function(w){return!w.belegt;}).length;
+      document.getElementById("infoW").textContent=allW.length+" Flächen · "+frei+" verfügbar";
+      document.getElementById("werbeGrid").innerHTML=allW.map(function(w){
+        var preview=w.bildUrl
+          ?'<img src="'+w.bildUrl+'" style="width:100%;height:70px;object-fit:cover;display:block">'
+          :'<div class="werbe-preview'+(w.belegt?" belegt":"")+'">'+ICONS.ads+" "+(w.belegt?"Belegt":w.groesse||"–")+'</div>';
+        var badge=w.belegt?'<span class="badge badge-neutral">Belegt</span>':'<span class="badge badge-green">Frei</span>';
+        return '<div class="werbe-card">'+preview
+          +'<div class="werbe-body"><div class="werbe-name">'+escH(w.name)+" "+badge+'</div>'
+          +'<div class="werbe-meta">'+escH(w.groesse||"")+" · "+Number(w.preis).toFixed(2)+" €/Tag · "+(slotLabels[w.slot]||w.slot||"–")+'</div>'
+          +'<div class="werbe-desc">'+escH(w.beschreibung||"")+(w.mieter?' <strong>→ '+escH(w.mieter)+'</strong>':'')+'</div>'
+          +'<div class="werbe-actions">'+editBtn("editW",w.id)+(w.belegt?leerenBtn(w.id,w.name):"")+delBtn("delW",w.id,w.name)+'</div>'
+          +'</div></div>';
+      }).join("") || '<div class="empty-state">Keine Werbeflächen</div>';
+    }
+
+    document.getElementById("mWSlot").addEventListener("change",function(){
+      document.getElementById("werbeGroesseTipp").textContent="(Empfohlen: "+(slotSizes[this.value]||"–")+")";
+    });
+
+    document.getElementById("bildInput").addEventListener("change",function(){
+      var file=this.files[0]; if(!file)return;
+      if(file.size>5*1024*1024){showToast("Bild zu groß (max 5 MB)","error");return;}
+      var reader=new FileReader();
+      reader.onload=function(e){
+        pendingImageData=e.target.result; pendingMime=file.type;
+        var prev=document.getElementById("uploadPreview"); prev.src=e.target.result; prev.style.display="block";
+        document.getElementById("uploadLabel").textContent=file.name;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("btnAddW").addEventListener("click",function(){
+      document.getElementById("mWTitle").textContent="Neue Werbefläche";
+      ["mWId","mWN","mWG","mWB","mWP","mWM","mWK"].forEach(function(i){document.getElementById(i).value="";});
+      document.getElementById("mWSlot").value="werbung"; document.getElementById("mWO").value="false";
+      document.getElementById("uploadPreview").style.display="none";
+      document.getElementById("uploadLabel").textContent="Bild auswählen oder hierher ziehen";
+      document.getElementById("bildInput").value=""; pendingImageData=null; pendingMime=null;
+      om("mW");
+    });
+
+    function editW(id){
+      var w=allW.find(function(x){return x.id===id;}); if(!w)return;
+      document.getElementById("mWTitle").textContent="Werbefläche bearbeiten";
+      document.getElementById("mWId").value=w.id; document.getElementById("mWN").value=w.name||"";
+      document.getElementById("mWG").value=w.groesse||""; document.getElementById("mWSlot").value=w.slot||"werbung";
+      document.getElementById("mWB").value=w.beschreibung||""; document.getElementById("mWP").value=w.preis||0;
+      document.getElementById("mWO").value=w.belegt?"true":"false"; document.getElementById("mWM").value=w.mieter||"";
+      document.getElementById("mWK").value=w.kontakt||""; pendingImageData=null; pendingMime=null;
+      document.getElementById("werbeGroesseTipp").textContent="(Empfohlen: "+(slotSizes[w.slot]||"–")+")";
+      var prev=document.getElementById("uploadPreview");
+      if(w.bildUrl){prev.src=w.bildUrl;prev.style.display="block";}else{prev.style.display="none";}
+      document.getElementById("uploadLabel").textContent=w.bildUrl?"Bild ersetzen":"Bild auswählen";
+      om("mW");
+    }
+
+    document.getElementById("saveW").addEventListener("click",async function(){
+      var id=document.getElementById("mWId").value;
+      var b={name:document.getElementById("mWN").value.trim(),groesse:document.getElementById("mWG").value.trim(),slot:document.getElementById("mWSlot").value,beschreibung:document.getElementById("mWB").value.trim(),preis:parseFloat(document.getElementById("mWP").value)||0,belegt:document.getElementById("mWO").value==="true",mieter:document.getElementById("mWM").value.trim(),kontakt:document.getElementById("mWK").value.trim()};
+      if(!b.name){showToast("Name fehlt!","error");return;}
+      var savedId=id;
+      if(id){ await fetch("/api/werbeflaechen/"+id,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}); }
+      else{ var r=await(await fetch("/api/werbeflaechen",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)})).json(); savedId=r.id; }
+      if(pendingImageData&&savedId){ await fetch("/api/werbeflaechen/"+savedId+"/bild",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({imageData:pendingImageData,mimeType:pendingMime})}); }
+      showToast(b.name+(id?" aktualisiert.":" hinzugefügt.")); cm("mW"); loadW();
+    });
+
+    async function delW(id,n){ if(!confirm('"'+n+'" löschen?'))return; await fetch("/api/werbeflaechen/"+id,{method:"DELETE"}); showToast(n+" gelöscht.","error"); loadW(); }
+    async function leerenW(id,n){ if(!confirm('"'+n+'" leeren?'))return; await fetch("/api/werbeflaechen/"+id+"/leeren",{method:"POST"}); showToast(n+" geleert."); loadW(); }
+
+    // ── ANFRAGEN ─────────────────────────────────────────────
+    var allA = [];
+    var statusLabels = { neu:"Neu", bearbeitung:"In Bearbeitung", erledigt:"Erledigt" };
+    var statusColors = { neu:"badge-green", bearbeitung:"badge-blue", erledigt:"badge-neutral" };
+
+    async function loadA() {
+      allA = await(await fetch("/api/anfragen")).json();
+      var fEl = document.getElementById("filterA"); renderAnfragen(fEl ? fEl.value : "alle");
+      var neuCount = allA.filter(function(a){return a.status==="neu";}).length;
+      document.getElementById("infoA").textContent = allA.length+" Anfragen"+(neuCount?" · "+neuCount+" neu":"");
+    }
+
+    var filterAEl = document.getElementById("filterA"); if(filterAEl) filterAEl.addEventListener("change", function(){ renderAnfragen(this.value); });
+
+    function renderAnfragen(filter) {
+      var data = filter==="alle" ? allA : allA.filter(function(a){return a.status===filter;});
+      var el = document.getElementById("anfragenList");
+      if (!data.length) {
+        el.innerHTML = '<div class="empty-state">Keine Anfragen'+(filter!=="alle"?" mit diesem Status":"")+'</div>';
+        return;
+      }
+      el.innerHTML = "";
+      data.forEach(function(a) {
+        var card = document.createElement("div");
+        card.className = "card";
+        card.style.cssText = "margin-bottom:.75rem";
+
+        var datum = new Date(a.datum);
+        var datumStr = datum.toLocaleDateString("de-DE",{day:"2-digit",month:"short",year:"numeric"})
+          + " " + datum.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}) + " Uhr";
+
+        var badge = '<span class="badge '+(statusColors[a.status]||"badge-neutral")+'">'+escH(statusLabels[a.status]||a.status)+'</span>';
+
+        var inner = document.createElement("div");
+        inner.style.cssText = "padding:1.1rem 1.25rem";
+
+        // Header row
+        var hrow = document.createElement("div");
+        hrow.style.cssText = "display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;margin-bottom:.75rem;flex-wrap:wrap";
+
+        var info = document.createElement("div");
+        info.innerHTML = '<div style="font-weight:500;font-size:.9375rem;margin-bottom:.2rem">'+escH(a.name)
+          +' <span style="font-weight:400;color:var(--text-2);font-size:.8rem">&lt;'+escH(a.email)+'&gt;</span></div>'
+          +'<div style="font-size:.75rem;color:var(--text-3)">'+ICONS.clock+' '+datumStr+'</div>';
+
+        var actions = document.createElement("div");
+        actions.style.cssText = "display:flex;align-items:center;gap:.5rem;flex-shrink:0";
+
+        // Status select
+        var sel = document.createElement("select");
+        sel.className = "search-input";
+        sel.style.cssText = "font-size:.775rem;padding:.3rem .5rem;min-width:130px";
+        ["neu","bearbeitung","erledigt"].forEach(function(s){
+          var opt=document.createElement("option"); opt.value=s; opt.textContent=statusLabels[s];
+          if(a.status===s) opt.selected=true;
+          sel.appendChild(opt);
+        });
+        sel.addEventListener("change", async function(){
+          await fetch("/api/anfragen/"+a.id,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({status:this.value})});
+          a.status = this.value;
+          showToast("Status aktualisiert.");
+          // Re-render badge
+          badgeEl.outerHTML = '<span class="badge '+(statusColors[a.status]||"badge-neutral")+'">'+escH(statusLabels[a.status]||a.status)+'</span>';
+          var neuCount = allA.filter(function(x){return x.status==="neu";}).length;
+          document.getElementById("infoA").textContent = allA.length+" Anfragen"+(neuCount?" · "+neuCount+" neu":"");
+        });
+
+        var delA = document.createElement("button");
+        delA.className = "btn btn-danger btn-sm";
+        delA.innerHTML = ICONS.trash;
+        delA.title = "Anfrage löschen";
+        delA.addEventListener("click", async function(){
+          if(!confirm('Anfrage von '+a.name+' löschen?')) return;
+          await fetch("/api/anfragen/"+a.id,{method:"DELETE"});
+          showToast("Anfrage gelöscht.","error");
+          loadA();
+        });
+
+        actions.appendChild(sel);
+        actions.appendChild(delA);
+        hrow.appendChild(info);
+        hrow.appendChild(actions);
+        inner.appendChild(hrow);
+
+        // Details row
+        var details = document.createElement("div");
+        details.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:.5rem .875rem;border-top:1px solid var(--border);padding-top:.75rem";
+
+        function detailField(label, value) {
+          var d=document.createElement("div");
+          d.innerHTML='<div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:.2rem">'+label+'</div>'
+            +'<div style="font-size:.8125rem;color:var(--text-1)">'+escH(value||"–")+'</div>';
+          return d;
+        }
+        details.appendChild(detailField("Gewünschte Fläche", a.flaeche));
+        details.appendChild(detailField("Status", "")); // placeholder, replaced by badge
+        var badgeEl = details.lastChild.querySelector("div:last-child") || document.createElement("span");
+
+        // Nachricht (full width)
+        if (a.nachricht) {
+          var msgDiv = document.createElement("div");
+          msgDiv.style.cssText = "grid-column:1/-1";
+          msgDiv.innerHTML = '<div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:.2rem">Nachricht</div>'
+            +'<div style="font-size:.8125rem;color:var(--text-1);background:var(--bg-subtle);padding:.625rem .875rem;border-radius:var(--radius-sm);line-height:1.5">'+escH(a.nachricht)+'</div>';
+          details.appendChild(msgDiv);
+        }
+
+        // Replace status placeholder with badge + select info
+        details.children[1].querySelector("div:last-child").innerHTML = badge;
+
+        inner.appendChild(details);
+        card.appendChild(inner);
+        el.appendChild(card);
+      });
+    }
+
+    // ── Helpers ───────────────────────────────────────────────
+    function apiSave(base,id,body){
+      if(id) return fetch(base+"/"+id,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+      return fetch(base,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    }
+    function today(){ return new Date().toISOString().split("T")[0]; }
+    function escH(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+    // ── Init ──────────────────────────────────────────────────
+
+    // ── GESETZE ───────────────────────────────────────────────
+    async function loadG(){
+      allG = await (await fetch("/api/gesetze")).json();
+      document.getElementById("infoG").textContent = allG.length + " Gesetzbücher";
+      var el = document.getElementById("gesetzeList");
+      el.innerHTML = "";
+      if(!allG.length){ el.innerHTML='<div class="empty-state">Keine Gesetzbücher vorhanden.</div>'; return; }
+      allG.forEach(function(g){
+        var wrap = document.createElement("div");
+        wrap.className = "card"; wrap.style.cssText = "margin-bottom:1rem";
+        var header = '<div style="padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)">'
+          +'<div><div style="font-family:var(--font-serif);font-size:1.1rem">'+escH(g.name)+'</div>'
+          +'<div style="font-size:.75rem;color:var(--text-2);margin-top:.2rem">'+escH(g.kurzname||"")+(g.ministerium?' · '+escH(g.ministerium):'')+(g.version?' · v'+escH(g.version):'')+'</div></div>'
+          +'<div style="display:flex;gap:.5rem">'
+          +'<button class="btn btn-ghost btn-sm" onclick="editGB('+g.id+')">'+ICONS.edit+' Bearbeiten</button>'
+          +'<button class="btn btn-primary btn-sm" onclick="addPara('+g.id+')">'+ICONS.plus+' Paragraph</button>'
+          +'<button class="btn btn-danger btn-sm" onclick="delGB('+g.id+')">'+ICONS.trash+'</button>'
+          +'</div></div>';
+        var paraHtml = "";
+        if(g.paragraphen && g.paragraphen.length){
+          paraHtml = '<div style="padding:.75rem 1.25rem;display:flex;flex-direction:column;gap:.5rem">';
+          g.paragraphen.forEach(function(p){
+            paraHtml += '<div style="background:var(--bg-subtle);border-radius:var(--radius-sm);padding:.75rem 1rem">'
+              +'<div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem">'
+              +'<div style="font-weight:500;font-size:.875rem">'+escH(p.nummer||"")+(p.titel?' – '+escH(p.titel):'')+'</div>'
+              +'<div style="display:flex;gap:.375rem">'
+              +'<button class="btn btn-ghost btn-sm" onclick="editPara('+g.id+','+p.id+')">'+ICONS.edit+'</button>'
+              +'<button class="btn btn-danger btn-sm" onclick="delPara('+g.id+','+p.id+')">'+ICONS.trash+'</button>'
+              +'</div></div>';
+            if(p.absaetze && p.absaetze.length){
+              paraHtml += '<div style="margin-top:.375rem;font-size:.775rem;color:var(--text-2);line-height:1.5">'
+                +p.absaetze.map(function(a){return escH(a);}).join('<br/>')+'</div>';
+            }
+            paraHtml += '</div>';
+          });
+          paraHtml += '</div>';
+        } else {
+          paraHtml = '<div style="padding:.75rem 1.25rem;font-size:.8rem;color:var(--text-3)">Keine Paragraphen</div>';
+        }
+        wrap.innerHTML = header + paraHtml;
+        el.appendChild(wrap);
+      });
+    }
+
+    document.getElementById("btnAddGesetzbuch").addEventListener("click", function(){
+      document.getElementById("mGBTitle").textContent = "Gesetzbuch hinzufügen";
+      document.getElementById("mGBId").value = "";
+      ["mGBName","mGBKurz","mGBMin","mGBVer"].forEach(function(i){document.getElementById(i).value="";});
+      om("mGB");
+    });
+    function editGB(id){
+      var g = allG.find(function(x){return x.id===id;}); if(!g) return;
+      document.getElementById("mGBTitle").textContent = "Gesetzbuch bearbeiten";
+      document.getElementById("mGBId").value = g.id;
+      document.getElementById("mGBName").value = g.name||"";
+      document.getElementById("mGBKurz").value = g.kurzname||"";
+      document.getElementById("mGBMin").value  = g.ministerium||"";
+      document.getElementById("mGBVer").value  = g.version||"";
+      om("mGB");
+    }
+    document.getElementById("saveGB").addEventListener("click", async function(){
+      var id   = document.getElementById("mGBId").value;
+      var body = {
+        name:       document.getElementById("mGBName").value.trim(),
+        kurzname:   document.getElementById("mGBKurz").value.trim(),
+        ministerium:document.getElementById("mGBMin").value.trim(),
+        version:    document.getElementById("mGBVer").value.trim(),
+        icon:       "constitution"
+      };
+      if(!body.name){ showToast("Name fehlt!","error"); return; }
+      await apiSave("/api/gesetze", id, body);
+      showToast(body.name + (id?" aktualisiert.":" hinzugefügt."));
+      cm("mGB"); loadG();
+    });
+    async function delGB(id){
+      var name=(allG.find(function(x){return x.id===id;})||{}).name||id;
+      if(!confirm('"'+name+'" löschen?')) return;
+      await fetch("/api/gesetze/"+id,{method:"DELETE"});
+      showToast(name+" gelöscht.","error"); loadG();
+    }
+
+    function addPara(gbId){
+      document.getElementById("mParaTitle").textContent = "Paragraph hinzufügen";
+      document.getElementById("mParaGBId").value = gbId;
+      document.getElementById("mParaId").value   = "";
+      ["mParaNr","mParaTitel","mParaAbs"].forEach(function(i){document.getElementById(i).value="";});
+      om("mPara");
+    }
+    function editPara(gbId, pid){
+      var g = allG.find(function(x){return x.id===gbId;}); if(!g) return;
+      var p = (g.paragraphen||[]).find(function(x){return x.id===pid;}); if(!p) return;
+      document.getElementById("mParaTitle").textContent = "Paragraph bearbeiten";
+      document.getElementById("mParaGBId").value  = gbId;
+      document.getElementById("mParaId").value    = pid;
+      document.getElementById("mParaNr").value    = p.nummer||"";
+      document.getElementById("mParaTitel").value = p.titel||"";
+      document.getElementById("mParaAbs").value   = (p.absaetze||[]).join("\n");
+      om("mPara");
+    }
+    document.getElementById("savePara").addEventListener("click", async function(){
+      var gbId = document.getElementById("mParaGBId").value;
+      var pid  = document.getElementById("mParaId").value;
+      var body = {
+        nummer:  document.getElementById("mParaNr").value.trim(),
+        titel:   document.getElementById("mParaTitel").value.trim(),
+        absaetze:document.getElementById("mParaAbs").value.split("\n").map(function(s){return s.trim();}).filter(Boolean)
+      };
+      if(!body.nummer){ showToast("Nummer fehlt!","error"); return; }
+      var url = "/api/gesetze/"+gbId+"/paragraphen"+(pid?"/"+pid:"");
+      var method = pid?"PUT":"POST";
+      await fetch(url,{method:method,headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+      showToast((pid?"Paragraph aktualisiert.":"Paragraph hinzugefügt."));
+      cm("mPara"); loadG();
+    });
+    async function delPara(gbId,pid){
+      if(!confirm('Paragraph löschen?')) return;
+      await fetch("/api/gesetze/"+gbId+"/paragraphen/"+pid,{method:"DELETE"});
+      showToast("Paragraph gelöscht.","error"); loadG();
+    }
+
+    // ── FAQ ADMIN ─────────────────────────────────────────────
+    async function loadFaq(){
+      try {
+        var res = await fetch("/api/faq"); allFaq = await res.json();
+      } catch(e){ allFaq=[]; }
+      document.getElementById("infoFaq").textContent = allFaq.length + " Kategorien";
+      document.getElementById("btnAddFaqKat").innerHTML = ICONS.plus + " Kategorie";
+      var el = document.getElementById("faqAdminList");
+      el.innerHTML = "";
+      if(!allFaq.length){ el.innerHTML='<div class="empty-state">Keine FAQ-Einträge.</div>'; return; }
+      allFaq.forEach(function(kat, katIdx){
+        var wrap = document.createElement("div");
+        wrap.className = "card"; wrap.style.cssText = "margin-bottom:1rem";
+        var header = '<div style="padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)">'
+          +'<div style="font-family:var(--font-serif);font-size:1.1rem">'+escH(kat.kategorie||kat.id||"Kategorie")+'</div>'
+          +'<div style="display:flex;gap:.5rem">'
+          +'<button class="btn btn-ghost btn-sm" onclick="editFaqKat('+katIdx+')">'+ICONS.edit+' Bearbeiten</button>'
+          +'<button class="btn btn-primary btn-sm" onclick="addFaqFrage('+katIdx+')">'+ICONS.plus+' Frage</button>'
+          +'<button class="btn btn-danger btn-sm" onclick="delFaqKat('+katIdx+')">'+ICONS.trash+'</button>'
+          +'</div></div>';
+        var fragenHtml = "";
+        if(kat.fragen && kat.fragen.length){
+          fragenHtml = '<div style="padding:.75rem 1.25rem;display:flex;flex-direction:column;gap:.5rem">';
+          kat.fragen.forEach(function(f, fi){
+            fragenHtml += '<div style="background:var(--bg-subtle);border-radius:var(--radius-sm);padding:.75rem 1rem">'
+              +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem">'
+              +'<div style="font-size:.875rem;font-weight:500;flex:1">'+escH(f.frage||"")+'</div>'
+              +'<div style="display:flex;gap:.375rem;flex-shrink:0">'
+              +'<button class="btn btn-ghost btn-sm" onclick="editFaqFrage('+katIdx+','+fi+')">'+ICONS.edit+'</button>'
+              +'<button class="btn btn-danger btn-sm" onclick="delFaqFrage('+katIdx+','+fi+')">'+ICONS.trash+'</button>'
+              +'</div></div>'
+              +'<div style="margin-top:.375rem;font-size:.775rem;color:var(--text-2);line-height:1.5">'+escH(f.antwort||"")+'</div>'
+              +'</div>';
+          });
+          fragenHtml += '</div>';
+        } else {
+          fragenHtml = '<div style="padding:.75rem 1.25rem;font-size:.8rem;color:var(--text-3)">Keine Fragen</div>';
+        }
+        wrap.innerHTML = header + fragenHtml;
+        el.appendChild(wrap);
+      });
+    }
+
+    document.getElementById("btnAddFaqKat").addEventListener("click", function(){
+      document.getElementById("mFaqKatTitle").textContent = "Kategorie hinzufügen";
+      document.getElementById("mFaqKatId").value = "";
+      document.getElementById("mFaqKatName").value = "";
+      om("mFaqKat");
+    });
+    function editFaqKat(katIdx){
+      var kat = allFaq[katIdx]; if(!kat) return;
+      document.getElementById("mFaqKatTitle").textContent = "Kategorie bearbeiten";
+      document.getElementById("mFaqKatId").value   = katIdx;
+      document.getElementById("mFaqKatName").value = kat.kategorie||"";
+      om("mFaqKat");
+    }
+    document.getElementById("saveFaqKat").addEventListener("click", async function(){
+      var katIdx = document.getElementById("mFaqKatId").value;
+      var name   = document.getElementById("mFaqKatName").value.trim();
+      if(!name){ showToast("Name fehlt!","error"); return; }
+      var newFaq = JSON.parse(JSON.stringify(allFaq));
+      if(katIdx !== ""){
+        newFaq[parseInt(katIdx)].kategorie = name;
+      } else {
+        newFaq.push({id:"kat_"+Date.now(),kategorie:name,icon:"question",fragen:[]});
+      }
+      await saveFaqAll(newFaq);
+      showToast(name+(katIdx!==""?" aktualisiert.":" hinzugefügt.")); cm("mFaqKat"); loadFaq();
+    });
+    async function delFaqKat(katIdx){
+      var kat = allFaq[katIdx];
+      if(!confirm('"'+(kat.kategorie||"Kategorie")+'" löschen?')) return;
+      var newFaq = JSON.parse(JSON.stringify(allFaq));
+      newFaq.splice(katIdx,1);
+      await saveFaqAll(newFaq);
+      showToast("Kategorie gelöscht.","error"); loadFaq();
+    }
+    function addFaqFrage(katIdx){
+      document.getElementById("mFaqFTitle").textContent = "Frage hinzufügen";
+      document.getElementById("mFaqFKatId").value = katIdx;
+      document.getElementById("mFaqFIdx").value   = "";
+      document.getElementById("mFaqFFrage").value  = "";
+      document.getElementById("mFaqFAntwort").value= "";
+      om("mFaqF");
+    }
+    function editFaqFrage(katIdx, fi){
+      var f = allFaq[katIdx] && allFaq[katIdx].fragen && allFaq[katIdx].fragen[fi];
+      if(!f) return;
+      document.getElementById("mFaqFTitle").textContent = "Frage bearbeiten";
+      document.getElementById("mFaqFKatId").value  = katIdx;
+      document.getElementById("mFaqFIdx").value    = fi;
+      document.getElementById("mFaqFFrage").value  = f.frage||"";
+      document.getElementById("mFaqFAntwort").value= f.antwort||"";
+      om("mFaqF");
+    }
+    document.getElementById("saveFaqF").addEventListener("click", async function(){
+      var katIdx = parseInt(document.getElementById("mFaqFKatId").value);
+      var fi     = document.getElementById("mFaqFIdx").value;
+      var frage  = document.getElementById("mFaqFFrage").value.trim();
+      var antwort= document.getElementById("mFaqFAntwort").value.trim();
+      if(!frage){ showToast("Frage fehlt!","error"); return; }
+      var newFaq = JSON.parse(JSON.stringify(allFaq));
+      if(fi !== ""){
+        newFaq[katIdx].fragen[parseInt(fi)] = {frage:frage,antwort:antwort};
+      } else {
+        newFaq[katIdx].fragen.push({frage:frage,antwort:antwort});
+      }
+      await saveFaqAll(newFaq);
+      showToast(fi!==""?"Frage aktualisiert.":"Frage hinzugefügt."); cm("mFaqF"); loadFaq();
+    });
+    async function delFaqFrage(katIdx, fi){
+      var f = allFaq[katIdx] && allFaq[katIdx].fragen && allFaq[katIdx].fragen[fi];
+      if(!confirm('"'+(f&&f.frage||"Frage")+'" löschen?')) return;
+      var newFaq = JSON.parse(JSON.stringify(allFaq));
+      newFaq[katIdx].fragen.splice(fi,1);
+      await saveFaqAll(newFaq);
+      showToast("Frage gelöscht.","error"); loadFaq();
+    }
+    async function saveFaqAll(faqData){
+      await fetch("/api/faq",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(faqData)});
+    }
+
+    // ── BACKUP & RESTORE ─────────────────────────────────────
+    (function(){
+      var fileInput = document.getElementById("backupFileInput");
+      var restoreBtn = document.getElementById("btnRestoreBackup");
+      var downloadBtn = document.getElementById("btnDownloadBackup");
+      var uploadLabel = document.getElementById("backupUploadLabel");
+      var statusEl = document.getElementById("backupStatusInfo");
+      var pendingRestore = null;
+
+      downloadBtn.innerHTML = ICONS.star + " Backup herunterladen";
+      restoreBtn.innerHTML  = ICONS.check + " Wiederherstellen";
+
+      downloadBtn.addEventListener("click", function(){
+        var a = document.createElement("a");
+        a.href = "/api/admin/backup";
+        a.download = "csg-city-backup-" + today() + ".json";
+        a.click();
+      });
+
+      fileInput.addEventListener("change", function(){
+        var file = this.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(e){
+          try {
+            pendingRestore = JSON.parse(e.target.result);
+            uploadLabel.textContent = file.name;
+            restoreBtn.disabled = false;
+          } catch(err){
+            showToast("Ungültige JSON-Datei!", "error");
+            restoreBtn.disabled = true;
+            pendingRestore = null;
+          }
+        };
+        reader.readAsText(file);
+      });
+
+      restoreBtn.addEventListener("click", async function(){
+        if (!pendingRestore) return;
+        if (!confirm("Wirklich wiederherstellen? Alle aktuellen Daten werden überschrieben!")) return;
+        restoreBtn.disabled = true;
+        restoreBtn.textContent = "Wird wiederhergestellt…";
+        try {
+          var r = await fetch("/api/admin/restore", {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify(pendingRestore)
+          });
+          var j = await r.json();
+          if (j.success) {
+            showToast("Backup wiederhergestellt! Server startet neu…");
+          } else {
+            showToast(j.error || "Fehler!", "error");
+            restoreBtn.disabled = false;
+            restoreBtn.innerHTML = ICONS.check + " Wiederherstellen";
+          }
+        } catch(e){
+          showToast("Verbindungsfehler!", "error");
+          restoreBtn.disabled = false;
+          restoreBtn.innerHTML = ICONS.check + " Wiederherstellen";
+        }
+      });
+
+      async function loadBackupStatus(){
+        try {
+          var r = await fetch("/api/admin/backup/status");
+          var j = await r.json();
+          if (j.lastBackup) {
+            var parts = j.lastBackup.replace("backup-","").replace(".json","").split("-");
+            var d = parts[0]+"-"+parts[1]+"-"+parts[2]+" "+parts[3]+":"+parts[4];
+            statusEl.textContent = "Letztes Auto-Backup: " + d + " ("+j.count+" gespeichert)";
+          } else {
+            statusEl.textContent = "Noch kein automatisches Backup erstellt";
+          }
+        } catch(e){ statusEl.textContent = ""; }
+      }
+
+      document.querySelector(".sidebar-link[data-sec='backup']").addEventListener("click", loadBackupStatus);
+      loadBackupStatus();
+    })();
+
+    loadN(); loadT(); loadS(); loadW(); loadG(); loadFaq();
+  </script>
+</body>
+</html>
