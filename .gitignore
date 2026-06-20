@@ -1,3 +1,7 @@
 node_modules/
 data/db.json
 data/.setup_done
+data/backup-*.json
+.env
+.env.*
+!.env.example

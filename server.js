@@ -1,9 +1,11 @@
-const express  = require("express");
-const session  = require("express-session");
-const path     = require("path");
-const fs       = require("fs");
-const OTPAuth  = require("otpauth");
-const QRCode   = require("qrcode");
+const express    = require("express");
+const session    = require("express-session");
+const helmet     = require("helmet");
+const rateLimit  = require("express-rate-limit");
+const path       = require("path");
+const fs         = require("fs");
+const OTPAuth    = require("otpauth");
+const QRCode     = require("qrcode");
 
 // data/-Ordner sicherstellen bevor require('./data/database') läuft
 fs.mkdirSync(path.join(__dirname, "data"), { recursive: true });
@@ -37,10 +39,24 @@ function addLog(typ, nachricht, status) {
   logs.push({ timestamp: new Date().toISOString(), typ, nachricht, status: status || "info" });
 }
 
+const SESSION_SECRET = process.env.SESSION_SECRET;
+if (!SESSION_SECRET) console.warn("WARNUNG: SESSION_SECRET nicht gesetzt! Bitte als Umgebungsvariable konfigurieren.");
+
+app.use(helmet());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(session({ secret: "csg-city-2025", resave: false, saveUninitialized: false, cookie: { maxAge: 1000*60*60*4 } }));
+app.use(session({
+  secret: SESSION_SECRET || "csg-city-fallback-bitte-aendern",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 4,
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production"
+  }
+}));
 
 const adm = (req,res,next) => req.session && req.session.isAdmin ? next() : res.status(401).json({ error: "Nicht autorisiert" });
 
@@ -55,7 +71,8 @@ app.get("/gesetze",        (_,res) => res.sendFile(path.join(__dirname,"public/p
 
 // Auth
 app.get("/api/auth/status", (req,res) => res.json({ isAdmin: !!req.session.isAdmin }));
-const TOTP_SECRET = "ND7NTFOAVACPAYSM4EW33HFJHRQBI2PH";
+const TOTP_SECRET = process.env.TOTP_SECRET || "ND7NTFOAVACPAYSM4EW33HFJHRQBI2PH";
+if (!process.env.TOTP_SECRET) console.warn("WARNUNG: TOTP_SECRET nicht als Umgebungsvariable gesetzt.");
 const path_fs = require("path");
 const SETUP_FLAG = path_fs.join(__dirname, "data", ".setup_done");
 
@@ -81,7 +98,15 @@ app.get("/api/admin/setup-qr", (req,res) => {
   });
 });
 
-app.post("/api/login", (req,res) => {
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: "Zu viele Login-Versuche. Bitte 15 Minuten warten." },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+app.post("/api/login", loginLimiter, (req,res) => {
   const { username, totp } = req.body;
   if (username !== "Admin") {
     addLog("login", "Login-Versuch mit ungültigem Benutzernamen: " + (username||"–"), "error");
@@ -336,7 +361,10 @@ app.post("/api/admin/restore", adm, (req, res) => {
     addLog("backup", "Backup wiederhergestellt", "success");
     res.json({ success: true });
     setTimeout(() => process.exit(0), 500);
-  } catch(e) { res.status(500).json({ error: "Fehler: " + e.message }); }
+  } catch(e) {
+    console.error("Restore-Fehler:", e);
+    res.status(500).json({ error: "Interner Fehler beim Wiederherstellen des Backups." });
+  }
 });
 
 // Logs
