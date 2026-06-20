@@ -42,7 +42,8 @@ function addLog(typ, nachricht, status) {
 const SESSION_SECRET = process.env.SESSION_SECRET;
 if (!SESSION_SECRET) console.warn("WARNUNG: SESSION_SECRET nicht gesetzt! Bitte als Umgebungsvariable konfigurieren.");
 
-app.use(helmet());
+// CSP deaktiviert: Seiten nutzen Inline-Scripts, die 'script-src self' blockieren würde
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.static(path.join(__dirname, "public")));
