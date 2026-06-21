@@ -575,7 +575,7 @@ const DEFAULT_DATA = {
       {
           "id": 46,
           "titel": "Kinderbetreuung Kirschblüte – Betreuer/in",
-          "abteilung": "Soziales",
+          "abteilung": "Sonstiges",
           "schlagzeile": "Kleine Hände in guten Händen",
           "beschreibung": "6 Stellen frei. Kinderbetreuung für Kinder zwischen 3 und 7 Jahren, gesucht werden Schüler/innen ab der achten Klasse.\n\nAufgaben:\n- Spielen, basteln und malen mit den Kindern\n- Begleiten von Aktionen und Ausflügen\n- Vorlesen von Geschichten\n- Austausch mit Eltern\n- Schaffung einer sicheren und wertschätzenden Atmosphäre\n- Organisatorische Tätigkeiten und Planung mit dem Team\n\nVoraussetzungen:\nFreundlicher und geduldiger Umgang mit Kindern, Spaß und Motivation bei der Arbeit, Verständnis für die Bedürfnisse der Kinder. Keine Vorkenntnisse benötigt.\n\nBezahlung: Beamtengehalt.",
           "lohnProH": 0,
@@ -611,7 +611,7 @@ const DEFAULT_DATA = {
       {
           "id": 49,
           "titel": "Freeze&Go",
-          "abteilung": "Gastronomie (Café)",
+          "abteilung": "Gastronomie",
           "schlagzeile": "2 freudige Arbeiter für das beste Café der Welt gesucht!",
           "beschreibung": "Du als Mitarbeiter bist dazu zuständig unsere Lebensmittel, wie Eis oder Waffeln zu verkaufen. Außerdem unterstützt du uns dabei zum Beispiel Waffelteig zu machen oder Smoothies zu mixen. Die genauen Aufgaben werden dir bei Einstellung erklärt. Jeder macht gleich viel, weshalb jeder Mitarbeiter den gleichen Endlohn aufgeteilt bekommt. Wir erwarten einen Mitarbeiter, der viel Freude an der Sache mitbringt und gut erreichbar ist. Wir werden wahrscheinlich in einem Raum im unteren Stock unseren Betrieb öffnen, es wird noch aufgeteilt. Unser Idee ist es möglichst klimafreundlich zu verkaufen, sowie das wir auf die Frische der Lebensmittel achten. Beim uns steht die Hygiene im Vordergrund.\nWir würden uns über ein kurzes Bewerbungsgespräch mit dir freuen, wo du erklärst wer du bist, welche Klasse und warum du Bock hast bei uns zu arbeiten!",
           "lohnProH": 0,
@@ -635,7 +635,7 @@ const DEFAULT_DATA = {
       {
           "id": 51,
           "titel": "Journalist/in / Layouter/in",
-          "abteilung": "Presse",
+          "abteilung": "Medien",
           "schlagzeile": "Presse-Arbeit, Schlagzeilen, Werbung, Layout - wir sammeln und veröffentlichen",
           "beschreibung": "Die CSG-City-News wollen das Leben im Staat dokumentieren, unter die Lupe nehmen und kommentieren.\n\nBitte Interesse oder Können an Layout, Textarbeit, Interviewgesprächen und Fotografie mitbringen.\n\nMittelstufe und Oberstufe sehr willkommen.",
           "lohnProH": 0,
@@ -659,7 +659,7 @@ const DEFAULT_DATA = {
       {
           "id": 53,
           "titel": "Fußballschule – Trainer/in",
-          "abteilung": "Sport",
+          "abteilung": "Freizeit",
           "schlagzeile": "Athletik-, Technik- und Koordinationstraining",
           "beschreibung": "8 Stellen frei.\n\nAufgaben:\n- Coachen der unterschiedlichen Trainingsstationen\n- Schiedsrichtertätigkeiten\n- Verkauf von Getränken\n- Spielerberatung\n\nVoraussetzungen:\nFußballerisches Verständnis, Kommunikationsbereitschaft, Einsatzbereitschaft.\n\nBezahlung: Fester Stundensatz.",
           "lohnProH": 0,
@@ -839,7 +839,7 @@ const DEFAULT_DATA = {
       {
           "titel": "Mitarbeiter/in GastroCheck",
           "schlagzeile": "Wir suchen motivierte Mitarbeiter für das Testen und Bewerten von Gastronomiebetrieben",
-          "abteilung": "Unabhängiges Institut/Dienstleistung",
+          "abteilung": "Dienstleistung",
           "kontakt": "Herr Kurzawe",
           "lohnTyp": "tag",
           "gewinnanteil": "5%",
@@ -851,7 +851,7 @@ const DEFAULT_DATA = {
       {
           "titel": "Verkäufer bei Frucht & Pop",
           "schlagzeile": "Bei uns verkaufst du keine Produkte - du sorgst für Genussmomente!",
-          "abteilung": "Gastronomie und Verkauf",
+          "abteilung": "Gastronomie",
           "kontakt": "Emilia Wichmann",
           "lohnTyp": "h",
           "gewinnanteil": "gleiche Gewinnverteilung",
@@ -863,7 +863,7 @@ const DEFAULT_DATA = {
       {
           "titel": "Du solltest verkaufen und basteln können und bei einem Workshop helfen",
           "schlagzeile": "Wir verkaufen selbst gemachte Sachen und machen Workshops. und man sollte verkaufen und Bastel können",
-          "abteilung": "Basteln und Bauen und Nähen",
+          "abteilung": "Handwerk",
           "kontakt": "Antonia Veigel oder Nele Schneider",
           "lohnTyp": "h",
           "gewinnanteil": "Variabel",
@@ -875,7 +875,7 @@ const DEFAULT_DATA = {
       {
           "titel": "Creaty- Mitarbeiter/in",
           "schlagzeile": "Basteln mit Natürlichen Dingen",
-          "abteilung": "Gebasteltes",
+          "abteilung": "Handwerk",
           "kontakt": "Maja Bosko",
           "lohnTyp": "h",
           "gewinnanteil": "Variabel",
@@ -887,7 +887,7 @@ const DEFAULT_DATA = {
       {
           "titel": "Anhänger Atelier - BuchhalterIn",
           "schlagzeile": "Schlüsselanhänger herstellen, Buchhaltung",
-          "abteilung": "Handwerk, Buchhaltung",
+          "abteilung": "Handwerk",
           "kontakt": "Cyra-Lena Fröhlich",
           "lohnTyp": "h",
           "gewinnanteil": "variabel",
