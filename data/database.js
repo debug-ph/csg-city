@@ -83,7 +83,7 @@ const DEFAULT_DATA = {
     {
       "id": 1,
       "titel": "Bäcker/in, Verkäufer/in, Kellner/in",
-      "abteilung": "Café",
+      "abteilung": "Gastronomie",
       "schlagzeile": "Wir würden uns freuen wenn du bei uns arbeitest!",
       "beschreibung": "Wir verkaufen: Tee, Kaffee, Schokofrüchte, Bananen mit Cream, Limo, Crêpes, und Kuchen.",
       "lohnProH": 8,
@@ -95,7 +95,7 @@ const DEFAULT_DATA = {
     {
       "id": 2,
       "titel": "Richter/in",
-      "abteilung": "Justiz",
+      "abteilung": "Behörde",
       "schlagzeile": "",
       "beschreibung": "Zuständig für alle straf- und zivilrechtlichen Verfahren im Schulstaat. Das Gericht entscheidet unabhängig über eingereichte Klagen.\n\nAufgaben:\n- Verhandlung und Entscheidung von Fällen\n- Anhörung von Beteiligten und Zeugen\n- Fällung von Urteilen nach Verfassung und Gesetzen\n- Sicherung von Fairness und Gerechtigkeit\n\nVoraussetzungen:\n- Mindestens 7. Klasse oder Lehrkraft\n- Verhaltensnote besser als 3\n- Keine Mitgliedschaft im City-Rat oder in der Regierung\n- Schriftliche Bewerbung und Eid auf die Verfassung\n- Fairness, Verantwortungsbewusstsein und Neutralität",
       "lohnProH": 0,
@@ -131,7 +131,7 @@ const DEFAULT_DATA = {
     {
       "id": 5,
       "titel": "Mitarbeiter/in beim Podcast \"Aufs Ohr\"",
-      "abteilung": "Medien / Podcast",
+      "abteilung": "Medien & Kultur",
       "schlagzeile": "Mach mit bei unserem Podcast",
       "beschreibung": "Werde Teil unseres Schulpodcasts \"Aufs Ohr\"!\n\nDu interessierst dich für Podcasts, Werbung, Gestaltung oder Medienarbeit? Dann mach mit bei \"Aufs Ohr\" und unterstütze unser Podcastteam!\n\nDu suchst passende Werbepartner, gestaltest Werbematerialien wie Plakate oder Social-Media-Beiträge und hilfst bei der Produktion neuer Podcast-Folgen. Dabei lernst du, wie man einen Podcast plant, bewirbt, aufnimmt und schneidet.\n\nWir bieten dir ein motiviertes Team, eine faire Bezahlung und die Möglichkeit, wichtige Fähigkeiten für Schule, Beruf und Alltag zu entwickeln.\n\nDu solltest mindestens in der 8. Klasse sein, gerne im Team arbeiten und Lust haben, eigene Ideen einzubringen.",
       "lohnProH": 0,
@@ -155,7 +155,7 @@ const DEFAULT_DATA = {
     {
       "id": 7,
       "titel": "Buchhalter",
-      "abteilung": "Buchhaltung",
+      "abteilung": "Behörde",
       "schlagzeile": "Du kannst gut mit Zahlen umgehen? Dann komm zu uns ins Team.",
       "beschreibung": "Als Buchhalter hast du unsere Finanzen im Blick.",
       "lohnProH": 2.5,
@@ -167,7 +167,7 @@ const DEFAULT_DATA = {
     {
       "id": 8,
       "titel": "Putzkraft",
-      "abteilung": "Reinigung",
+      "abteilung": "Gastronomie",
       "schlagzeile": "Putzen kann Spaß machen",
       "beschreibung": "Die Putzkraft tut den Boden kehren, die Tische abwischen und den Müll raus bringen.",
       "lohnProH": 3,
@@ -191,7 +191,7 @@ const DEFAULT_DATA = {
     {
       "id": 10,
       "titel": "Verkäufer – Kino",
-      "abteilung": "Verkauf",
+      "abteilung": "Handel & Verkauf",
       "schlagzeile": "Mach niemals die Rechnung ohne den Verkäufer",
       "beschreibung": "Verkauf von Tickets, Snacks und Getränke.\nWichtig ist Pünktlichkeit und Zuverlässigkeit.",
       "lohnProH": 2.5,
@@ -287,7 +287,7 @@ const DEFAULT_DATA = {
     {
       "id": 18,
       "titel": "Mitarbeiter/in für unsere Kreativwerkstatt für Natur und Upcycling „Miss Green\"",
-      "abteilung": "Kreativwerkstatt/Upcycling",
+      "abteilung": "Handwerk & Kreativ",
       "schlagzeile": "Hast du Lust, kreative Dinge zu gestalten, zu verkaufen und unsere Workshops zu leiten! Dann bewirb dich!",
       "beschreibung": "In unserer Kreativwerkstatt entstehen kreative Einkaufstaschen aus alten T-Shirts, Stiftehalter und Geldbörsen aus Kokosnussschale und viele andere schöne Dinge. Alles was man bei uns kaufen kann, kann man auch selbst in einem unserer Workshops während der Staatstage anbieten.\n\nVoraussetzung für eine Mitarbeit bei uns: Kreativität und Spaß am Basteln und Gestalten.\n\nUnsere Mitarbeiter kreieren in unserer Upcycling-Werkstatt kreative Dinge, verkaufen sie und leiten unsere Mitmach-Workshops.",
       "lohnProH": 0,
@@ -299,7 +299,7 @@ const DEFAULT_DATA = {
     {
       "id": 19,
       "titel": "Trainer",
-      "abteilung": "Fußball",
+      "abteilung": "Sport & Freizeit",
       "schlagzeile": "Komm in unser Team",
       "beschreibung": "Übungen aufbauen, Kinder trainieren, Übungen vormachen",
       "lohnProH": 0,
@@ -311,7 +311,7 @@ const DEFAULT_DATA = {
     {
       "id": 20,
       "titel": "City Radio",
-      "abteilung": "Dienstleistung(Radio)",
+      "abteilung": "Medien & Kultur",
       "schlagzeile": "Von Schülern für die Stadt",
       "beschreibung": "Unsere Aufgaben liegen darin, Bürger und Politiker zu interviewen und daraus einen Bericht zu schreiben. Wir senden stündlich aber passen natürlich auf, dass wir nicht während einer Cityratssitzung senden. Dazu bräuchten wir Zugriff auf die Schulsprechanlage und einen kleinen Platz, wo wir uns besprechen könnten mit einem Tisch und vier Stühle.",
       "lohnProH": 0,
@@ -323,7 +323,7 @@ const DEFAULT_DATA = {
     {
       "id": 21,
       "titel": "DIY- Lounge",
-      "abteilung": "normale Angestellte für alles",
+      "abteilung": "Handwerk & Kreativ",
       "schlagzeile": "Erklären, lachen, begeistern - dein neuer Job",
       "beschreibung": "Stellenbeschreibung – Mitarbeiter:in in der DIY Lounge\n\nIn unserer DIY Lounge treffen sich die Mitarbeitenden der Frühschicht möglichst früh, um gemeinsam den Laden für den Tag vorzubereiten. Dabei wird im Team gearbeitet: Vorräte werden aufgefüllt, Tische mit den Unterlagen und Arbeitsmaterialien ausgestattet und der gesamte Raum liebevoll mit der vorbereiteten Dekoration gestaltet. Ziel ist es, eine einladende und kreative Atmosphäre für unsere Gäste zu schaffen, bevor der Betrieb startet.\n\nNach der Vorbereitung übernimmt jede:r Mitarbeitende vielseitige Aufgaben im laufenden Betrieb. Ein zentraler Bestandteil ist die Arbeit an der Kasse. Hier übernehmen Mitarbeitende Reservierungen und Termine koordinieren, Rechnungen erstellt sowie Beträge sorgfältig berechnet und dokumentiert. Zur Unterstützung darf ein Taschenrechner genutzt werden, dennoch wird erwartet, dass alle Abläufe nachvollziehbar und korrekt schriftlich festgehalten werden.\n\nDarüber hinaus gehört es zu den Aufgaben, die angebotenen DIY-Projekte sicher zu erklären und sowohl Kund:innen als auch Kolleg:innen anzuleiten. Jeder Mitarbeitende sollte die Inhalte so gut beherrschen, dass er oder sie sie verständlich weitervermitteln kann. Ebenso ist es wichtig, sich im gesamten Laden auszukennen und zu wissen, wo sich Materialien und Arbeitsmittel befinden, um einen reibungslosen Ablauf zu gewährleisten.\n\nDie Einarbeitung in diese Strukturen und Abläufe erfolgt durch die Leitung, wobei ein gutes Erinnerungsvermögen und eigenständiges Mitdenken ausdrücklich erwünscht sind. Insgesamt erwartet dich eine abwechslungsreiche Tätigkeit in einem kreativen Umfeld, in dem Teamarbeit, Verantwortung und Freude am Gestalten im Mittelpunkt stehen.",
       "lohnProH": 0,
@@ -335,7 +335,7 @@ const DEFAULT_DATA = {
     {
       "id": 22,
       "titel": "Cocktails und Co.",
-      "abteilung": "Gastronomie (Getränke)",
+      "abteilung": "Gastronomie",
       "schlagzeile": "Wir verkaufen verschiedene Cocktails",
       "beschreibung": "Es werden Cocktails und Getränke gemischt und verkauft. Die Mitarbeiter müssen Kundenkontakt aufnehmen können, Getränke mischen können und auch verkaufen und kassieren können.",
       "lohnProH": 0,
@@ -359,7 +359,7 @@ const DEFAULT_DATA = {
     {
       "id": 24,
       "titel": "In'Cult recrute ses talents",
-      "abteilung": "Kultur",
+      "abteilung": "Medien & Kultur",
       "schlagzeile": "Francophonie et bonne ambiance",
       "beschreibung": "Informationen zum Betrieb\nDie Institutsleitung besteht aus Katja Teufel-Pevny und Kathrin Traens, die sich diese Stelle zu je 50% teilen. Als Institutsleitungen kümmern Sie sich um die Organisation des Kulturinstitutes. Das Kulturinstitut repräsentiert die deutsch-französische Kooperation und jahrelange Zusammenarbeit. Auch CSG City fördert diese Freundschaft und wir setzen sie gemeinsam um.\nEs wird im Vorfeld ein Arbeits-/Schichtplan erstellt.\n\nArbeitsplatzbeschreibung\n1.) Kulturbeauftragte/r: Leitung Kultur- und Sprachprogramme / Ideen einbringen und umsetzen / Auftritt nach außen\n2.) Sprachkursleitung und Mediathek: Umsetzung Sprachenkurse / Sprachunterricht / Medien und Aktivitäten / eigene Ideen einbringen und gestalten\n3.) Veranstaltungsmanagement: Umsetzung einer Abendveranstaltung am „langen Abend“ (Mittwoch) oder kleinerer Events für Jugendliche\n4.) Verwaltungsleitung: Verwaltungstätigkeiten / Korrespondenz / Bibliotheksarbeiten / Betreuung / Aufsicht\n5.) Kreativer Mitarbeiter/in: Erstellung von Schulungsmaterial (Spiele), Werbematerial, Poster, Social Media etc.\n6.) Sportbeauftragte/r: Erarbeitung eines kleinen Sportprogramms für Jugendliche und ausgepowerte Arbeiter/innen, Durchführung von Übungen in Großgruppen, Motivation zur Bewegung und Ausgleich\n\nVoraussetzungen\n• Französischkenntnisse oder Interesse an Frankreich und der Francophonie\n• Freude und Spaß, sich mit der französischen Sprache zu beschäftigen\n• Ruhige Persönlichkeiten für Verwaltungstätigkeiten\n• Viele Ideen und Engagement für die Sache\n• Bereitschaft zu freiwilligen Überstunden\n• Bereitschaft bei einem gemeinsamen Essen etwas mitzubringen (Mittwochmittag)",
       "lohnProH": 2,
@@ -371,7 +371,7 @@ const DEFAULT_DATA = {
     {
       "id": 25,
       "titel": "Verkäufer – Kiosk",
-      "abteilung": "Kiosk",
+      "abteilung": "Handel & Verkauf",
       "schlagzeile": "Hier gibt es (fast) alles",
       "beschreibung": "Größten Teils muss man verkaufen es wird aber auch Specials wie z. B. Fotografieren geben.\nVoraussetzungen: Freundlichkeit, Motivation und Pünktlichkeit",
       "lohnProH": 0,
@@ -395,7 +395,7 @@ const DEFAULT_DATA = {
     {
       "id": 27,
       "titel": "Losstand mit Mohrenkopfschleuder / Putzkraft",
-      "abteilung": "Freizeitaktivität",
+      "abteilung": "Sport & Freizeit",
       "schlagzeile": "Treff ins schwarze und gewinne",
       "beschreibung": "- Putzen der Mohrenkopfschleuder\n- Kaufen der Wasserbomben/Süßigkeiten\n- Verkauf bei der Mohrenkopfschleuder",
       "lohnProH": 0,
@@ -407,7 +407,7 @@ const DEFAULT_DATA = {
     {
       "id": 28,
       "titel": "Waffelmobil",
-      "abteilung": "Gastro Betrieb",
+      "abteilung": "Gastronomie",
       "schlagzeile": "Die besten Holzofenwaffeln der Welt.",
       "beschreibung": "Aufgaben:\n-Feuer machen\n-Kassieren\n-Waffeln backen\n-Waffeln Ausgeben\n-Getränke ausgeben\n-Dosenwerfen betreuen\n\nVoraussetzungen:\nGrundkenntnisse im Waffelnbacken, Feuer machen und Kassieren.",
       "lohnProH": 0,
@@ -419,7 +419,7 @@ const DEFAULT_DATA = {
     {
       "id": 29,
       "titel": "Waffelverkäufer",
-      "abteilung": "Essen",
+      "abteilung": "Gastronomie",
       "schlagzeile": "",
       "beschreibung": "Du musst mit einem Waffeleisen umgehen können. Höflichkeit ist wichtig. Zu deinen Aufgaben gehören: Waffeln backen und dekorieren. Du musst kassieren können.",
       "lohnProH": 3,
@@ -443,7 +443,7 @@ const DEFAULT_DATA = {
     {
       "id": 31,
       "titel": "Sweet Dreams-Mitarbeiter",
-      "abteilung": "Verkauf",
+      "abteilung": "Handel & Verkauf",
       "schlagzeile": "Verkaufstalent gesucht – Werde Teil unseres Sweet Dream Teams!",
       "beschreibung": "Für unseren Candy Shop namens Sweet Dreams suchen wir eine engagierte Verkäuferin / einen engagierten Verkäufer für unseren Shop. Du bist für den Verkauf unserer Süßwaren verantwortlich und sorgst dafür, dass sich unsere Kundinnen und Kunden wohlfühlen.\n\nDeine Aufgaben:\n- Freundliche Bedienung der Kundschaft\n- Verkauf von Süßigkeiten und Snacks\n- Kassieren und Herausgeben von Wechselgeld\n- Auffüllen und ansprechende Präsentation der Waren\n- Mithilfe bei der Organisation des Candy Shops\n\nDas bringst du mit:\n- Freundliches Auftreten\n- Freude am Umgang mit Menschen\n- Zuverlässigkeit und Teamfähigkeit\n- Interesse am Verkauf\n\nWir bieten:\n- Mitarbeit in einem tollen Unternehmen\n- Ein motiviertes Team\n- Praktische Erfahrungen im Bereich Verkauf und Kundenkontakt\n- Lohn nach Vereinbarung mit variablem Gewinnanteil\n\nWir freuen uns auf deine Bewerbung und darauf, gemeinsam einen erfolgreichen Candy Shop zu führen!",
       "lohnProH": 0,
@@ -491,7 +491,7 @@ const DEFAULT_DATA = {
     {
       "id": 35,
       "titel": "Mitarbeiter/in GastroCheck",
-      "abteilung": "Unabhängiges Institut/Dienstleistung",
+      "abteilung": "Dienstleistung",
       "schlagzeile": "Wir suchen motivierte Mitarbeiter für das Testen und Bewerten von Gastronomiebetrieben",
       "beschreibung": "GastroCheck ist ein unabhängiges Institut zur Bewertung von Gastronomiebetrieben.\nDie Aufgaben umfassen Planung, Konzeption, Abwicklung und Präsentation verschiedener Testkategorien.\nVoraussetzungen: Gutes sprachliches Ausdrucksvermögen, Fähigkeit zum selbstständigen und strukturierten Arbeiten, Kommunikationsbereitschaft, diplomatisches Auftreten.\nWas dich erwartet: Spannende Einblicke in die Gastronomiebetriebe, Möglichkeiten zur aktiven Mitgestaltung der Testprogramme, Offenheit für eigene Ideen.",
       "lohnProH": 0,
@@ -503,7 +503,7 @@ const DEFAULT_DATA = {
     {
       "id": 36,
       "titel": "Verkäufer bei Frucht & Pop",
-      "abteilung": "Gastronomie und Verkauf",
+      "abteilung": "Gastronomie",
       "schlagzeile": "Bei uns verkaufst du keine Produkte - du sorgst für Genussmomente!",
       "beschreibung": "Der Arbeitsplatz umfasst die Vorbereitung, Herstellung und den Verkauf von Schokofrüchten. Außerdem können Cocktails aus verschiedenen Säften und Popcorn bestellt werden.\n\nAufgaben:\n\n- Waschen und Vorbereiten der Früchte\n- Überziehen der Früchte mit Schokolade\n- Dekorieren und Präsentieren der Produkte\n- Kundenbedienung\n- Kassiertätigkeiten\n- Arbeitsgeräte und Verkaufsfläche reinigen\n\n\nVoraussetzungen:\n\nDer Arbeitsplatz erfordert sorgfältiges Arbeiten, Zuverlässigkeit und einen freundlichen Umgang mit Kunden.",
       "lohnProH": 0,
@@ -515,7 +515,7 @@ const DEFAULT_DATA = {
     {
       "id": 37,
       "titel": "Du solltest verkaufen und basteln können und bei einem Workshop helfen",
-      "abteilung": "Basteln und Bauen und Nähen",
+      "abteilung": "Handwerk & Kreativ",
       "schlagzeile": "Wir verkaufen selbst gemachte Sachen und machen Workshops. und man sollte verkaufen und Bastel können",
       "beschreibung": "Man sollte basteln, verkaufen und bei einem Workshop helfen. Du wirst immer in unterschiedlicher Arbeit eingeteilt.",
       "lohnProH": 0,
@@ -527,7 +527,7 @@ const DEFAULT_DATA = {
     {
       "id": 38,
       "titel": "Creaty- Mitarbeiter/in",
-      "abteilung": "Gebasteltes",
+      "abteilung": "Handwerk & Kreativ",
       "schlagzeile": "Basteln mit Natürlichen Dingen",
       "beschreibung": "Der/Die Mitarbeiter/in sollte 10 oder 11 sein\nEr/ Sie soll Interesse am Basteln haben.\nDie Aufgaben wären:\nBasteln & verkaufen\nAlle machen alles.",
       "lohnProH": 0,
@@ -539,7 +539,7 @@ const DEFAULT_DATA = {
     {
       "id": 39,
       "titel": "Anhänger Atelier - BuchhalterIn",
-      "abteilung": "Handwerk, Buchhaltung",
+      "abteilung": "Handwerk & Kreativ",
       "schlagzeile": "Schlüsselanhänger herstellen, Buchhaltung",
       "beschreibung": "Im Anhänger-Atelier werden aus Stoff- und Lederresten kleine, individuelle Schlüsselanhänger hergestellt.\nDafür wird auch ein/e BuchhalterIn benötigt, der/die unsere Kassenbücher auf dem aktuellen Stand hält. Dazu solltest du grundsätzlich gut mit Zahlen umgehen können und auch das Prozent-Rechnen sicher beherrschen.\n\nZusätzlich wirst du unserer Kundschaft helfen, Materialien auszuwählen, Stoffe und Leder zuzuschneiden und damit unserer Kundschaft zu einem persönlichen Unikat zu verhelfen. Am Ende wirst du gut mit Nadel und Faden umgehen können. Dabei werden einfache handwerkliche Techniken wie Schneiden und Nähen eingesetzt. Vorwissen wird für diesen Teil keines vorausgesetzt.\nDu solltest dazu gut auf Menschen zugehen können und Spaß am Handwerk haben.",
       "lohnProH": 0,
@@ -551,7 +551,7 @@ const DEFAULT_DATA = {
     {
       "id": 40,
       "titel": "Anhänger Atelier - Mitarbeiter/In",
-      "abteilung": "Handwerk",
+      "abteilung": "Handwerk & Kreativ",
       "schlagzeile": "Schlüsselanhänger herstellen",
       "beschreibung": "Im Anhänger-Atelier werden aus Stoff- und Lederresten kleine, individuelle Schlüsselanhänger hergestellt.\nDabei wirst du unserer Kundschaft helfen, Materialien auszuwählen, Stoffe und Leder zuzuschneiden und damit zu einem persönlichen Unikat zu verhelfen. Am Ende wirst du gut mit Nadel und Faden umgehen können.\nDabei werden einfache handwerkliche Techniken wie Schneiden und Nähen eingesetzt. Vorwissen wird keines vorausgesetzt. Du solltest gut auf Menschen zugehen können und Spaß am Handwerk haben.",
       "lohnProH": 0,
@@ -587,7 +587,7 @@ const DEFAULT_DATA = {
     {
       "id": 43,
       "titel": "Verkäuferin",
-      "abteilung": "Handel",
+      "abteilung": "Handel & Verkauf",
       "schlagzeile": "ein kleiner Stand sucht dich",
       "beschreibung": "Ich suche nach einer person welche gut mit Menschen umgehen kann, kein problem damit hat mitzuhelfen und einfach eine schöne zeit haben will.",
       "lohnProH": 0,
