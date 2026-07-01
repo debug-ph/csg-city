@@ -165,7 +165,11 @@
       }
     });
 
-    fetch("/api/werbeflaechen").then(r=>r.json()).then(function(data){
+    fetch("/api/werbeflaechen").then(r=>r.json()).then(function(rawData){
+      var data = rawData.filter(function(w){
+        return w.slot === "dashboard_sidebar_1" || w.slot === "dashboard_sidebar_2" ||
+               w.slot === "dashboard_sidebar_3" || w.slot === "dashboard_footer";
+      });
       var frei=data.filter(function(w){return!w.belegt;}).length;
       var belegt=data.filter(function(w){return w.belegt;}).length;
       document.getElementById("statsRow").innerHTML=

@@ -47,6 +47,7 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.static(path.join(__dirname, "public")));
+app.set("trust proxy", 1);
 app.use(session({
   secret: SESSION_SECRET || "csg-city-fallback-bitte-aendern",
   resave: false,
@@ -54,7 +55,7 @@ app.use(session({
   cookie: {
     maxAge: 1000 * 60 * 60 * 4,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "lax",
     secure: process.env.NODE_ENV === "production"
   }
 }));
@@ -131,11 +132,13 @@ app.post("/api/logout", (req,res) => {
 
 // Dashboard
 app.get("/api/dashboard", (_,res) => {
+  const offeneStellen = db.all("stellenangebote").filter(s => s.offen);
   res.json({
-    nachrichten:     db.latest("nachrichten", 3),
-    termine:         db.oldest("termine", 4),
-    stellenangebote: db.all("stellenangebote").filter(s => s.offen).slice(0, 6),
-    werbeflaechen:   db.all("werbeflaechen")
+    nachrichten:        db.latest("nachrichten", 3),
+    termine:            db.oldest("termine", 4),
+    stellenangebote:    offeneStellen.slice(0, 6),
+    totalOffeneStellen: offeneStellen.length,
+    werbeflaechen:      db.all("werbeflaechen")
   });
 });
 

@@ -92,6 +92,9 @@
       <div class="law-tabs" id="tabsContainer"></div>
       <div id="booksContainer"><div class="law-empty">Laden&hellip;</div></div>
     </div>
+    <div style="max-width:860px;margin:1.5rem auto;padding:0 1rem">
+      <div id="gesetzeAd"></div>
+    </div>
   </div>
 
   <script src="/js/app.js"></script>
@@ -204,6 +207,21 @@
     }).catch(function(){
       document.getElementById("booksContainer").innerHTML='<div class="law-empty">Fehler beim Laden</div>';
     });
+    fetch("/api/werbeflaechen").then(r=>r.json()).then(function(data){
+      var w = data.find(function(x){ return x.slot === "gesetze_sidebar"; });
+      var el = document.getElementById("gesetzeAd");
+      if (!el || !w) return;
+      if (w.belegt && w.mieter) {
+        el.innerHTML = '<div style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--radius);padding:1rem;display:flex;gap:1rem;align-items:center">'
+          +'<div style="font-size:.75rem;color:var(--text-3)">Werbung</div>'
+          +'<div style="font-weight:500">'+w.mieter+'</div>'
+          +(w.beschreibung?'<div style="color:var(--text-2);font-size:.875rem">'+w.beschreibung+'</div>':'')
+          +'</div>';
+      } else {
+        el.innerHTML = '<div style="background:var(--bg-card);border:1px dashed var(--border);border-radius:var(--radius);padding:1rem;text-align:center;color:var(--text-3);font-size:.875rem">'
+          +'Werbefläche hier buchen &nbsp;·&nbsp; <a href="/werbung" style="color:var(--accent)">Mehr erfahren</a></div>';
+      }
+    }).catch(function(){});
   </script>
 </body>
 </html>

@@ -339,7 +339,7 @@
     // ── Load data ─────────────────────────────────────────────
     fetch("/api/dashboard").then(function(r){return r.json();}).then(function(data){
       document.getElementById("statTermine").textContent = data.termine.length;
-      document.getElementById("statStellen").textContent = data.stellenangebote.length;
+      document.getElementById("statStellen").textContent = data.totalOffeneStellen !== undefined ? data.totalOffeneStellen : data.stellenangebote.length;
 
       // Nachrichten
       document.getElementById("nachrichtenContainer").innerHTML = data.nachrichten.map(function(n){
