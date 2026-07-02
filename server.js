@@ -81,7 +81,7 @@ app.get("/api/auth/status", (req,res) => res.json({ isAdmin: !!req.session.isAdm
 const TOTP_SECRET = process.env.TOTP_SECRET;
 if (!TOTP_SECRET) console.error("FEHLER: TOTP_SECRET nicht als Umgebungsvariable gesetzt – der Admin-Login ist bis zur Konfiguration deaktiviert.");
 const path_fs = require("path");
-const SETUP_FLAG = path_fs.join(__dirname, "data", ".setup_done");
+const SETUP_FLAG = path_fs.join(process.env.DATA_PATH || path_fs.join(__dirname, "data"), ".setup_done");
 
 function getTOTP() {
   return new OTPAuth.TOTP({ issuer:"CSG-City", label:"Admin", algorithm:"SHA1", digits:6, period:30, secret:OTPAuth.Secret.fromBase32(TOTP_SECRET) });
@@ -241,6 +241,16 @@ app.delete("/api/werbeflaechen/:id", adm, (req,res) => {
 app.post("/api/werbeflaechen/:id/leeren", adm, (req,res) => {
   db.update("werbeflaechen", req.params.id, { belegt: false, mieter: "", kontakt: "", bildUrl: "" });
   addLog("admin", "Werbefläche geleert (ID " + req.params.id + ")", "info");
+  res.json({ success: true });
+});
+
+app.post("/api/werbeflaechen/:id/bild", adm, (req,res) => {
+  const { imageData } = req.body;
+  if (!imageData || typeof imageData !== "string" || imageData.indexOf("data:image/") !== 0) {
+    return res.status(400).json({ error: "Kein gültiges Bild übermittelt" });
+  }
+  db.update("werbeflaechen", req.params.id, { bildUrl: imageData });
+  addLog("admin", "Werbebild aktualisiert (ID " + req.params.id + ")", "info");
   res.json({ success: true });
 });
 
