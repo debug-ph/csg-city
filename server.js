@@ -23,7 +23,7 @@ if (process.env.DATA_PATH) {
 const db = require("./data/database");
 
 const app  = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const DB_FILE   = path.join(__dirname, "data", "db.json");
 const BACKUP_DIR = process.env.DATA_PATH || path.join(__dirname, "data");
