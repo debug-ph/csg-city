@@ -361,10 +361,12 @@ app.post("/api/admin/restore", adm, (req, res) => {
       const stamp = new Date().toISOString().replace(/[:.]/g, "-").substring(0, 19);
       if (fs.existsSync(DB_FILE)) fs.copyFileSync(DB_FILE, path.join(BACKUP_DIR, "backup-" + stamp + ".json"));
     } catch(e) {}
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf8");
-    addLog("backup", "Backup wiederhergestellt", "success");
+    // Daten direkt in den laufenden Speicher schreiben – kein Neustart nötig.
+    // db liest bei jeder Operation frisch aus DB_FILE (load()), daher genügt
+    // das Schreiben der Datei, damit der laufende Server sofort die neuen Daten liefert.
+    db.saveRaw(data);
+    addLog("backup", "Backup wiederhergestellt (ohne Neustart)", "success");
     res.json({ success: true });
-    setTimeout(() => process.exit(0), 500);
   } catch(e) {
     console.error("Restore-Fehler:", e);
     res.status(500).json({ error: "Interner Fehler beim Wiederherstellen des Backups." });
