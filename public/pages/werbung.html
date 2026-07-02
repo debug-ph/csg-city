@@ -165,11 +165,11 @@
       }
     });
 
+    function escH(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
     fetch("/api/werbeflaechen").then(r=>r.json()).then(function(rawData){
-      var data = rawData.filter(function(w){
-        return w.slot === "dashboard_sidebar_1" || w.slot === "dashboard_sidebar_2" ||
-               w.slot === "dashboard_sidebar_3" || w.slot === "dashboard_footer";
-      });
+      // Nur öffentlich buchbare Flächen anzeigen (oeffentlich: true)
+      var data = rawData.filter(function(w){ return w.oeffentlich === true; });
       var frei=data.filter(function(w){return!w.belegt;}).length;
       var belegt=data.filter(function(w){return w.belegt;}).length;
       document.getElementById("statsRow").innerHTML=
@@ -181,23 +181,23 @@
       document.getElementById("werbeGrid").innerHTML=data.map(function(w){
         var preview;
         if (w.belegt) {
-          preview = '<div class="werbe-preview belegt">'+ICONS.check+' Belegt – '+w.mieter+'</div>';
+          preview = '<div class="werbe-preview belegt">'+ICONS.check+' Belegt – '+escH(w.mieter)+'</div>';
         } else {
           var s = randomSlogan();
           preview = '<div class="werbe-preview-leer">'
-            +'<div class="slogan-size">'+ICONS.ads+' '+w.groesse+'</div>'
-            +'<div class="slogan-head">'+s.head+'</div>'
-            +'<div class="slogan-sub">'+s.sub+'</div>'
+            +'<div class="slogan-size">'+ICONS.ads+' '+escH(w.groesse)+'</div>'
+            +'<div class="slogan-head">'+escH(s.head)+'</div>'
+            +'<div class="slogan-sub">'+escH(s.sub)+'</div>'
             +'</div>';
         }
         var badge=w.belegt?'<span class="badge badge-neutral">Belegt</span>':'<span class="badge badge-green">Verfügbar</span>';
         if(!w.belegt){var opt=document.createElement("option");opt.value=w.name;opt.textContent=w.name+" ("+w.groesse+")";select.appendChild(opt);}
         return '<div class="werbe-card">'+preview
-          +'<div class="werbe-info"><div class="werbe-name">'+w.name+' '+badge+'</div>'
-          +'<div class="werbe-meta">'+ICONS.info+" "+w.groesse+'</div>'
-          +'<div class="werbe-desc">'+(w.beschreibung||"")+'</div>'
+          +'<div class="werbe-info"><div class="werbe-name">'+escH(w.name)+' '+badge+'</div>'
+          +'<div class="werbe-meta">'+ICONS.info+" "+escH(w.groesse)+'</div>'
+          +'<div class="werbe-desc">'+escH(w.beschreibung||"")+'</div>'
           +'<div class="werbe-footer"><div><div class="werbe-preis-val">'+Number(w.preis).toFixed(2)+' €</div><div class="werbe-preis-lbl">pro Tag</div></div>'
-          +(!w.belegt?'<button class="btn btn-primary btn-sm" onclick="bucheFl(\''+w.name.replace(/'/g,"")+'\')" style="display:flex;align-items:center;gap:.3rem">'+ICONS.arrow_right+' Buchen</button>':'')
+          +(!w.belegt?'<button class="btn btn-primary btn-sm" onclick="bucheFl(\''+escH(w.name).replace(/'/g,"").replace(/\\/g,"")+'\')" style="display:flex;align-items:center;gap:.3rem">'+ICONS.arrow_right+' Buchen</button>':'')
           +'</div></div></div>';
       }).join("");
     });

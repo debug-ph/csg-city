@@ -1424,7 +1424,8 @@ const DEFAULT_DATA = {
       "kontakt": "",
       "beschreibung": "Sidebar oben rechts auf dem Dashboard.",
       "bildUrl": "",
-      "slot": "dashboard_sidebar_1"
+      "slot": "dashboard_sidebar_1",
+      "oeffentlich": true
     },
     {
       "id": 2,
@@ -1436,7 +1437,8 @@ const DEFAULT_DATA = {
       "kontakt": "",
       "beschreibung": "Sidebar Mitte rechts auf dem Dashboard.",
       "bildUrl": "",
-      "slot": "dashboard_sidebar_2"
+      "slot": "dashboard_sidebar_2",
+      "oeffentlich": true
     },
     {
       "id": 3,
@@ -1448,7 +1450,8 @@ const DEFAULT_DATA = {
       "kontakt": "",
       "beschreibung": "Sidebar unten rechts auf dem Dashboard.",
       "bildUrl": "",
-      "slot": "dashboard_sidebar_3"
+      "slot": "dashboard_sidebar_3",
+      "oeffentlich": true
     },
     {
       "id": 4,
@@ -1460,7 +1463,8 @@ const DEFAULT_DATA = {
       "kontakt": "",
       "beschreibung": "Breiter Banner ganz unten auf dem Dashboard.",
       "bildUrl": "",
-      "slot": "dashboard_footer"
+      "slot": "dashboard_footer",
+      "oeffentlich": true
     },
     {
       "id": 5,
@@ -1472,7 +1476,8 @@ const DEFAULT_DATA = {
       "kontakt": "",
       "beschreibung": "Inline-Werbung zwischen Stellenangeboten (Pos. 1).",
       "bildUrl": "",
-      "slot": "stellen_inline_1"
+      "slot": "stellen_inline_1",
+      "oeffentlich": false
     },
     {
       "id": 6,
@@ -1484,7 +1489,8 @@ const DEFAULT_DATA = {
       "kontakt": "",
       "beschreibung": "Inline-Werbung zwischen Stellenangeboten (Pos. 2).",
       "bildUrl": "",
-      "slot": "stellen_inline_2"
+      "slot": "stellen_inline_2",
+      "oeffentlich": false
     },
     {
       "id": 7,
@@ -1496,7 +1502,8 @@ const DEFAULT_DATA = {
       "kontakt": "",
       "beschreibung": "Inline-Werbung zwischen Stellenangeboten (Pos. 3).",
       "bildUrl": "",
-      "slot": "stellen_inline_3"
+      "slot": "stellen_inline_3",
+      "oeffentlich": false
     },
     {
       "id": 8,
@@ -1508,7 +1515,8 @@ const DEFAULT_DATA = {
       "kontakt": "",
       "beschreibung": "Sidebar neben den Gesetzbüchern.",
       "bildUrl": "",
-      "slot": "gesetze_sidebar"
+      "slot": "gesetze_sidebar",
+      "oeffentlich": true
     }
   ],
   "anfragen": [],

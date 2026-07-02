@@ -161,16 +161,15 @@
           +'<a href="/werbung" class="ad-inline-cta">'+ICONS.arrow_right+' Jetzt buchen</a></div>';
       } else if (w.bildUrl) {
         el.className = "ad-inline belegt";
-        el.innerHTML = '<img src="'+w.bildUrl+'" alt="'+w.name+'">'
+        el.innerHTML = '<img src="'+escH(w.bildUrl)+'" alt="'+escH(w.name)+'">'
           +'<div class="ad-inline-body"><div class="ad-inline-label">Werbung</div>'
-          +'<div class="ad-inline-head">'+w.mieter+'</div>'
-          +'<div class="ad-inline-sub">'+w.beschreibung+'</div></div>';
+          +'<div class="ad-inline-head">'+escH(w.mieter)+'</div>'
+          +'<div class="ad-inline-sub">'+escH(w.beschreibung)+'</div></div>';
       } else {
-        var s = randomSlogan();
         el.className = "ad-inline belegt";
         el.innerHTML = '<div class="ad-inline-body"><div class="ad-inline-label">Werbung</div>'
-          +'<div class="ad-inline-head">'+w.mieter+'</div>'
-          +'<div class="ad-inline-sub">'+w.beschreibung+'</div></div>';
+          +'<div class="ad-inline-head">'+escH(w.mieter)+'</div>'
+          +'<div class="ad-inline-sub">'+escH(w.beschreibung)+'</div></div>';
       }
       return el;
     }
@@ -187,8 +186,7 @@
 
       var chevronSvg = '<svg class="stelle-chevron" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 5.5 7.5 10.5 12.5 5.5"/></svg>';
 
-      // Insert items, every AD_INTERVAL stelle add one inline ad
-      var AD_INTERVAL = 2 + Math.floor(Math.random() * 2); // 2-3 random
+      // Inline-Werbung nur alle 10 Jobs (nach Job 10, 20, 30 …)
       var adIndex = 0;
       data.forEach(function(s, i) {
         var card = document.createElement("div");
@@ -221,13 +219,14 @@
         });
         list.appendChild(card);
 
-        // Every AD_INTERVAL items, insert an ad
-        if ((i + 1) % AD_INTERVAL === 0) {
-          var ad = allInlineAds[adIndex % (allInlineAds.length || 1)];
-          list.appendChild(makeInlineAd(ad));
+        // Nach jedem 10. Job eine Inline-Werbung einfügen (volle Breite, margin 2rem 0)
+        if ((i + 1) % 10 === 0 && allInlineAds.length) {
+          var ad = allInlineAds[adIndex % allInlineAds.length];
+          var adEl = makeInlineAd(ad);
+          adEl.style.margin = "2rem 0";
+          adEl.style.gridColumn = "1 / -1";
+          list.appendChild(adEl);
           adIndex++;
-          // New random interval for next insertion
-          AD_INTERVAL = 2 + Math.floor(Math.random() * 2);
         }
       });
     }
@@ -242,7 +241,8 @@
       fetch("/api/werbeflaechen").then(function(r){return r.json();})
     ]).then(function(results){
       allStellen    = results[0];
-      allInlineAds  = results[1].filter(function(w){return w.slot==="stellen_inline_1"||w.slot==="stellen_inline_2"||w.slot==="stellen_inline_3";});
+      allInlineAds  = results[1].filter(function(w){return w.slot && w.slot.indexOf("stellen_inline_")===0;})
+        .sort(function(a,b){return (parseInt(a.slot.split("_")[2])||0)-(parseInt(b.slot.split("_")[2])||0);});
 
       // Build filter bar
       var fb = document.getElementById("filterBar");

@@ -31,6 +31,9 @@
     .list-item-sub{font-size:.775rem;color:var(--text-2);}
     .list-item-right{display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
     .list-item-date{font-size:.7rem;color:var(--text-3);white-space:nowrap;}
+    .werbe-groups{display:flex;flex-direction:column;gap:1.5rem;}
+    .werbe-group-title{font-size:.8125rem;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.625rem;display:flex;align-items:center;gap:.4rem;}
+    .werbe-group-count{font-weight:400;color:var(--text-3);text-transform:none;letter-spacing:0;}
     .werbe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.875rem;}
     .werbe-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
     .werbe-preview{height:70px;background:repeating-linear-gradient(45deg,var(--bg),var(--bg) 8px,var(--bg-subtle) 8px,var(--bg-subtle) 16px);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--text-3);border-bottom:1px solid var(--border);}
@@ -139,7 +142,7 @@
       <div class="admin-section" id="sec-werbung">
         <div class="page-header"><h2 id="h-werbung"></h2><p>Werbeplätze verwalten und Bilder hinterlegen</p></div>
         <div class="toolbar"><span class="toolbar-info" id="infoW"></span><button class="btn btn-primary" id="btnAddW"></button></div>
-        <div class="werbe-grid" id="werbeGrid"><div class="empty-state">Laden…</div></div>
+        <div class="werbe-groups" id="werbeGrid"><div class="empty-state">Laden…</div></div>
       </div>
 
       <!-- ANFRAGEN -->
@@ -307,9 +310,17 @@
             <option value="dashboard_sidebar_2">Dashboard – Sidebar Mitte (300×250)</option>
             <option value="dashboard_sidebar_3">Dashboard – Sidebar unten (300×250)</option>
             <option value="dashboard_footer">Dashboard – Footer Leaderboard (728×90)</option>
+            <option value="gesetze_sidebar">Gesetze – Sidebar (300×250)</option>
             <option value="stellen_inline_1">Stellenangebote – Inline 1 (300×140)</option>
             <option value="stellen_inline_2">Stellenangebote – Inline 2 (300×140)</option>
             <option value="stellen_inline_3">Stellenangebote – Inline 3 (300×140)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sichtbarkeit</label>
+          <select class="form-input" id="mWOeff">
+            <option value="true">Öffentlich buchbar (auf Werbeseite sichtbar)</option>
+            <option value="false">Privat (nur intern, z.B. Inline-Slots)</option>
           </select>
         </div>
         <div class="form-group"><label class="form-label">Beschreibung</label><input class="form-input" id="mWB"/></div>
@@ -593,22 +604,45 @@
     var slotLabels={"dashboard_sidebar_1":"Sidebar oben","dashboard_sidebar_2":"Sidebar Mitte","dashboard_sidebar_3":"Sidebar unten","dashboard_footer":"Footer","stellen_inline_1":"Stellen Inline 1","stellen_inline_2":"Stellen Inline 2","stellen_inline_3":"Stellen Inline 3","gesetze_sidebar":"Gesetze Sidebar"};
     var slotSizes={"dashboard_sidebar_1":"300×250","dashboard_sidebar_2":"300×250","dashboard_sidebar_3":"300×250","dashboard_footer":"728×90","stellen_inline_1":"300×140","stellen_inline_2":"300×140","stellen_inline_3":"300×140","gesetze_sidebar":"300×250"};
 
+    function slotLabel(slot){ if(slotLabels[slot])return slotLabels[slot]; var m=/^stellen_inline_(\d+)$/.exec(slot||""); if(m)return "Stellen Inline "+m[1]; return slot||"–"; }
+    function slotSize(slot){ if(slotSizes[slot])return slotSizes[slot]; if(/^stellen_inline_\d+$/.test(slot||""))return "300×140"; return "–"; }
+
+    function werbeCard(w){
+      var preview=w.bildUrl
+        ?'<img src="'+escH(w.bildUrl)+'" style="width:100%;height:70px;object-fit:cover;display:block">'
+        :'<div class="werbe-preview'+(w.belegt?" belegt":"")+'">'+ICONS.ads+" "+(w.belegt?"Belegt":escH(w.groesse||slotSize(w.slot)))+'</div>';
+      var badge=w.belegt?'<span class="badge badge-neutral">Belegt</span>':'<span class="badge badge-green">Frei</span>';
+      return '<div class="werbe-card">'+preview
+        +'<div class="werbe-body"><div class="werbe-name">'+escH(w.name)+" "+badge+'</div>'
+        +'<div class="werbe-meta">'+escH(w.groesse||slotSize(w.slot))+" · "+Number(w.preis).toFixed(2)+" €/Tag · "+escH(slotLabel(w.slot))+'</div>'
+        +'<div class="werbe-desc">'+escH(w.beschreibung||"")+(w.mieter?' <strong>→ '+escH(w.mieter)+'</strong>':'')+'</div>'
+        +'<div class="werbe-actions">'+editBtn("editW",w.id)+(w.belegt?leerenBtn(w.id,w.name):"")+delBtn("delW",w.id,w.name)+'</div>'
+        +'</div></div>';
+    }
+
     async function loadW(){
       allW=await(await fetch("/api/werbeflaechen")).json();
       var frei=allW.filter(function(w){return!w.belegt;}).length;
       document.getElementById("infoW").textContent=allW.length+" Flächen · "+frei+" verfügbar";
-      document.getElementById("werbeGrid").innerHTML=allW.map(function(w){
-        var preview=w.bildUrl
-          ?'<img src="'+w.bildUrl+'" style="width:100%;height:70px;object-fit:cover;display:block">'
-          :'<div class="werbe-preview'+(w.belegt?" belegt":"")+'">'+ICONS.ads+" "+(w.belegt?"Belegt":w.groesse||"–")+'</div>';
-        var badge=w.belegt?'<span class="badge badge-neutral">Belegt</span>':'<span class="badge badge-green">Frei</span>';
-        return '<div class="werbe-card">'+preview
-          +'<div class="werbe-body"><div class="werbe-name">'+escH(w.name)+" "+badge+'</div>'
-          +'<div class="werbe-meta">'+escH(w.groesse||"")+" · "+Number(w.preis).toFixed(2)+" €/Tag · "+(slotLabels[w.slot]||w.slot||"–")+'</div>'
-          +'<div class="werbe-desc">'+escH(w.beschreibung||"")+(w.mieter?' <strong>→ '+escH(w.mieter)+'</strong>':'')+'</div>'
-          +'<div class="werbe-actions">'+editBtn("editW",w.id)+(w.belegt?leerenBtn(w.id,w.name):"")+delBtn("delW",w.id,w.name)+'</div>'
-          +'</div></div>';
-      }).join("") || '<div class="empty-state">Keine Werbeflächen</div>';
+      var groups=[
+        {title:"Dashboard",      test:function(w){return (w.slot||"").indexOf("dashboard_")===0;}},
+        {title:"Stellenanzeigen",test:function(w){return (w.slot||"").indexOf("stellen_inline_")===0;}},
+        {title:"Gesetze",        test:function(w){return w.slot==="gesetze_sidebar";}}
+      ];
+      var used={}, html="";
+      groups.forEach(function(g){
+        var items=allW.filter(function(w){ if(g.test(w)){used[w.id]=1;return true;} return false;})
+          .sort(function(a,b){return (a.slot||"").localeCompare(b.slot||"",undefined,{numeric:true});});
+        if(!items.length)return;
+        html+='<div class="werbe-group"><div class="werbe-group-title">'+ICONS.ads+' '+g.title+' <span class="werbe-group-count">('+items.length+')</span></div>'
+          +'<div class="werbe-grid">'+items.map(werbeCard).join("")+'</div></div>';
+      });
+      var rest=allW.filter(function(w){return !used[w.id];});
+      if(rest.length){
+        html+='<div class="werbe-group"><div class="werbe-group-title">'+ICONS.ads+' Weitere <span class="werbe-group-count">('+rest.length+')</span></div>'
+          +'<div class="werbe-grid">'+rest.map(werbeCard).join("")+'</div></div>';
+      }
+      document.getElementById("werbeGrid").innerHTML=html || '<div class="empty-state">Keine Werbeflächen</div>';
     }
 
     document.getElementById("mWSlot").addEventListener("change",function(){
@@ -631,6 +665,7 @@
       document.getElementById("mWTitle").textContent="Neue Werbefläche";
       ["mWId","mWN","mWG","mWB","mWP","mWM","mWK"].forEach(function(i){document.getElementById(i).value="";});
       document.getElementById("mWSlot").value="werbung"; document.getElementById("mWO").value="false";
+      document.getElementById("mWOeff").value="true";
       document.getElementById("uploadPreview").style.display="none";
       document.getElementById("uploadLabel").textContent="Bild auswählen oder hierher ziehen";
       document.getElementById("bildInput").value=""; pendingImageData=null; pendingMime=null;
@@ -644,6 +679,7 @@
       document.getElementById("mWG").value=w.groesse||""; document.getElementById("mWSlot").value=w.slot||"werbung";
       document.getElementById("mWB").value=w.beschreibung||""; document.getElementById("mWP").value=w.preis||0;
       document.getElementById("mWO").value=w.belegt?"true":"false"; document.getElementById("mWM").value=w.mieter||"";
+      document.getElementById("mWOeff").value=(w.oeffentlich===false)?"false":"true";
       document.getElementById("mWK").value=w.kontakt||""; pendingImageData=null; pendingMime=null;
       document.getElementById("werbeGroesseTipp").textContent="(Empfohlen: "+(slotSizes[w.slot]||"–")+")";
       var prev=document.getElementById("uploadPreview");
@@ -654,7 +690,7 @@
 
     document.getElementById("saveW").addEventListener("click",async function(){
       var id=document.getElementById("mWId").value;
-      var b={name:document.getElementById("mWN").value.trim(),groesse:document.getElementById("mWG").value.trim(),slot:document.getElementById("mWSlot").value,beschreibung:document.getElementById("mWB").value.trim(),preis:parseFloat(document.getElementById("mWP").value)||0,belegt:document.getElementById("mWO").value==="true",mieter:document.getElementById("mWM").value.trim(),kontakt:document.getElementById("mWK").value.trim()};
+      var b={name:document.getElementById("mWN").value.trim(),groesse:document.getElementById("mWG").value.trim(),slot:document.getElementById("mWSlot").value,beschreibung:document.getElementById("mWB").value.trim(),preis:parseFloat(document.getElementById("mWP").value)||0,belegt:document.getElementById("mWO").value==="true",mieter:document.getElementById("mWM").value.trim(),kontakt:document.getElementById("mWK").value.trim(),oeffentlich:document.getElementById("mWOeff").value==="true"};
       if(!b.name){showToast("Name fehlt!","error");return;}
       var savedId=id;
       if(id){ await fetch("/api/werbeflaechen/"+id,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}); }

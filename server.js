@@ -6,6 +6,7 @@ const path       = require("path");
 const fs         = require("fs");
 const OTPAuth    = require("otpauth");
 const QRCode     = require("qrcode");
+const crypto     = require("crypto");
 
 // data/-Ordner sicherstellen bevor require('./data/database') läuft
 fs.mkdirSync(path.join(__dirname, "data"), { recursive: true });
@@ -39,8 +40,11 @@ function addLog(typ, nachricht, status) {
   logs.push({ timestamp: new Date().toISOString(), typ, nachricht, status: status || "info" });
 }
 
-const SESSION_SECRET = process.env.SESSION_SECRET;
-if (!SESSION_SECRET) console.warn("WARNUNG: SESSION_SECRET nicht gesetzt! Bitte als Umgebungsvariable konfigurieren.");
+// Session-Secret ausschließlich aus der Umgebung. Ist keins gesetzt (z.B. lokale
+// Entwicklung), wird ein zufälliges pro Prozess erzeugt – niemals ein festes
+// Secret im Quellcode, das im öffentlichen Repo einsehbar wäre.
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
+if (!process.env.SESSION_SECRET) console.warn("WARNUNG: SESSION_SECRET nicht gesetzt! Zufälliges Secret generiert – Sessions gehen bei jedem Neustart verloren. Bitte als Umgebungsvariable konfigurieren.");
 
 // CSP deaktiviert: Seiten nutzen Inline-Scripts, die 'script-src self' blockieren würde
 app.use(helmet({ contentSecurityPolicy: false }));
@@ -49,7 +53,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.static(path.join(__dirname, "public")));
 app.set("trust proxy", 1);
 app.use(session({
-  secret: SESSION_SECRET || "csg-city-fallback-bitte-aendern",
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -73,8 +77,9 @@ app.get("/gesetze",        (_,res) => res.sendFile(path.join(__dirname,"public/p
 
 // Auth
 app.get("/api/auth/status", (req,res) => res.json({ isAdmin: !!req.session.isAdmin }));
-const TOTP_SECRET = process.env.TOTP_SECRET || "ND7NTFOAVACPAYSM4EW33HFJHRQBI2PH";
-if (!process.env.TOTP_SECRET) console.warn("WARNUNG: TOTP_SECRET nicht als Umgebungsvariable gesetzt.");
+// TOTP-Secret ausschließlich aus der Umgebung – kein festes 2FA-Secret im Quellcode.
+const TOTP_SECRET = process.env.TOTP_SECRET;
+if (!TOTP_SECRET) console.error("FEHLER: TOTP_SECRET nicht als Umgebungsvariable gesetzt – der Admin-Login ist bis zur Konfiguration deaktiviert.");
 const path_fs = require("path");
 const SETUP_FLAG = path_fs.join(__dirname, "data", ".setup_done");
 
@@ -89,7 +94,16 @@ function markSetupDone() {
   require("fs").writeFileSync(SETUP_FLAG, "1");
 }
 
-app.get("/api/admin/setup-qr", (req,res) => {
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: "Zu viele Login-Versuche. Bitte 15 Minuten warten." },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+app.get("/api/admin/setup-qr", loginLimiter, (req,res) => {
+  if (!TOTP_SECRET) return res.status(503).json({error:"Server nicht konfiguriert (TOTP_SECRET fehlt)."});
   if (isSetupDone()) {
     return res.status(403).json({error:"Einrichtung bereits abgeschlossen."});
   }
@@ -100,15 +114,8 @@ app.get("/api/admin/setup-qr", (req,res) => {
   });
 });
 
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
-  message: { error: "Zu viele Login-Versuche. Bitte 15 Minuten warten." },
-  standardHeaders: true,
-  legacyHeaders: false
-});
-
 app.post("/api/login", loginLimiter, (req,res) => {
+  if (!TOTP_SECRET) return res.status(503).json({error:"Server nicht konfiguriert (TOTP_SECRET fehlt)."});
   const { username, totp } = req.body;
   if (username !== "Admin") {
     addLog("login", "Login-Versuch mit ungültigem Benutzernamen: " + (username||"–"), "error");
@@ -149,17 +156,20 @@ app.post("/api/stellenangebote", adm, (req,res) => {
   if (!titel) return res.status(400).json({ error: "Titel fehlt" });
   const row = db.insert("stellenangebote", { titel, abteilung: abteilung||"", schlagzeile: schlagzeile||"", beschreibung: beschreibung||"", lohnProH: parseFloat(lohnProH)||0, lohnTyp: lohnTyp||"h", offen: offen !== false, kontakt: kontakt||"", gewinnanteil: gewinnanteil||"" });
   addLog("admin", "Stelle erstellt: " + titel, "success");
+  syncWerbeflaechen();
   res.json(row);
 });
 app.put("/api/stellenangebote/:id", adm, (req,res) => {
   const { titel, abteilung, schlagzeile, beschreibung, lohnProH, lohnTyp, offen, kontakt, gewinnanteil } = req.body;
   db.update("stellenangebote", req.params.id, { titel, abteilung, schlagzeile: schlagzeile||"", beschreibung, lohnProH: parseFloat(lohnProH)||0, lohnTyp: lohnTyp||"h", offen, kontakt: kontakt||"", gewinnanteil: gewinnanteil||"" });
   addLog("admin", "Stelle aktualisiert: " + (titel||req.params.id), "info");
+  syncWerbeflaechen();
   res.json({ success: true });
 });
 app.delete("/api/stellenangebote/:id", adm, (req,res) => {
   db.delete("stellenangebote", req.params.id);
   addLog("admin", "Stelle gelöscht (ID " + req.params.id + ")", "info");
+  syncWerbeflaechen();
   res.json({ success: true });
 });
 
@@ -206,15 +216,19 @@ app.delete("/api/termine/:id", adm, (req,res) => {
 // Werbeflächen
 app.get("/api/werbeflaechen", (_,res) => res.json(db.all("werbeflaechen")));
 app.post("/api/werbeflaechen", adm, (req,res) => {
-  const { name, groesse, preis, belegt, mieter, kontakt, beschreibung, bildUrl, slot } = req.body;
+  const { name, groesse, preis, belegt, mieter, kontakt, beschreibung, bildUrl, slot, oeffentlich } = req.body;
   if (!name) return res.status(400).json({ error: "Name fehlt" });
-  const row = db.insert("werbeflaechen", { name, groesse: groesse||"", preis: parseFloat(preis)||0, belegt: belegt===true||belegt==="true", mieter: mieter||"", kontakt: kontakt||"", beschreibung: beschreibung||"", bildUrl: bildUrl||"", slot: slot||"werbung" });
+  const theSlot = slot||"werbung";
+  const oeff = typeof oeffentlich === "boolean" ? oeffentlich : !(theSlot.indexOf("stellen_inline_") === 0);
+  const row = db.insert("werbeflaechen", { name, groesse: groesse||"", preis: parseFloat(preis)||0, belegt: belegt===true||belegt==="true", mieter: mieter||"", kontakt: kontakt||"", beschreibung: beschreibung||"", bildUrl: bildUrl||"", slot: theSlot, oeffentlich: oeff });
   addLog("admin", "Werbefläche erstellt: " + name, "success");
   res.json(row);
 });
 app.put("/api/werbeflaechen/:id", adm, (req,res) => {
-  const { name, groesse, preis, belegt, mieter, kontakt, beschreibung, bildUrl, slot } = req.body;
-  db.update("werbeflaechen", req.params.id, { name, groesse, preis: parseFloat(preis)||0, belegt: belegt===true||belegt==="true", mieter: mieter||"", kontakt: kontakt||"", beschreibung, bildUrl: bildUrl||"", slot: slot||"werbung" });
+  const { name, groesse, preis, belegt, mieter, kontakt, beschreibung, bildUrl, slot, oeffentlich } = req.body;
+  const ch = { name, groesse, preis: parseFloat(preis)||0, belegt: belegt===true||belegt==="true", mieter: mieter||"", kontakt: kontakt||"", beschreibung, bildUrl: bildUrl||"", slot: slot||"werbung" };
+  if (typeof oeffentlich === "boolean") ch.oeffentlich = oeffentlich;
+  db.update("werbeflaechen", req.params.id, ch);
   addLog("admin", "Werbefläche aktualisiert: " + (name||req.params.id), "info");
   res.json({ success: true });
 });
@@ -378,6 +392,65 @@ app.get("/api/admin/logs", adm, (req, res) => {
   res.json([...logs].reverse());
 });
 
+// Inline-Werbeslots automatisch an die Anzahl offener Stellen anpassen.
+// Benötigte Slots = ceil(offene Stellen / 10). Fehlende werden erstellt,
+// überflüssige (nicht gebuchte) gelöscht. Zusätzlich Migration des
+// oeffentlich-Feldes für Alt-Daten ohne dieses Feld.
+function syncWerbeflaechen() {
+  try {
+    const raw = db.getRaw();
+    if (!Array.isArray(raw.werbeflaechen)) raw.werbeflaechen = [];
+    if (!raw._nextId) raw._nextId = {};
+    let changed = false;
+
+    // Migration: oeffentlich-Feld ergänzen (Inline = privat, Rest = öffentlich)
+    raw.werbeflaechen.forEach(w => {
+      if (typeof w.oeffentlich !== "boolean") {
+        w.oeffentlich = !(w.slot && w.slot.indexOf("stellen_inline_") === 0);
+        changed = true;
+      }
+    });
+
+    const offen = (raw.stellenangebote || []).filter(s => s.offen).length;
+    const needed = Math.ceil(offen / 10);
+
+    const inlineIdx = w => { const m = /^stellen_inline_(\d+)$/.exec(w.slot || ""); return m ? Number(m[1]) : null; };
+    const existing = {};
+    raw.werbeflaechen.forEach(w => { const n = inlineIdx(w); if (n) existing[n] = w; });
+
+    // Fehlende Inline-Slots erstellen
+    for (let i = 1; i <= needed; i++) {
+      if (!existing[i]) {
+        const id = raw._nextId.werbeflaechen || (Math.max(0, ...raw.werbeflaechen.map(w => w.id || 0)) + 1);
+        raw._nextId.werbeflaechen = id + 1;
+        raw.werbeflaechen.push({
+          id, name: "Stellen Inline " + i, groesse: "300×140", preis: 4,
+          belegt: false, mieter: "", kontakt: "",
+          beschreibung: "Inline-Werbung zwischen Stellenangeboten (Pos. " + i + ").",
+          bildUrl: "", slot: "stellen_inline_" + i, oeffentlich: false
+        });
+        changed = true;
+      }
+    }
+
+    // Überflüssige Inline-Slots löschen – gebuchte (belegt) bleiben erhalten,
+    // damit bezahlte Buchungen nicht verloren gehen.
+    const before = raw.werbeflaechen.length;
+    raw.werbeflaechen = raw.werbeflaechen.filter(w => {
+      const n = inlineIdx(w);
+      return !(n && n > needed && !w.belegt);
+    });
+    if (raw.werbeflaechen.length !== before) changed = true;
+
+    if (changed) {
+      db.saveRaw(raw);
+      addLog("system", "Werbeflächen synchronisiert: " + needed + " Inline-Slot(s) für " + offen + " offene Stellen", "info");
+    }
+  } catch (e) {
+    console.error("syncWerbeflaechen Fehler:", e);
+  }
+}
+
 function autoBackup() {
   try {
     if (!fs.existsSync(DB_FILE)) return;
@@ -412,6 +485,7 @@ function scheduleMidnightBackup() {
 app.listen(PORT, () => {
   addLog("system", "Server gestartet auf Port " + PORT, "info");
   console.log("Server läuft auf http://localhost:" + PORT);
+  syncWerbeflaechen();
   setInterval(() => {
     try { db.saveRaw(db.getRaw()); } catch(e) { console.error("Auto-Save Fehler:", e); }
   }, 30000);
