@@ -240,7 +240,7 @@
       fetch("/api/stellenangebote").then(function(r){return r.json();}),
       fetch("/api/werbeflaechen").then(function(r){return r.json();})
     ]).then(function(results){
-      allStellen    = results[0];
+      allStellen    = results[0].filter(function(s){return !s.versteckt;});
       allInlineAds  = results[1].filter(function(w){return w.slot && w.slot.indexOf("stellen_inline_")===0;})
         .sort(function(a,b){return (parseInt(a.slot.split("_")[2])||0)-(parseInt(b.slot.split("_")[2])||0);});
 

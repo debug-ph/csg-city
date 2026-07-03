@@ -510,6 +510,12 @@
     function delBtn(fn, id, name) {
       return '<button class="btn btn-danger btn-sm act-btn" title="Löschen" data-fn="'+fn+'" data-id="'+id+'" data-name="'+name.replace(/"/g,"")+'">'+ICONS.trash+'</button>';
     }
+    function hideBtn(id) {
+      return '<button class="btn btn-icon btn-sm act-btn" title="Ausblenden" data-fn="versteckenS" data-id="'+id+'">'+ICONS.eye_off+'</button>';
+    }
+    function showBtn(id) {
+      return '<button class="btn btn-icon btn-sm act-btn" title="Einblenden" data-fn="einblendenS" data-id="'+id+'">'+ICONS.eye+'</button>';
+    }
     function leerenBtn(id, name) {
       return '<button class="btn btn-ghost btn-sm act-btn" title="Leeren" data-fn="leerenW" data-id="'+id+'" data-name="'+name.replace(/"/g,"")+'">Leeren</button>';
     }
@@ -524,6 +530,8 @@
       else if (fn==="delTerm")  delTerm(id,name);
       else if (fn==="editS")    editS(id);
       else if (fn==="delS")     delS(id,name);
+      else if (fn==="versteckenS") versteckenS(id);
+      else if (fn==="einblendenS") einblendenS(id);
       else if (fn==="editW")    editW(id);
       else if (fn==="delW")     delW(id,name);
       else if (fn==="leerenW")  leerenW(id,name);
@@ -582,14 +590,19 @@
 
     function buildFilterBarS(){
       var fb=document.getElementById("filterBarS"); if(!fb)return;
+      var visible=allS.filter(function(s){return !s.versteckt;});
+      var hidden =allS.filter(function(s){return s.versteckt;});
       var cats={};
-      allS.forEach(function(s){ var a=catOf(s); cats[a]=(cats[a]||0)+1; });
-      var offen=allS.filter(function(s){return s.offen;}).length;
-      var html='<button class="filter-btn'+(currentFilterS==="alle"?" active":"")+'" data-f="alle">'+ICONS.jobs+' Alle <span class="fcount">('+allS.length+')</span></button>';
+      visible.forEach(function(s){ var a=catOf(s); cats[a]=(cats[a]||0)+1; });
+      var offen=visible.filter(function(s){return s.offen;}).length;
+      var html='<button class="filter-btn'+(currentFilterS==="alle"?" active":"")+'" data-f="alle">'+ICONS.jobs+' Alle <span class="fcount">('+visible.length+')</span></button>';
       html+='<button class="filter-btn'+(currentFilterS==="offen"?" active":"")+'" data-f="offen">'+ICONS.dot_green+' Nur offene <span class="fcount">('+offen+')</span></button>';
       Object.keys(cats).sort(function(a,b){return a.localeCompare(b,"de");}).forEach(function(a){
         html+='<button class="filter-btn'+(currentFilterS===a?" active":"")+'" data-f="'+escH(a)+'">'+ICONS.building+' '+escH(a)+' <span class="fcount">('+cats[a]+')</span></button>';
       });
+      if(hidden.length){
+        html+='<button class="filter-btn'+(currentFilterS==="versteckt"?" active":"")+'" data-f="versteckt">'+ICONS.eye_off+' Ausgeblendet <span class="fcount">('+hidden.length+')</span></button>';
+      }
       fb.innerHTML=html;
       fb.querySelectorAll(".filter-btn").forEach(function(btn){
         btn.addEventListener("click",function(){ currentFilterS=this.dataset.f; buildFilterBarS(); renderS(); });
@@ -598,44 +611,70 @@
 
     function stellenRow(s){
       var b=s.offen?'<span class="badge badge-green">Offen</span>':'<span class="badge badge-neutral">Besetzt</span>';
+      var toggle=s.versteckt?showBtn(s.id):hideBtn(s.id);
       return '<tr><td><strong>'+escH(s.titel)+'</strong>'+(s.schlagzeile?'<div class="text-3" style="font-size:.72rem;margin-top:.15rem">'+escH(s.schlagzeile)+'</div>':'')+'</td>'
         +'<td>'+Number(s.lohnProH||0).toFixed(2)+'</td><td>'+b+'</td>'
-        +'<td><div class="actions-cell">'+editBtn("editS",s.id)+delBtn("delS",s.id,s.titel)+'</div></td></tr>';
+        +'<td><div class="actions-cell">'+editBtn("editS",s.id)+toggle+delBtn("delS",s.id,s.titel)+'</div></td></tr>';
+    }
+
+    function stellenGruppe(titel, items, dimmed){
+      if(!items.length) return "";
+      var offen=items.filter(function(s){return s.offen;}).length;
+      var icon = dimmed ? ICONS.eye_off : ICONS.building;
+      var style = dimmed ? ' style="opacity:0.6"' : '';
+      return '<div class="werbe-group"'+style+'><div class="werbe-group-title">'+icon+' '+escH(titel)
+        +' <span class="werbe-group-count">('+items.length+(offen?' · '+offen+' offen':'')+')</span></div>'
+        +'<div class="card"><div class="table-wrap"><table>'
+        +'<thead><tr><th>Titel</th><th>€/h</th><th>Status</th><th></th></tr></thead>'
+        +'<tbody>'+items.map(stellenRow).join("")+'</tbody></table></div></div></div>';
     }
 
     function renderS(){
       var term=searchTermS.trim().toLowerCase();
+      function matchTerm(s){
+        if(!term) return true;
+        var hay=((s.titel||"")+" "+(s.abteilung||"")+" "+(s.schlagzeile||"")+" "+(s.beschreibung||"")).toLowerCase();
+        return hay.indexOf(term)!==-1;
+      }
+      var html="";
+
+      // Nur ausgeblendete Stellen
+      if(currentFilterS==="versteckt"){
+        var hidOnly=allS.filter(function(s){return s.versteckt && matchTerm(s);});
+        document.getElementById("stellenGroups").innerHTML = stellenGruppe("Ausgeblendet", hidOnly, true) || '<div class="empty-state">Keine Stellen gefunden</div>';
+        return;
+      }
+
+      // Sichtbare Stellen nach aktuellem Filter gruppieren
       var base=allS.filter(function(s){
+        if(s.versteckt) return false;
         if(currentFilterS==="offen" && !s.offen) return false;
         if(currentFilterS!=="alle" && currentFilterS!=="offen" && catOf(s)!==currentFilterS) return false;
-        if(term){
-          var hay=((s.titel||"")+" "+(s.abteilung||"")+" "+(s.schlagzeile||"")+" "+(s.beschreibung||"")).toLowerCase();
-          if(hay.indexOf(term)===-1) return false;
-        }
-        return true;
+        return matchTerm(s);
       });
       var groups={};
       base.forEach(function(s){ var a=catOf(s); (groups[a]=groups[a]||[]).push(s); });
-      var names=Object.keys(groups).sort(function(a,b){return a.localeCompare(b,"de");});
-      var html="";
-      names.forEach(function(a){
-        var items=groups[a];
-        var offen=items.filter(function(s){return s.offen;}).length;
-        html+='<div class="werbe-group"><div class="werbe-group-title">'+ICONS.building+' '+escH(a)
-          +' <span class="werbe-group-count">('+items.length+(offen?' · '+offen+' offen':'')+')</span></div>'
-          +'<div class="card"><div class="table-wrap"><table>'
-          +'<thead><tr><th>Titel</th><th>€/h</th><th>Status</th><th></th></tr></thead>'
-          +'<tbody>'+items.map(stellenRow).join("")+'</tbody></table></div></div></div>';
+      Object.keys(groups).sort(function(a,b){return a.localeCompare(b,"de");}).forEach(function(a){
+        html+=stellenGruppe(a, groups[a], false);
       });
+
+      // Ausgeblendet-Gruppe ans Ende – nur in der Gesamtansicht "Alle"
+      if(currentFilterS==="alle"){
+        var hid=allS.filter(function(s){return s.versteckt && matchTerm(s);});
+        html+=stellenGruppe("Ausgeblendet", hid, true);
+      }
+
       document.getElementById("stellenGroups").innerHTML = html || '<div class="empty-state">Keine Stellen gefunden</div>';
     }
 
     async function loadS(){
       allS = await(await fetch("/api/stellenangebote")).json();
-      var of=allS.filter(function(s){return s.offen;}).length;
-      document.getElementById("infoS").textContent=allS.length+" Stellen · "+of+" offen";
-      // Aktiven Kategorie-Filter zuruecksetzen, falls die Kategorie nicht mehr existiert
-      if(currentFilterS!=="alle" && currentFilterS!=="offen" && !allS.some(function(s){return catOf(s)===currentFilterS;})) currentFilterS="alle";
+      var of=allS.filter(function(s){return s.offen && !s.versteckt;}).length;
+      var vh=allS.filter(function(s){return s.versteckt;}).length;
+      document.getElementById("infoS").textContent=allS.length+" Stellen · "+of+" offen"+(vh?" · "+vh+" ausgeblendet":"");
+      // Aktiven Filter zuruecksetzen, falls Kategorie bzw. Ausgeblendet-Ansicht nicht mehr existiert
+      if(currentFilterS==="versteckt" && !vh) currentFilterS="alle";
+      if(currentFilterS!=="alle" && currentFilterS!=="offen" && currentFilterS!=="versteckt" && !allS.some(function(s){return !s.versteckt && catOf(s)===currentFilterS;})) currentFilterS="alle";
       buildFilterBarS();
       renderS();
     }
@@ -676,6 +715,21 @@
         showToast(t+" gelöscht.","error");
         loadS();
       }catch(err){ showToast("Netzwerkfehler beim Löschen.","error"); }
+    }
+    function versteckenS(id){ return stelleSichtbarkeit(id,"verstecken","Stelle ausgeblendet."); }
+    function einblendenS(id){ return stelleSichtbarkeit(id,"einblenden","Stelle eingeblendet."); }
+    async function stelleSichtbarkeit(id,aktion,okMsg){
+      try{
+        var r=await fetch("/api/stellenangebote/"+id+"/"+aktion,{method:"POST",credentials:"same-origin"});
+        if(!r.ok){
+          if(r.status===401){ showToast("Sitzung abgelaufen – bitte neu anmelden.","error"); location.href="/login"; return; }
+          var e=await r.json().catch(function(){return{};});
+          showToast(e.error||("Aktion fehlgeschlagen ("+r.status+").") ,"error");
+          return;
+        }
+        showToast(okMsg);
+        loadS();
+      }catch(err){ showToast("Netzwerkfehler.","error"); }
     }
 
     // ── WERBEFLÄCHEN ──────────────────────────────────────────

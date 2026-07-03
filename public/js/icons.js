@@ -28,6 +28,7 @@ var ICONS = {
   arrow_right:    `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="7" x2="12" y2="7"/><polyline points="8 3 12 7 8 11"/></svg>`,
   check:          `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 7 5.5 11 12 3"/></svg>`,
   eye:            `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7s2.5-4.5 6-4.5S13 7 13 7s-2.5 4.5-6 4.5S1 7 1 7z"/><circle cx="7" cy="7" r="1.5"/></svg>`,
+  eye_off:        `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 3.1A5.6 5.6 0 0 1 7 2.5c3.5 0 6 4.5 6 4.5a11 11 0 0 1-1.8 2.3M3.3 3.9A11 11 0 0 0 1 7s2.5 4.5 6 4.5a5.6 5.6 0 0 0 2.2-.45"/><path d="M6 6a1.5 1.5 0 0 0 2 2"/><line x1="1.5" y1="1.5" x2="12.5" y2="12.5"/></svg>`,
   // Status / Misc
   dot_green:      `<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="#2D8C4E"/></svg>`,
   dot_gray:       `<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor" opacity="0.4"/></svg>`,

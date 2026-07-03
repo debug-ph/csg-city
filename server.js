@@ -139,7 +139,7 @@ app.post("/api/logout", (req,res) => {
 
 // Dashboard
 app.get("/api/dashboard", (_,res) => {
-  const offeneStellen = db.all("stellenangebote").filter(s => s.offen);
+  const offeneStellen = db.all("stellenangebote").filter(s => s.offen && !s.versteckt);
   res.json({
     nachrichten:        db.latest("nachrichten", 3),
     termine:            db.oldest("termine", 4),
@@ -174,9 +174,25 @@ app.post("/api/stellenangebote", adm, (req,res) => {
   res.json(row);
 });
 app.put("/api/stellenangebote/:id", adm, (req,res) => {
-  const { titel, abteilung, schlagzeile, beschreibung, lohnProH, lohnTyp, offen, kontakt, gewinnanteil } = req.body;
-  db.update("stellenangebote", req.params.id, { titel, abteilung, schlagzeile: schlagzeile||"", beschreibung, lohnProH: parseFloat(lohnProH)||0, lohnTyp: lohnTyp||"h", offen, kontakt: kontakt||"", gewinnanteil: gewinnanteil||"" });
+  const { titel, abteilung, schlagzeile, beschreibung, lohnProH, lohnTyp, offen, kontakt, gewinnanteil, versteckt } = req.body;
+  const ch = { titel, abteilung, schlagzeile: schlagzeile||"", beschreibung, lohnProH: parseFloat(lohnProH)||0, lohnTyp: lohnTyp||"h", offen, kontakt: kontakt||"", gewinnanteil: gewinnanteil||"" };
+  // versteckt nur überschreiben, wenn ausdrücklich mitgeschickt – das normale
+  // Bearbeiten-Formular sendet das Feld nicht und soll den Zustand nicht ändern.
+  if (typeof versteckt === "boolean") ch.versteckt = versteckt;
+  db.update("stellenangebote", req.params.id, ch);
   addLog("admin", "Stelle aktualisiert: " + (titel||req.params.id), "info");
+  syncWerbeflaechen();
+  res.json({ success: true });
+});
+app.post("/api/stellenangebote/:id/verstecken", adm, (req,res) => {
+  db.update("stellenangebote", req.params.id, { versteckt: true });
+  addLog("admin", "Stelle ausgeblendet (ID " + req.params.id + ")", "info");
+  syncWerbeflaechen();
+  res.json({ success: true });
+});
+app.post("/api/stellenangebote/:id/einblenden", adm, (req,res) => {
+  db.update("stellenangebote", req.params.id, { versteckt: false });
+  addLog("admin", "Stelle eingeblendet (ID " + req.params.id + ")", "info");
   syncWerbeflaechen();
   res.json({ success: true });
 });
@@ -435,7 +451,7 @@ function syncWerbeflaechen() {
       }
     });
 
-    const offen = (raw.stellenangebote || []).filter(s => s.offen).length;
+    const offen = (raw.stellenangebote || []).filter(s => s.offen && !s.versteckt).length;
     const needed = Math.ceil(offen / 10);
 
     const inlineIdx = w => { const m = /^stellen_inline_(\d+)$/.exec(w.slot || ""); return m ? Number(m[1]) : null; };

@@ -90,7 +90,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Vania Rupp, Lissy Brändle",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 2,
@@ -102,7 +103,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Charlotte Joos",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 3,
@@ -114,7 +116,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "woche",
       "offen": true,
       "kontakt": "Noel Fritz",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 4,
@@ -126,7 +129,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "woche",
       "offen": true,
       "kontakt": "Nico Fischer",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 5,
@@ -138,7 +142,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "John Durben",
-      "gewinnanteil": "variabel (Lohn umsatzabhängig)"
+      "gewinnanteil": "variabel (Lohn umsatzabhängig)",
+      "versteckt": false
     },
     {
       "id": 6,
@@ -150,7 +155,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "woche",
       "offen": true,
       "kontakt": "Noel Fritz",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 7,
@@ -162,7 +168,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Julius Richter",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 8,
@@ -174,7 +181,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Julius Richter",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 9,
@@ -186,7 +194,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Julius Richter",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 10,
@@ -198,7 +207,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Julius Richter",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 11,
@@ -210,7 +220,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Jannis Burk",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 12,
@@ -222,7 +233,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Nico Fischer",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 13,
@@ -234,7 +246,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Nico Schönfeld",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 14,
@@ -246,7 +259,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Nico Schönfeld",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 15,
@@ -258,7 +272,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Noël Fritz",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 16,
@@ -270,7 +285,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Noël Fritz",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 17,
@@ -282,7 +298,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Vinzent Kapp, 9c (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 18,
@@ -294,7 +311,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Anja Biedermann, Marcella Gallo",
-      "gewinnanteil": "Variabel"
+      "gewinnanteil": "Variabel",
+      "versteckt": false
     },
     {
       "id": 19,
@@ -306,7 +324,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "David Kinstler",
-      "gewinnanteil": "Tageslohn, nach Absprache"
+      "gewinnanteil": "Tageslohn, nach Absprache",
+      "versteckt": false
     },
     {
       "id": 20,
@@ -318,7 +337,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Paul Backes",
-      "gewinnanteil": "Gewinnaufteilung"
+      "gewinnanteil": "Gewinnaufteilung",
+      "versteckt": false
     },
     {
       "id": 21,
@@ -330,7 +350,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Emilia Jahn",
-      "gewinnanteil": "Lohn wird noch besprochen"
+      "gewinnanteil": "Lohn wird noch besprochen",
+      "versteckt": false
     },
     {
       "id": 22,
@@ -342,7 +363,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Samuel Zahn",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 23,
@@ -354,7 +376,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Uyen Nguyen",
-      "gewinnanteil": "Gewinnbeteiligung, variabel"
+      "gewinnanteil": "Gewinnbeteiligung, variabel",
+      "versteckt": false
     },
     {
       "id": 24,
@@ -366,7 +389,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Mme Traens et Mme Teufel-Pevny",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 25,
@@ -378,7 +402,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Jakob Werning",
-      "gewinnanteil": "Nach Absprache"
+      "gewinnanteil": "Nach Absprache",
+      "versteckt": false
     },
     {
       "id": 26,
@@ -390,7 +415,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Emma Mohn",
-      "gewinnanteil": "Variabel"
+      "gewinnanteil": "Variabel",
+      "versteckt": false
     },
     {
       "id": 27,
@@ -402,7 +428,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Siri Dentler, Sarah Löw",
-      "gewinnanteil": "Gewinnbeteiligung, variabel"
+      "gewinnanteil": "Gewinnbeteiligung, variabel",
+      "versteckt": false
     },
     {
       "id": 28,
@@ -414,7 +441,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Jakob Schneider/Clara Wilhelm",
-      "gewinnanteil": "gewinnabhängig, variabel"
+      "gewinnanteil": "gewinnabhängig, variabel",
+      "versteckt": false
     },
     {
       "id": 29,
@@ -426,7 +454,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Maja Metzger oder Lara Fink",
-      "gewinnanteil": "50% (Lohn lt. Formular: 3-4€/h)"
+      "gewinnanteil": "50% (Lohn lt. Formular: 3-4€/h)",
+      "versteckt": false
     },
     {
       "id": 30,
@@ -438,7 +467,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "woche",
       "offen": true,
       "kontakt": "Vincent Ludwig",
-      "gewinnanteil": "12,5% vom Gewinn"
+      "gewinnanteil": "12,5% vom Gewinn",
+      "versteckt": false
     },
     {
       "id": 31,
@@ -450,7 +480,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Tabea Koschlig, Zoe Link oder Katja Galic",
-      "gewinnanteil": "vereinbar, variabel"
+      "gewinnanteil": "vereinbar, variabel",
+      "versteckt": false
     },
     {
       "id": 32,
@@ -462,7 +493,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "David Koryakin",
-      "gewinnanteil": "Gewinnbeteiligung"
+      "gewinnanteil": "Gewinnbeteiligung",
+      "versteckt": false
     },
     {
       "id": 33,
@@ -474,7 +506,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Florian Bungenstock",
-      "gewinnanteil": "Variabel"
+      "gewinnanteil": "Variabel",
+      "versteckt": false
     },
     {
       "id": 34,
@@ -486,7 +519,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Florian Bungenstock",
-      "gewinnanteil": "Variabel"
+      "gewinnanteil": "Variabel",
+      "versteckt": false
     },
     {
       "id": 35,
@@ -498,7 +532,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Herr Kurzawe",
-      "gewinnanteil": "5%"
+      "gewinnanteil": "5%",
+      "versteckt": false
     },
     {
       "id": 36,
@@ -510,7 +545,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Emilia Wichmann",
-      "gewinnanteil": "gleiche Gewinnverteilung"
+      "gewinnanteil": "gleiche Gewinnverteilung",
+      "versteckt": false
     },
     {
       "id": 37,
@@ -522,7 +558,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Antonia Veigel oder Nele Schneider",
-      "gewinnanteil": "Variabel"
+      "gewinnanteil": "Variabel",
+      "versteckt": false
     },
     {
       "id": 38,
@@ -534,7 +571,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Maja Bosko",
-      "gewinnanteil": "Variabel"
+      "gewinnanteil": "Variabel",
+      "versteckt": false
     },
     {
       "id": 39,
@@ -546,7 +584,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Cyra-Lena Fröhlich",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 40,
@@ -558,7 +597,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Cyra-Lena Fröhlich",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 41,
@@ -570,7 +610,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Linus Kempe",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 42,
@@ -582,7 +623,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Cristina Barbaro; Andreas Grieb",
-      "gewinnanteil": "Faire Bezahlung (in unserer Landeswährung)"
+      "gewinnanteil": "Faire Bezahlung (in unserer Landeswährung)",
+      "versteckt": false
     },
     {
       "id": 43,
@@ -594,7 +636,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Helena Ruff",
-      "gewinnanteil": "verhandelbar"
+      "gewinnanteil": "verhandelbar",
+      "versteckt": false
     },
     {
       "id": 44,
@@ -606,7 +649,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Lara Tlili",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 45,
@@ -618,7 +662,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "woche",
       "offen": true,
       "kontakt": "Aurelia Barbaro",
-      "gewinnanteil": "4%"
+      "gewinnanteil": "4%",
+      "versteckt": false
     },
     {
       "id": 46,
@@ -630,7 +675,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Antonia Veigel oder Nele Schneider",
-      "gewinnanteil": "Variabel"
+      "gewinnanteil": "Variabel",
+      "versteckt": false
     },
     {
       "id": 47,
@@ -642,7 +688,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Lara Tlili",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 48,
@@ -654,7 +701,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Milla Hauptfleisch (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 49,
@@ -666,7 +714,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Florian Kobiela",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 50,
@@ -678,7 +727,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Kate Kippenbrock (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 51,
@@ -690,7 +740,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Matteo Schelle (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 52,
@@ -702,7 +753,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Frau Schell-Klein (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 53,
@@ -714,7 +766,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Aniko Keller, 10c",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 54,
@@ -726,7 +779,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Aniko Keller, 10c",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 55,
@@ -738,7 +792,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Lara Tlili (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 56,
@@ -750,7 +805,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Lara Tlili (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 57,
@@ -762,7 +818,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Lara Tlili (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 58,
@@ -774,7 +831,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Lara Tlili (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 60,
@@ -786,7 +844,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Vincent Ludwig (Schul.cloud)",
-      "gewinnanteil": "12,5%"
+      "gewinnanteil": "12,5%",
+      "versteckt": false
     },
     {
       "id": 61,
@@ -798,7 +857,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Andrei Sander, 6d",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 62,
@@ -810,7 +870,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Emilia Rheinländer (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 63,
@@ -822,7 +883,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Michael Jabs / Patrick Rudolf (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 64,
@@ -834,7 +896,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Eleni Schlatterer (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 65,
@@ -846,7 +909,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Eleni Schlatterer (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 66,
@@ -858,7 +922,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "moritz.dammbach@csgb.de",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 67,
@@ -870,7 +935,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Felix Mattern, 0176 55094506",
-      "gewinnanteil": "~3%"
+      "gewinnanteil": "~3%",
+      "versteckt": false
     },
     {
       "id": 68,
@@ -882,7 +948,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Katja Teufel-Pevny (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 69,
@@ -894,7 +961,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Kathrin Traens (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 70,
@@ -906,7 +974,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Katja Teufel-Pevny (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 71,
@@ -918,7 +987,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "David Koryakin (vertr. Alexander Naumann)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 72,
@@ -930,7 +1000,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Béla Staude (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 73,
@@ -942,7 +1013,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Béla Staude (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 74,
@@ -954,7 +1026,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Béla Staude (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 75,
@@ -966,7 +1039,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Béla Staude (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 76,
@@ -978,7 +1052,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Elias Kim, 5d",
-      "gewinnanteil": "15%"
+      "gewinnanteil": "15%",
+      "versteckt": false
     },
     {
       "id": 77,
@@ -990,7 +1065,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Salome Raichle (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 78,
@@ -1002,7 +1078,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Emma Mohn",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 79,
@@ -1014,7 +1091,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Nico Fischer (Schul.cloud oder nico.fischer@csgb.de)",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 80,
@@ -1026,7 +1104,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Nico Fischer (Schul.cloud oder nico.fischer@csgb.de)",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 81,
@@ -1038,7 +1117,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Nico Fischer (Schul.cloud oder nico.fischer@csgb.de)",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 82,
@@ -1050,7 +1130,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Nico Fischer (Schul.cloud oder nico.fischer@csgb.de)",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 83,
@@ -1062,7 +1143,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "tag",
       "offen": true,
       "kontakt": "Nico Fischer (Schul.cloud oder nico.fischer@csgb.de)",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 84,
@@ -1074,7 +1156,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Raphael List (Schul.cloud)",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 85,
@@ -1086,7 +1169,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Raphael List (Schul.cloud)",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 86,
@@ -1098,7 +1182,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Raphael List (Schul.cloud)",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 87,
@@ -1110,7 +1195,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Uyen Nguyen (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 88,
@@ -1122,7 +1208,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Manuel Hänsgen (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 89,
@@ -1134,7 +1221,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Manuel Hänsgen (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 90,
@@ -1146,7 +1234,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Manuel Hänsgen (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 91,
@@ -1158,7 +1247,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Manuel Hänsgen (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 92,
@@ -1170,7 +1260,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Jakob Werning",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 93,
@@ -1182,7 +1273,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Franziska Schäfer, 10c (Schul.cloud)",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 94,
@@ -1194,7 +1286,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Anja Biedermann / Marcella Gallo",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 95,
@@ -1206,7 +1299,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Carolina Schäfer, 6d (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 96,
@@ -1218,7 +1312,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Leonardo Mai, 7d, 0152 09930423",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 97,
@@ -1230,7 +1325,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Charlie Iacobelli, 01573 3310559",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 98,
@@ -1242,7 +1338,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Felicitas Pschierer (Schul.cloud / pschierer@csgb.de)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 99,
@@ -1254,7 +1351,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Bastian Joos, 6b (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 100,
@@ -1266,7 +1364,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "David Kinstler, Klasse 5A",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 101,
@@ -1278,7 +1377,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Herr Rothe & Herr Korber (Schul.cloud)",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 102,
@@ -1290,7 +1390,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Ludwig Stark, 6b (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 103,
@@ -1302,7 +1403,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Paul Backes, 6d (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 104,
@@ -1314,7 +1416,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Maxim Schiller, Tel. 015565/147111",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 105,
@@ -1326,7 +1429,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Emilia Badmann / Emmi Ritter (Schul.cloud)",
-      "gewinnanteil": "variabel"
+      "gewinnanteil": "variabel",
+      "versteckt": false
     },
     {
       "id": 106,
@@ -1338,7 +1442,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Jannis Burk",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 107,
@@ -1350,7 +1455,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Nico Fischer",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 108,
@@ -1362,7 +1468,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Nico Schönfeld",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 109,
@@ -1374,7 +1481,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Nico Schönfeld",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 110,
@@ -1386,7 +1494,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Noël Fritz",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     },
     {
       "id": 111,
@@ -1398,7 +1507,8 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Noël Fritz",
-      "gewinnanteil": ""
+      "gewinnanteil": "",
+      "versteckt": false
     }
   ],
   "werbeflaechen": [
