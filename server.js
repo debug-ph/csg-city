@@ -151,9 +151,23 @@ app.get("/api/dashboard", (_,res) => {
 
 // Stellenangebote
 app.get("/api/stellenangebote", (_,res) => res.json(db.all("stellenangebote")));
+// Titel normalisieren, damit "Fitte Fritten - X" und "Fitte Fritten – X"
+// (Bindestrich vs. Gedankenstrich, Groß-/Kleinschreibung, doppelte Leerzeichen,
+// (m/w/d)-Zusatz) als identisch erkannt werden.
+function normTitel(t) {
+  return String(t || "")
+    .toLowerCase()
+    .replace(/\(m\/w\/d\)|\(w\/m\/d\)/g, "")
+    .replace(/[–—-]/g, "-")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 app.post("/api/stellenangebote", adm, (req,res) => {
   const { titel, abteilung, schlagzeile, beschreibung, lohnProH, lohnTyp, offen, kontakt, gewinnanteil } = req.body;
   if (!titel) return res.status(400).json({ error: "Titel fehlt" });
+  const dup = db.all("stellenangebote").find(s => normTitel(s.titel) === normTitel(titel));
+  if (dup) return res.status(409).json({ error: 'Eine Stelle mit dem Titel "' + titel + '" existiert bereits.' });
   const row = db.insert("stellenangebote", { titel, abteilung: abteilung||"", schlagzeile: schlagzeile||"", beschreibung: beschreibung||"", lohnProH: parseFloat(lohnProH)||0, lohnTyp: lohnTyp||"h", offen: offen !== false, kontakt: kontakt||"", gewinnanteil: gewinnanteil||"" });
   addLog("admin", "Stelle erstellt: " + titel, "success");
   syncWerbeflaechen();

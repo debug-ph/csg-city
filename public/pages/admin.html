@@ -652,9 +652,31 @@
       var id=document.getElementById("mSId").value;
       var b={titel:document.getElementById("mST").value.trim(),schlagzeile:document.getElementById("mSSL").value.trim(),abteilung:document.getElementById("mSA").value.trim(),beschreibung:document.getElementById("mSB").value.trim(),lohnProH:parseFloat(document.getElementById("mSL").value)||0,lohnTyp:document.getElementById("mSLT").value||"h",offen:document.getElementById("mSO").value==="true",kontakt:document.getElementById("mSK").value.trim(),gewinnanteil:document.getElementById("mSGW").value.trim()};
       if(!b.titel){showToast("Titel fehlt!","error");return;}
-      await apiSave("/api/stellenangebote",id,b); showToast(b.titel+(id?" aktualisiert.":" hinzugefügt.")); cm("mS"); loadS();
+      try{
+        var r=await apiSave("/api/stellenangebote",id,b);
+        if(!r.ok){
+          if(r.status===401){ showToast("Sitzung abgelaufen – bitte neu anmelden.","error"); location.href="/login"; return; }
+          var e=await r.json().catch(function(){return{};});
+          showToast(e.error||("Speichern fehlgeschlagen ("+r.status+").") ,"error");
+          return;
+        }
+        showToast(b.titel+(id?" aktualisiert.":" hinzugefügt.")); cm("mS"); loadS();
+      }catch(err){ showToast("Netzwerkfehler beim Speichern.","error"); }
     });
-    async function delS(id,t){ if(!confirm('"'+t+'" löschen?'))return; await fetch("/api/stellenangebote/"+id,{method:"DELETE"}); showToast(t+" gelöscht.","error"); loadS(); }
+    async function delS(id,t){
+      if(!confirm('"'+t+'" löschen?'))return;
+      try{
+        var r=await fetch("/api/stellenangebote/"+id,{method:"DELETE",credentials:"same-origin"});
+        if(!r.ok){
+          if(r.status===401){ showToast("Sitzung abgelaufen – bitte neu anmelden.","error"); location.href="/login"; return; }
+          var e=await r.json().catch(function(){return{};});
+          showToast(e.error||("Löschen fehlgeschlagen ("+r.status+").") ,"error");
+          return;
+        }
+        showToast(t+" gelöscht.","error");
+        loadS();
+      }catch(err){ showToast("Netzwerkfehler beim Löschen.","error"); }
+    }
 
     // ── WERBEFLÄCHEN ──────────────────────────────────────────
     var slotLabels={"dashboard_sidebar_1":"Sidebar oben","dashboard_sidebar_2":"Sidebar Mitte","dashboard_sidebar_3":"Sidebar unten","dashboard_footer":"Footer","stellen_inline_1":"Stellen Inline 1","stellen_inline_2":"Stellen Inline 2","stellen_inline_3":"Stellen Inline 3","gesetze_sidebar":"Gesetze Sidebar"};

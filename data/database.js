@@ -281,8 +281,8 @@ const DEFAULT_DATA = {
       "lohnProH": 0,
       "lohnTyp": "h",
       "offen": true,
-      "kontakt": "Vinzent Kapp",
-      "gewinnanteil": "variable"
+      "kontakt": "Vinzent Kapp, 9c (Schul.cloud)",
+      "gewinnanteil": "variabel"
     },
     {
       "id": 18,
@@ -774,18 +774,6 @@ const DEFAULT_DATA = {
       "lohnTyp": "h",
       "offen": true,
       "kontakt": "Lara Tlili (Schul.cloud)",
-      "gewinnanteil": "variabel"
-    },
-    {
-      "id": 59,
-      "titel": "Fitte Fritten – Mitarbeiter/in",
-      "abteilung": "Gastronomie",
-      "schlagzeile": "Kleine Pommesbude, flexible Aufgaben",
-      "beschreibung": "2 Stellen frei.\n\nAufgaben:\nPommes machen, bedienen – Aufgaben sind flexibel.\n\nVoraussetzungen:\nKopfrechnen können, Airfryer bedienen können.",
-      "lohnProH": 0,
-      "lohnTyp": "h",
-      "offen": true,
-      "kontakt": "Vinzent Kapp, 9c (Schul.cloud)",
       "gewinnanteil": "variabel"
     },
     {
