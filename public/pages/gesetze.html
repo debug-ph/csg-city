@@ -93,7 +93,7 @@
       <div id="booksContainer"><div class="law-empty">Laden&hellip;</div></div>
     </div>
     <div style="max-width:860px;margin:1.5rem auto;padding:0 1rem">
-      <div id="gesetzeAd"></div>
+      <div id="gesetzeSponsor"></div>
     </div>
   </div>
 
@@ -209,7 +209,7 @@
     });
     fetch("/api/werbeflaechen").then(r=>r.json()).then(function(data){
       var w = data.find(function(x){ return x.slot === "gesetze_sidebar"; });
-      var el = document.getElementById("gesetzeAd");
+      var el = document.getElementById("gesetzeSponsor");
       if (!el || !w) return;
       if (w.bildUrl) {
         el.innerHTML = '<div style="border:1px solid var(--accent);border-radius:var(--radius);overflow:hidden"><img src="'+w.bildUrl+'" alt="'+(w.name||"")+'" style="width:100%;display:block"/></div>';

@@ -48,7 +48,7 @@
     .empty{text-align:center;padding:3rem;color:var(--text-3);grid-column:1/-1;font-size:.875rem;}
 
     /* Inline-Werbung: gleiche Größe wie stelle-card, aber als Werbecard */
-    .ad-inline{
+    .partner-card{
       background:var(--bg-card);
       border:1.5px dashed var(--border-strong);
       border-radius:var(--radius);
@@ -56,14 +56,14 @@
       display:flex;flex-direction:column;
       min-height:160px;
     }
-    .ad-inline.belegt{ border-style:solid; }
-    .ad-inline img{width:100%;height:160px;object-fit:cover;display:block;}
-    .ad-inline-body{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:center;}
-    .ad-inline-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-3);margin-bottom:.35rem;}
-    .ad-inline-head{font-size:.875rem;font-weight:500;color:var(--text-1);margin-bottom:.25rem;}
-    .ad-inline-sub{font-size:.775rem;color:var(--text-2);line-height:1.4;}
-    .ad-inline-cta{display:inline-flex;align-items:center;gap:.25rem;margin-top:.625rem;font-size:.775rem;color:var(--accent);text-decoration:none;font-weight:500;}
-    .ad-inline-cta:hover{text-decoration:underline;}
+    .partner-card.belegt{ border-style:solid; }
+    .partner-card img{width:100%;height:160px;object-fit:cover;display:block;}
+    .partner-card-body{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:center;}
+    .partner-card-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-3);margin-bottom:.35rem;}
+    .partner-card-head{font-size:.875rem;font-weight:500;color:var(--text-1);margin-bottom:.25rem;}
+    .partner-card-sub{font-size:.775rem;color:var(--text-2);line-height:1.4;}
+    .partner-card-cta{display:inline-flex;align-items:center;gap:.25rem;margin-top:.625rem;font-size:.775rem;color:var(--accent);text-decoration:none;font-weight:500;}
+    .partner-card-cta:hover{text-decoration:underline;}
   </style>
 </head>
 <body>
@@ -153,23 +153,23 @@
     function makeInlineAd(w) {
       var el = document.createElement("div");
       if (w && w.bildUrl) {
-        el.className = "ad-inline belegt";
+        el.className = "partner-card belegt";
         el.innerHTML = '<img src="'+escH(w.bildUrl)+'" alt="'+escH(w.name)+'">'
-          +'<div class="ad-inline-body"><div class="ad-inline-label">Werbung</div>'
-          +'<div class="ad-inline-head">'+escH(w.mieter)+'</div>'
-          +'<div class="ad-inline-sub">'+escH(w.beschreibung)+'</div></div>';
+          +'<div class="partner-card-body"><div class="partner-card-label">Werbung</div>'
+          +'<div class="partner-card-head">'+escH(w.mieter)+'</div>'
+          +'<div class="partner-card-sub">'+escH(w.beschreibung)+'</div></div>';
       } else if (!w || !w.belegt) {
         var s = randomSlogan();
-        el.className = "ad-inline";
-        el.innerHTML = '<div class="ad-inline-body"><div class="ad-inline-label">Werbefläche · 300×140</div>'
-          +'<div class="ad-inline-head">'+s.head+'</div>'
-          +'<div class="ad-inline-sub">'+s.sub+'</div>'
-          +'<a href="/werbung" class="ad-inline-cta">'+ICONS.arrow_right+' Jetzt buchen</a></div>';
+        el.className = "partner-card";
+        el.innerHTML = '<div class="partner-card-body"><div class="partner-card-label">Werbefläche · 300×140</div>'
+          +'<div class="partner-card-head">'+s.head+'</div>'
+          +'<div class="partner-card-sub">'+s.sub+'</div>'
+          +'<a href="/werbung" class="partner-card-cta">'+ICONS.arrow_right+' Jetzt buchen</a></div>';
       } else {
-        el.className = "ad-inline belegt";
-        el.innerHTML = '<div class="ad-inline-body"><div class="ad-inline-label">Werbung</div>'
-          +'<div class="ad-inline-head">'+escH(w.mieter)+'</div>'
-          +'<div class="ad-inline-sub">'+escH(w.beschreibung)+'</div></div>';
+        el.className = "partner-card belegt";
+        el.innerHTML = '<div class="partner-card-body"><div class="partner-card-label">Werbung</div>'
+          +'<div class="partner-card-head">'+escH(w.mieter)+'</div>'
+          +'<div class="partner-card-sub">'+escH(w.beschreibung)+'</div></div>';
       }
       return el;
     }

@@ -67,7 +67,7 @@
     @media(min-width:961px){.dash-sidebar{position:sticky;top:76px;align-self:start;}}
 
     /* ── Werbeflächen (Sidebar) ── Equal height boxes ── */
-    .ad-box{
+    .info-card{
       width:100%;
       height:200px;           /* fixed equal height for all 3 sidebar slots */
       border-radius:var(--radius);
@@ -75,7 +75,7 @@
       position:relative;
       border:1px solid var(--border);
     }
-    .ad-box-empty{
+    .partner-empty{
       height:200px;
       border-radius:var(--radius);
       border:1.5px dashed var(--border-strong);
@@ -83,25 +83,25 @@
       display:flex;flex-direction:column;align-items:center;justify-content:center;
       text-align:center;padding:1rem;gap:.375rem;
     }
-    .ad-box img{width:100%;height:100%;object-fit:cover;display:block;}
-    .ad-box-inner{width:100%;height:100%;background:var(--bg-card);padding:.875rem;display:flex;flex-direction:column;justify-content:center;}
-    .ad-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-3);}
-    .ad-head{font-size:.875rem;font-weight:500;color:var(--text-1);margin:.25rem 0 .2rem;}
-    .ad-sub{font-size:.75rem;color:var(--text-2);line-height:1.4;}
-    .ad-cta{display:inline-flex;align-items:center;gap:.25rem;margin-top:.625rem;font-size:.75rem;color:var(--accent);text-decoration:none;font-weight:500;}
-    .ad-cta:hover{text-decoration:underline;}
+    .info-card img{width:100%;height:100%;object-fit:cover;display:block;}
+    .info-card-inner{width:100%;height:100%;background:var(--bg-card);padding:.875rem;display:flex;flex-direction:column;justify-content:center;}
+    .partner-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-3);}
+    .partner-head{font-size:.875rem;font-weight:500;color:var(--text-1);margin:.25rem 0 .2rem;}
+    .partner-sub{font-size:.75rem;color:var(--text-2);line-height:1.4;}
+    .partner-cta{display:inline-flex;align-items:center;gap:.25rem;margin-top:.625rem;font-size:.75rem;color:var(--accent);text-decoration:none;font-weight:500;}
+    .partner-cta:hover{text-decoration:underline;}
 
     /* ── Footer Leaderboard ── */
     .dash-footer{padding:1.25rem 1.5rem 1.75rem;max-width:1160px;margin:0 auto;}
     @media(max-width:960px){.dash-footer{padding:1rem 1rem 1.25rem;}}
-    .footer-ad{
+    .page-sponsor{
       width:100%;
       min-height:120px;       /* taller than sidebar = matches visual weight of center column */
       border-radius:var(--radius);
       overflow:hidden;
       border:1px solid var(--border);
     }
-    .footer-ad-empty{
+    .page-sponsor-empty{
       min-height:120px;
       border-radius:var(--radius);
       border:1.5px dashed var(--border-strong);
@@ -109,9 +109,9 @@
       display:flex;align-items:center;justify-content:space-between;
       padding:1.5rem 2rem;gap:1.5rem;
     }
-    @media(max-width:640px){.footer-ad-empty{flex-direction:column;align-items:flex-start;}}
-    .footer-ad img{width:100%;height:120px;object-fit:cover;display:block;}
-    .footer-ad-inner{width:100%;min-height:120px;background:var(--bg-card);padding:1.25rem 2rem;display:flex;align-items:center;gap:2rem;}
+    @media(max-width:640px){.page-sponsor-empty{flex-direction:column;align-items:flex-start;}}
+    .page-sponsor img{width:100%;height:120px;object-fit:cover;display:block;}
+    .page-sponsor-inner{width:100%;min-height:120px;background:var(--bg-card);padding:1.25rem 2rem;display:flex;align-items:center;gap:2rem;}
 
     .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem;}
     .section-title{font-family:var(--font-serif);font-size:1.375rem;font-weight:400;}
@@ -193,15 +193,15 @@
             <div class="card-body" id="termineContainer"><div class="text-3 text-sm">Laden…</div></div>
           </div>
           <!-- 3 equal-height sidebar ad slots - show immediately -->
-          <div id="adSlot1"></div>
-          <div id="adSlot2"></div>
-          <div id="adSlot3"></div>
+          <div id="partnerSlot1"></div>
+          <div id="partnerSlot2"></div>
+          <div id="partnerSlot3"></div>
         </div>
       </div>
 
       <!-- ── Footer Leaderboard – unter beiden Spalten, etwas größer ── -->
       <div class="dash-footer">
-        <div id="adFooter"></div>
+        <div id="sponsorFooter"></div>
       </div>
     </div>
   </div>
@@ -270,17 +270,17 @@
     // ── Ad render helpers ─────────────────────────────────────
     function adEmpty(size) {
       var s = randomSlogan();
-      return '<div class="ad-box-empty">'
-        +'<div class="ad-label">Werbefläche · '+size+'</div>'
-        +'<div class="ad-head">'+s.head+'</div>'
-        +'<div class="ad-sub">'+s.sub+'</div>'
-        +'<a href="/werbung" class="ad-cta">'+ICONS.arrow_right+' Jetzt buchen</a>'
+      return '<div class="partner-empty">'
+        +'<div class="partner-label">Werbefläche · '+size+'</div>'
+        +'<div class="partner-head">'+s.head+'</div>'
+        +'<div class="partner-sub">'+s.sub+'</div>'
+        +'<a href="/werbung" class="partner-cta">'+ICONS.arrow_right+' Jetzt buchen</a>'
         +'</div>';
     }
     function renderSidebarAd(el, w) {
       if (!el) return;
       if (w && w.bildUrl) {
-        el.innerHTML = '<div class="ad-box"><img src="'+w.bildUrl+'" alt="'+escH(w.name)+'" style="width:100%;height:200px;object-fit:cover;display:block"/></div>';
+        el.innerHTML = '<div class="info-card"><img src="'+w.bildUrl+'" alt="'+escH(w.name)+'" style="width:100%;height:200px;object-fit:cover;display:block"/></div>';
         return;
       }
       if (!w || !w.belegt) {
@@ -288,35 +288,35 @@
         return;
       }
       {
-        el.innerHTML = '<div class="ad-box-empty" style="background:var(--accent-soft);border-color:var(--accent)">'
-          +'<div class="ad-label">Werbung</div>'
-          +'<div class="ad-head">'+escH(w.mieter)+'</div>'
-          +'<div class="ad-sub">'+escH(w.beschreibung)+'</div>'
+        el.innerHTML = '<div class="partner-empty" style="background:var(--accent-soft);border-color:var(--accent)">'
+          +'<div class="partner-label">Werbung</div>'
+          +'<div class="partner-head">'+escH(w.mieter)+'</div>'
+          +'<div class="partner-sub">'+escH(w.beschreibung)+'</div>'
           +'</div>';
       }
     }
     function renderFooterAd(el, w) {
       if (!el) return;
       if (w && w.bildUrl) {
-        el.innerHTML = '<div class="footer-ad"><img src="'+w.bildUrl+'" alt="'+escH(w.name)+'" style="width:100%;height:120px;object-fit:cover;display:block"/></div>';
+        el.innerHTML = '<div class="page-sponsor"><img src="'+w.bildUrl+'" alt="'+escH(w.name)+'" style="width:100%;height:120px;object-fit:cover;display:block"/></div>';
         return;
       }
       if (!w || !w.belegt) {
         var s = randomSlogan();
         var preis = w ? Number(w.preis).toFixed(2)+" €/Tag" : "ab 6,00 €/Tag";
-        el.innerHTML = '<div class="footer-ad-empty">'
-          +'<div><div class="ad-label">Werbefläche · 728×90 · '+preis+'</div>'
-          +'<div class="ad-head" style="font-size:1rem;font-weight:500;margin:.3rem 0 .2rem">'+s.head+'</div>'
-          +'<div class="ad-sub">'+s.sub+'</div></div>'
+        el.innerHTML = '<div class="page-sponsor-empty">'
+          +'<div><div class="partner-label">Werbefläche · 728×90 · '+preis+'</div>'
+          +'<div class="partner-head" style="font-size:1rem;font-weight:500;margin:.3rem 0 .2rem">'+s.head+'</div>'
+          +'<div class="partner-sub">'+s.sub+'</div></div>'
           +'<a href="/werbung" class="btn btn-primary btn-sm" style="flex-shrink:0">'+ICONS.arrow_right+' Jetzt buchen</a>'
           +'</div>';
         return;
       }
       {
-        el.innerHTML = '<div class="footer-ad-empty" style="background:var(--accent-soft);border-color:var(--accent)">'
-          +'<div class="ad-label">Werbung</div>'
+        el.innerHTML = '<div class="page-sponsor-empty" style="background:var(--accent-soft);border-color:var(--accent)">'
+          +'<div class="partner-label">Werbung</div>'
           +'<div style="font-weight:500">'+escH(w.mieter)+'</div>'
-          +'<div class="ad-sub">'+escH(w.beschreibung)+'</div>'
+          +'<div class="partner-sub">'+escH(w.beschreibung)+'</div>'
           +'</div>';
       }
     }
@@ -325,17 +325,17 @@
     function escH(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
     // Pre-render ads immediately with slogans (before API responds)
-    ["adSlot1","adSlot2","adSlot3"].forEach(function(id){
+    ["partnerSlot1","partnerSlot2","partnerSlot3"].forEach(function(id){
       var el = document.getElementById(id);
       if (el) el.innerHTML = adEmpty("300×250");
     });
-    var footerEl = document.getElementById("adFooter");
+    var footerEl = document.getElementById("sponsorFooter");
     if (footerEl) {
       var s0 = randomSlogan();
-      footerEl.innerHTML = '<div class="footer-ad-empty">'
-        +'<div><div class="ad-label">Werbefläche · 728×90</div>'
-        +'<div class="ad-head" style="font-size:1rem;font-weight:500;margin:.3rem 0 .2rem">'+s0.head+'</div>'
-        +'<div class="ad-sub">'+s0.sub+'</div></div>'
+      footerEl.innerHTML = '<div class="page-sponsor-empty">'
+        +'<div><div class="partner-label">Werbefläche · 728×90</div>'
+        +'<div class="partner-head" style="font-size:1rem;font-weight:500;margin:.3rem 0 .2rem">'+s0.head+'</div>'
+        +'<div class="partner-sub">'+s0.sub+'</div></div>'
         +'<a href="/werbung" class="btn btn-primary btn-sm" style="flex-shrink:0">'+ICONS.arrow_right+' Jetzt buchen</a>'
         +'</div>';
     }
@@ -396,10 +396,10 @@
       // Werbeflächen
       var wf = data.werbeflaechen || [];
       function findSlot(slot){ return wf.find(function(w){return w.slot===slot;})||null; }
-      renderSidebarAd(document.getElementById("adSlot1"), findSlot("dashboard_sidebar_1"));
-      renderSidebarAd(document.getElementById("adSlot2"), findSlot("dashboard_sidebar_2"));
-      renderSidebarAd(document.getElementById("adSlot3"), findSlot("dashboard_sidebar_3"));
-      renderFooterAd(document.getElementById("adFooter"), findSlot("dashboard_footer"));
+      renderSidebarAd(document.getElementById("partnerSlot1"), findSlot("dashboard_sidebar_1"));
+      renderSidebarAd(document.getElementById("partnerSlot2"), findSlot("dashboard_sidebar_2"));
+      renderSidebarAd(document.getElementById("partnerSlot3"), findSlot("dashboard_sidebar_3"));
+      renderFooterAd(document.getElementById("sponsorFooter"), findSlot("dashboard_footer"));
     });
 
     // ── Burger ────────────────────────────────────────────────
