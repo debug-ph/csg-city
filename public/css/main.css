@@ -508,31 +508,43 @@ body.menu-open { overflow: hidden; }
   #sidebarToggleBtn { display: flex !important; }
 }
 
-/* ── PWA standalone app layout: bottom tab bar instead of top navbar ── */
-.pwa-tabbar { display: none; }
-body.pwa-mode .navbar,
-body.pwa-mode .mobile-nav { display: none !important; }
-/* reserve space so page content is never hidden behind the fixed tab bar */
-body.pwa-mode { padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
-body.pwa-mode .pwa-tabbar {
-  display: flex;
+/* ── PWA / Mobile bottom tab bar ──
+   Shown in installed (standalone) mode at any width AND in the normal mobile
+   browser (≤768px). Raised above the iPhone home-indicator via safe-area.
+   The "Installieren" tab is hidden once the app is installed (see app.js). */
+.pwa-tabbar {
+  display: none;
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 9000;
   background: var(--bg-card);
   border-top: 1px solid var(--border);
-  padding-bottom: env(safe-area-inset-bottom);
+  height: calc(72px + env(safe-area-inset-bottom));
+  padding-top: 8px;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
 }
-.pwa-tabbar a {
+.pwa-tab {
   flex: 1;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-  min-height: 44px; padding: 7px 0 6px; margin: 4px 4px 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; padding: 10px 0 6px; margin: 0 4px;
   border-radius: var(--radius-sm);
-  text-decoration: none;
-  font-size: 10px; color: var(--text-3);
+  text-decoration: none; color: var(--text-3);
   transition: color .15s, background .15s;
   touch-action: manipulation;
 }
-.pwa-tabbar a svg { width: 24px; height: 24px; }
-.pwa-tabbar a.active { color: var(--accent); background: var(--accent-soft); }
+.pwa-tab svg { width: 24px; height: 24px; }
+.pwa-tab span { font-size: 11px; }
+.pwa-tab.active { color: var(--accent); background: var(--accent-soft); }
+
+/* Installed app: replace the top navbar with the tab bar */
+body.pwa-mode .navbar,
+body.pwa-mode .mobile-nav { display: none !important; }
+body.pwa-mode .pwa-tabbar { display: flex; }
+body.pwa-mode { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+
+/* Normal mobile browser: show the tab bar too (below the top navbar) */
+@media (max-width: 768px) {
+  .pwa-tabbar { display: flex; }
+  body:not(.pwa-mode) { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+}
 
 /* ═══ Mobile UX (touch, nav, no horizontal scroll) ═══ */
 /* Kill 300ms tap delay + accidental horizontal scroll on touch devices */

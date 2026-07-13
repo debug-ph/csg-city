@@ -200,11 +200,10 @@ function initMobileNav() {
   navbar.insertBefore(wrap, actions);
 }
 
-// ── PWA standalone app layout (bottom tab bar) ────────────
+// ── PWA / mobile bottom tab bar ───────────────────────────
 function initPwaTabbar() {
-  var standalone = window.navigator.standalone || window.matchMedia("(display-mode: standalone)").matches;
-  if (!standalone) return;
-  document.body.classList.add("pwa-mode");
+  var isPWA = window.navigator.standalone || window.matchMedia("(display-mode: standalone)").matches;
+  if (isPWA) document.body.classList.add("pwa-mode");
   if (document.querySelector(".pwa-tabbar")) return;
   var tabs = [
     { href: "/",                ic: "dashboard",    label: "Home" },
@@ -213,14 +212,23 @@ function initPwaTabbar() {
     { href: "/faq",             ic: "question",     label: "FAQ" },
     { href: "/werbung",         ic: "ads",          label: "Werbung" }
   ];
+  var installSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v13m0 0-4-4m4 4 4-4M2 17v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2"/></svg>';
   var bar = document.createElement("nav");
   bar.className = "pwa-tabbar";
-  bar.innerHTML = tabs.map(function(t) {
+  var html = tabs.map(function(t) {
     var active = window.location.pathname === t.href ? " active" : "";
     var icon = (typeof ICONS !== "undefined" && ICONS[t.ic]) || "";
     return '<a href="' + t.href + '" class="pwa-tab' + active + '">' + icon + '<span>' + t.label + '</span></a>';
   }).join("");
+  var instActive = window.location.pathname === "/install" ? " active" : "";
+  html += '<a class="pwa-tab' + instActive + '" href="/install" id="ptab-install">' + installSvg + '<span>Installieren</span></a>';
+  bar.innerHTML = html;
   document.body.appendChild(bar);
+  // Install-Tab nur im Browser zeigen – im installierten App-Modus ausblenden
+  if (isPWA) {
+    var installTab = document.getElementById("ptab-install");
+    if (installTab) installTab.style.display = "none";
+  }
 }
 
 // ── Init ──────────────────────────────────────────────────
