@@ -74,6 +74,7 @@ app.get("/faq",            (_,res) => res.sendFile(path.join(__dirname,"public/p
 app.get("/login",          (_,res) => res.sendFile(path.join(__dirname,"public/pages/login.html")));
 app.get("/admin",          (_,res) => res.sendFile(path.join(__dirname,"public/pages/admin.html")));
 app.get("/gesetze",        (_,res) => res.sendFile(path.join(__dirname,"public/pages/gesetze.html")));
+app.get("/install",         (_,res) => res.sendFile(path.join(__dirname,"public/pages/install.html")));
 
 // Auth
 app.get("/api/auth/status", (req,res) => res.json({ isAdmin: !!req.session.isAdmin }));

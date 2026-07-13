@@ -507,3 +507,26 @@ body.menu-open { overflow: hidden; }
   #logoutDesktop { display: none !important; }
   #sidebarToggleBtn { display: flex !important; }
 }
+
+/* ── PWA standalone app layout: bottom tab bar instead of top navbar ── */
+.pwa-tabbar { display: none; }
+body.pwa-mode .navbar,
+body.pwa-mode .mobile-nav { display: none !important; }
+body.pwa-mode { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+body.pwa-mode .pwa-tabbar {
+  display: flex;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 9000;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pwa-tabbar a {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  padding: 8px 0 7px;
+  text-decoration: none;
+  font-size: 0.625rem; color: var(--text-3);
+  transition: color .15s;
+}
+.pwa-tabbar a svg { width: 21px; height: 21px; }
+.pwa-tabbar a.active { color: var(--accent); }
