@@ -14,6 +14,9 @@
     @media(max-width:768px){.werbe-page{padding:1.25rem 1rem;}}
     .werbe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.1rem;}
     @media(max-width:480px){.werbe-grid{grid-template-columns:1fr;}}
+    .werbe-grid-small{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
+    .werbe-grid-small .werbe-preview-leer{min-height:90px;padding:.75rem;}
+    .werbe-grid-small .werbe-preview-leer .slogan-head{font-size:.8125rem;}
     .werbe-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:box-shadow .18s,transform .18s;}
     .werbe-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
     .werbe-preview{height:80px;background:repeating-linear-gradient(45deg,var(--bg),var(--bg) 8px,var(--bg-subtle) 8px,var(--bg-subtle) 16px);display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.775rem;color:var(--text-3);font-weight:500;border-bottom:1px solid var(--border);}
@@ -89,9 +92,14 @@
     <div class="werbe-page">
       <div class="stats-row" id="statsRow"></div>
       <div class="page-title-row">
-        <h2 id="werbePageTitle"></h2>
+        <h2 id="werbeTitle1"></h2>
       </div>
-      <div class="werbe-grid" id="werbeGrid"><div class="text-3 text-sm">Laden…</div></div>
+      <div class="werbe-grid" id="werbeGrid1"><div class="text-3 text-sm">Laden…</div></div>
+
+      <div class="page-title-row" style="margin-top:2.5rem">
+        <h2 id="werbeTitle2"></h2>
+      </div>
+      <div class="werbe-grid werbe-grid-small" id="werbeGrid2"></div>
 
       <div class="kontakt-section">
         <h2 id="kontaktTitle"></h2>
@@ -148,7 +156,8 @@
       }
     });
 
-    document.getElementById("werbePageTitle").innerHTML = ICONS.ads + " Verfügbare Werbeflächen";
+    document.getElementById("werbeTitle1").innerHTML = ICONS.ads + " Hauptflächen";
+    document.getElementById("werbeTitle2").innerHTML = ICONS.jobs + " Stellenanzeigen-Werbung";
     document.getElementById("kontaktTitle").innerHTML   = ICONS.send + " Anfrage senden";
     document.getElementById("lName").textContent      = "Name *";
     document.getElementById("lEmail").textContent     = "E-Mail *";
@@ -167,9 +176,10 @@
 
     function escH(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
-    fetch("/api/werbeflaechen").then(r=>r.json()).then(function(rawData){
-      // Nur öffentlich buchbare Flächen anzeigen (oeffentlich: true)
-      var data = rawData.filter(function(w){ return w.oeffentlich === true; });
+    // Inline-Slots (stellen_inline_*) sind nicht "öffentlich", aber trotzdem hier buchbar – nur in eigener Sektion.
+    var isInline = function(w){ return w.slot && w.slot.indexOf("stellen_inline_") === 0; };
+
+    fetch("/api/werbeflaechen").then(r=>r.json()).then(function(data){
       var frei=data.filter(function(w){return!w.belegt;}).length;
       var belegt=data.filter(function(w){return w.belegt;}).length;
       document.getElementById("statsRow").innerHTML=
@@ -178,7 +188,7 @@
         +'<div class="card stat-sm"><div class="stat-sm-num">'+belegt+'</div><div class="stat-sm-lbl">Belegt</div></div>';
 
       var select=document.getElementById("kFlaeche");
-      document.getElementById("werbeGrid").innerHTML=data.map(function(w){
+      function card(w){
         var preview;
         if (w.belegt) {
           preview = '<div class="werbe-preview belegt">'+ICONS.check+' Belegt – '+escH(w.mieter)+'</div>';
@@ -199,7 +209,11 @@
           +'<div class="werbe-footer"><div><div class="werbe-preis-val">'+Number(w.preis).toFixed(2)+' €</div><div class="werbe-preis-lbl">pro Tag</div></div>'
           +(!w.belegt?'<button class="btn btn-primary btn-sm" onclick="bucheFl(\''+escH(w.name).replace(/'/g,"").replace(/\\/g,"")+'\')" style="display:flex;align-items:center;gap:.3rem">'+ICONS.arrow_right+' Buchen</button>':'')
           +'</div></div></div>';
-      }).join("");
+      }
+      var haupt=data.filter(function(w){return !isInline(w);});
+      var stellen=data.filter(isInline);
+      document.getElementById("werbeGrid1").innerHTML=haupt.map(card).join("")||'<div class="text-3 text-sm">Keine Flächen.</div>';
+      document.getElementById("werbeGrid2").innerHTML=stellen.map(card).join("")||'<div class="text-3 text-sm">Keine Stellenanzeigen-Flächen.</div>';
     });
 
     function bucheFl(name){document.getElementById("kFlaeche").value=name;document.querySelector(".kontakt-section").scrollIntoView({behavior:"smooth"});}

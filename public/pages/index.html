@@ -279,13 +279,15 @@
     }
     function renderSidebarAd(el, w) {
       if (!el) return;
+      if (w && w.bildUrl) {
+        el.innerHTML = '<div class="ad-box"><img src="'+w.bildUrl+'" alt="'+escH(w.name)+'" style="width:100%;height:200px;object-fit:cover;display:block"/></div>';
+        return;
+      }
       if (!w || !w.belegt) {
         el.innerHTML = adEmpty(w ? w.groesse : "300×250");
         return;
       }
-      if (w.bildUrl) {
-        el.innerHTML = '<div class="ad-box"><img src="'+w.bildUrl+'" alt="'+escH(w.name)+'" style="width:100%;height:200px;object-fit:cover;display:block"/></div>';
-      } else {
+      {
         el.innerHTML = '<div class="ad-box-empty" style="background:var(--accent-soft);border-color:var(--accent)">'
           +'<div class="ad-label">Werbung</div>'
           +'<div class="ad-head">'+escH(w.mieter)+'</div>'
@@ -295,6 +297,10 @@
     }
     function renderFooterAd(el, w) {
       if (!el) return;
+      if (w && w.bildUrl) {
+        el.innerHTML = '<div class="footer-ad"><img src="'+w.bildUrl+'" alt="'+escH(w.name)+'" style="width:100%;height:120px;object-fit:cover;display:block"/></div>';
+        return;
+      }
       if (!w || !w.belegt) {
         var s = randomSlogan();
         var preis = w ? Number(w.preis).toFixed(2)+" €/Tag" : "ab 6,00 €/Tag";
@@ -306,9 +312,7 @@
           +'</div>';
         return;
       }
-      if (w.bildUrl) {
-        el.innerHTML = '<div class="footer-ad"><img src="'+w.bildUrl+'" alt="'+escH(w.name)+'" style="width:100%;height:120px;object-fit:cover;display:block"/></div>';
-      } else {
+      {
         el.innerHTML = '<div class="footer-ad-empty" style="background:var(--accent-soft);border-color:var(--accent)">'
           +'<div class="ad-label">Werbung</div>'
           +'<div style="font-weight:500">'+escH(w.mieter)+'</div>'

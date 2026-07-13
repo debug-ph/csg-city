@@ -256,7 +256,9 @@ app.post("/api/werbeflaechen", adm, (req,res) => {
 });
 app.put("/api/werbeflaechen/:id", adm, (req,res) => {
   const { name, groesse, preis, belegt, mieter, kontakt, beschreibung, bildUrl, slot, oeffentlich } = req.body;
-  const ch = { name, groesse, preis: parseFloat(preis)||0, belegt: belegt===true||belegt==="true", mieter: mieter||"", kontakt: kontakt||"", beschreibung, bildUrl: bildUrl||"", slot: slot||"werbung" };
+  const ch = { name, groesse, preis: parseFloat(preis)||0, belegt: belegt===true||belegt==="true", mieter: mieter||"", kontakt: kontakt||"", beschreibung, slot: slot||"werbung" };
+  // bildUrl nur überschreiben wenn mitgeschickt – sonst bleibt das per /bild hochgeladene Bild erhalten (leeren-Route löscht es).
+  if (typeof bildUrl === "string") ch.bildUrl = bildUrl;
   if (typeof oeffentlich === "boolean") ch.oeffentlich = oeffentlich;
   db.update("werbeflaechen", req.params.id, ch);
   addLog("admin", "Werbefläche aktualisiert: " + (name||req.params.id), "info");

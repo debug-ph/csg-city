@@ -152,19 +152,19 @@
     // Build an inline ad card element
     function makeInlineAd(w) {
       var el = document.createElement("div");
-      if (!w || !w.belegt) {
+      if (w && w.bildUrl) {
+        el.className = "ad-inline belegt";
+        el.innerHTML = '<img src="'+escH(w.bildUrl)+'" alt="'+escH(w.name)+'">'
+          +'<div class="ad-inline-body"><div class="ad-inline-label">Werbung</div>'
+          +'<div class="ad-inline-head">'+escH(w.mieter)+'</div>'
+          +'<div class="ad-inline-sub">'+escH(w.beschreibung)+'</div></div>';
+      } else if (!w || !w.belegt) {
         var s = randomSlogan();
         el.className = "ad-inline";
         el.innerHTML = '<div class="ad-inline-body"><div class="ad-inline-label">Werbefläche · 300×140</div>'
           +'<div class="ad-inline-head">'+s.head+'</div>'
           +'<div class="ad-inline-sub">'+s.sub+'</div>'
           +'<a href="/werbung" class="ad-inline-cta">'+ICONS.arrow_right+' Jetzt buchen</a></div>';
-      } else if (w.bildUrl) {
-        el.className = "ad-inline belegt";
-        el.innerHTML = '<img src="'+escH(w.bildUrl)+'" alt="'+escH(w.name)+'">'
-          +'<div class="ad-inline-body"><div class="ad-inline-label">Werbung</div>'
-          +'<div class="ad-inline-head">'+escH(w.mieter)+'</div>'
-          +'<div class="ad-inline-sub">'+escH(w.beschreibung)+'</div></div>';
       } else {
         el.className = "ad-inline belegt";
         el.innerHTML = '<div class="ad-inline-body"><div class="ad-inline-label">Werbung</div>'
