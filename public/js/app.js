@@ -172,6 +172,34 @@ function formatDatum(s) {
   return new Date(s).toLocaleDateString("de-DE", { day: "2-digit", month: "long", year: "numeric" });
 }
 
+// ── Mobile navbar: 4 quick icons + "Mehr" button ──────────
+function initMobileNav() {
+  var navbar = document.querySelector(".navbar");
+  var actions = navbar && navbar.querySelector(".nav-actions");
+  // Give the (otherwise empty) burger a menu icon and label it "Mehr"
+  var burger = document.getElementById("burgerBtn");
+  if (burger && typeof ICONS !== "undefined") {
+    if (!burger.innerHTML.trim()) burger.innerHTML = ICONS.menu;
+    burger.setAttribute("aria-label", "Mehr");
+    burger.title = "Mehr";
+  }
+  if (!navbar || !actions || navbar.querySelector(".nav-mobile-quick")) return;
+  var items = [
+    { href: "/",                ic: "dashboard",    label: "Home" },
+    { href: "/stellenangebote", ic: "jobs",         label: "Stellen" },
+    { href: "/gesetze",         ic: "constitution", label: "Gesetze" },
+    { href: "/faq",             ic: "question",     label: "FAQ" }
+  ];
+  var wrap = document.createElement("div");
+  wrap.className = "nav-mobile-quick";
+  wrap.innerHTML = items.map(function(t) {
+    var active = window.location.pathname === t.href ? " active" : "";
+    var icon = (typeof ICONS !== "undefined" && ICONS[t.ic]) || "";
+    return '<a href="' + t.href + '" class="' + active.trim() + '" aria-label="' + t.label + '" title="' + t.label + '">' + icon + '</a>';
+  }).join("");
+  navbar.insertBefore(wrap, actions);
+}
+
 // ── PWA standalone app layout (bottom tab bar) ────────────
 function initPwaTabbar() {
   var standalone = window.navigator.standalone || window.matchMedia("(display-mode: standalone)").matches;
@@ -198,6 +226,7 @@ function initPwaTabbar() {
 // ── Init ──────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", function() {
   initTheme();
+  initMobileNav();
   initPwaTabbar();
   // Note: theme toggle click is handled by each page's own script
   // to update the icon correctly after icons.js loads

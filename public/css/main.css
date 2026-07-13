@@ -512,7 +512,8 @@ body.menu-open { overflow: hidden; }
 .pwa-tabbar { display: none; }
 body.pwa-mode .navbar,
 body.pwa-mode .mobile-nav { display: none !important; }
-body.pwa-mode { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+/* reserve space so page content is never hidden behind the fixed tab bar */
+body.pwa-mode { padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
 body.pwa-mode .pwa-tabbar {
   display: flex;
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 9000;
@@ -523,10 +524,41 @@ body.pwa-mode .pwa-tabbar {
 .pwa-tabbar a {
   flex: 1;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-  padding: 8px 0 7px;
+  min-height: 44px; padding: 7px 0 6px; margin: 4px 4px 0;
+  border-radius: var(--radius-sm);
   text-decoration: none;
-  font-size: 0.625rem; color: var(--text-3);
-  transition: color .15s;
+  font-size: 10px; color: var(--text-3);
+  transition: color .15s, background .15s;
+  touch-action: manipulation;
 }
-.pwa-tabbar a svg { width: 21px; height: 21px; }
-.pwa-tabbar a.active { color: var(--accent); }
+.pwa-tabbar a svg { width: 24px; height: 24px; }
+.pwa-tabbar a.active { color: var(--accent); background: var(--accent-soft); }
+
+/* ═══ Mobile UX (touch, nav, no horizontal scroll) ═══ */
+/* Kill 300ms tap delay + accidental horizontal scroll on touch devices */
+a, button, .btn, .filter-btn, input, select, textarea { touch-action: manipulation; }
+html { overflow-x: hidden; }
+img { max-width: 100%; }
+
+/* Simplified mobile navbar: 4 quick icons + "Mehr" (burger) */
+.nav-mobile-quick { display: none; }
+@media (max-width: 768px) {
+  .nav-mobile-quick {
+    display: flex; align-items: center; gap: 2px;
+    margin-left: auto; margin-right: 4px;
+  }
+  .nav-mobile-quick a {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: var(--radius-sm);
+    color: var(--text-2); text-decoration: none; transition: var(--t);
+  }
+  .nav-mobile-quick a svg { width: 22px; height: 22px; }
+  .nav-mobile-quick a.active { color: var(--accent); background: var(--accent-soft); }
+  /* Grow theme + more buttons to a comfortable 44px touch target */
+  .theme-btn, .burger-btn { width: 40px !important; height: 40px !important; }
+}
+@media (max-width: 480px) {
+  /* Free up horizontal space on small phones: logo mark only */
+  .brand-name, .brand-sub, #beta-badge { display: none; }
+  .nav-mobile-quick a { width: 40px; }
+}

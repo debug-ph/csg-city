@@ -123,6 +123,16 @@
     .section-title{font-family:var(--font-serif);font-size:1.375rem;font-weight:400;}
     .section-link{font-size:.8rem;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:.25rem;}
     .section-link:hover{text-decoration:underline;}
+
+    /* Mobile: Stat-Karten 2×2, volle Breite & lesbarere Schrift (≥14px) */
+    @media(max-width:480px){
+      .stat-strip{grid-template-columns:1fr 1fr;}
+      .news-head{font-size:.9375rem;}
+      .news-body{font-size:.875rem;}
+      .t-title{font-size:.875rem;}
+      .t-desc{font-size:.8125rem;}
+      .stelle-title{font-size:.9375rem;}
+    }
   </style>
 </head>
 <body>

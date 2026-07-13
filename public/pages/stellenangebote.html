@@ -53,6 +53,18 @@
     .badge-gold{background:rgba(234,179,8,.15);color:#a16207;border:1px solid rgba(234,179,8,.35);border-radius:100px;padding:.15rem .55rem;font-size:.65rem;font-weight:500;letter-spacing:.03em;}
     .empty{text-align:center;padding:3rem;color:var(--text-3);grid-column:1/-1;font-size:.875rem;}
 
+    /* Mobile: volle Breite, größere Schrift (≥14px) & besser tippbarer Pfeil */
+    @media(max-width:640px){
+      .stelle-card{padding:1rem;gap:.6rem;}
+      .stelle-title{font-size:1.0625rem;}
+      .stelle-schlagzeile{font-size:.875rem;}
+      .stelle-kontakt,.stelle-desc-text,.stelle-abt{font-size:.875rem;}
+      .stelle-bottom-row{padding:.35rem 0;}
+      .stelle-bottom-row span{font-size:.8125rem !important;}
+      .stelle-chevron svg,.stelle-chevron{width:22px !important;height:22px !important;}
+      .filter-btn{padding:.5rem 1rem;font-size:.875rem;}
+    }
+
     /* Inline-Werbung: gleiche Größe wie stelle-card, aber als Werbecard */
     .partner-card{
       background:var(--bg-card);
