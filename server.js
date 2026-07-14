@@ -29,6 +29,8 @@ const PORT = process.env.PORT || 3000;
 const DB_FILE   = path.join(__dirname, "data", "db.json");
 const BACKUP_DIR = process.env.DATA_PATH || path.join(__dirname, "data");
 
+const MAINTENANCE = true; // <- auf false setzen um Wartung zu beenden
+
 // Uploads-Ordner erstellen falls nicht vorhanden
 const uploadsDir = path.join(__dirname, "public", "uploads");
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
@@ -65,6 +67,61 @@ app.use(session({
 }));
 
 const adm = (req,res,next) => req.session && req.session.isAdmin ? next() : res.status(401).json({ error: "Nicht autorisiert" });
+
+// ── Wartungsmodus-Banner (nur Live, nicht localhost) ─────────
+// Injiziert den Banner als Overlay in jede HTML-Seite. Die Seiten werden per
+// res.sendFile ausgeliefert (streamt die Datei direkt, ruft res.send NICHT auf),
+// deshalb wird res.sendFile ebenfalls gehookt – sonst käme der Banner nie an.
+app.use((req, res, next) => {
+  if (!MAINTENANCE) return next();
+  const host = req.hostname;
+  if (host === "localhost" || host === "127.0.0.1") return next();
+  if (req.path.startsWith("/api/") || req.path === "/login" ||
+      req.path === "/admin") return next();
+
+  const banner = `
+<div id="wartungs-banner" style="
+  position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;
+  background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  font-family:system-ui,sans-serif;
+">
+  <div style="
+    background:#1a1f2e;border:1px solid #2E5C8A;border-radius:12px;
+    padding:2rem 2.5rem;text-align:center;max-width:420px;margin:1rem;
+  ">
+    <div style="font-size:2.5rem;margin-bottom:1rem;">🔧</div>
+    <h2 style="color:#fff;margin:0 0 0.5rem;font-size:1.4rem;">Wartungspause</h2>
+    <p style="color:#aab;margin:0;font-size:0.95rem;line-height:1.5;">
+      CSG-City wird gerade gewartet.<br>Wir sind gleich wieder für euch da!
+    </p>
+  </div>
+</div>`;
+  const inject = (html) =>
+    html.includes("<body") ? html.replace("<body", banner + "<body") : html;
+
+  // String-HTML-Antworten (res.send)
+  const origSend = res.send.bind(res);
+  res.send = function(body) {
+    if (typeof body === "string") body = inject(body);
+    return origSend(body);
+  };
+
+  // Datei-Antworten (res.sendFile) – Datei lesen, Banner injizieren, senden
+  const origSendFile = res.sendFile.bind(res);
+  res.sendFile = function(filePath, ...rest) {
+    if (typeof filePath === "string" && filePath.endsWith(".html")) {
+      return fs.readFile(filePath, "utf8", (err, html) => {
+        if (err) return origSendFile(filePath, ...rest);
+        res.type("html");
+        origSend(inject(html));
+      });
+    }
+    return origSendFile(filePath, ...rest);
+  };
+
+  next();
+});
 
 // Pages
 app.get("/",               (_,res) => res.sendFile(path.join(__dirname,"public/pages/index.html")));
