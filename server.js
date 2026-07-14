@@ -29,7 +29,7 @@ const PORT = process.env.PORT || 3000;
 const DB_FILE   = path.join(__dirname, "data", "db.json");
 const BACKUP_DIR = process.env.DATA_PATH || path.join(__dirname, "data");
 
-const MAINTENANCE = true; // <- auf false setzen um Wartung zu beenden
+const MAINTENANCE = false; // <- auf false setzen um Wartung zu beenden
 
 // Uploads-Ordner erstellen falls nicht vorhanden
 const uploadsDir = path.join(__dirname, "public", "uploads");
