@@ -26,7 +26,12 @@ const db = require("./data/database");
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
-const DB_FILE   = path.join(__dirname, "data", "db.json");
+// Aktive db.json: Railway-Volume (DATA_PATH) hat Vorrang, sonst lokale Datei.
+// Muss mit data/database.js übereinstimmen, damit Backup-Download/-Kopie die
+// echten Daten (vom Volume) treffen und nicht eine leere lokale Datei.
+const DB_FILE   = process.env.DATA_PATH
+  ? path.join(process.env.DATA_PATH, "db.json")
+  : path.join(__dirname, "data", "db.json");
 const BACKUP_DIR = process.env.DATA_PATH || path.join(__dirname, "data");
 
 const MAINTENANCE = false; // <- auf false setzen um Wartung zu beenden

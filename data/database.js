@@ -2416,12 +2416,36 @@ const DEFAULT_DATA = {
   ]
 };
 
+// Schreib-/Lese-Ziel: Railway-Volume (DATA_PATH) hat Vorrang, sonst lokale Datei.
+const DB_TARGET = process.env.DATA_PATH
+  ? path.join(process.env.DATA_PATH, "db.json")
+  : DB_FILE;
+
 function load() {
-  if (!fs.existsSync(DB_FILE)) { fs.writeFileSync(DB_FILE, JSON.stringify(DEFAULT_DATA, null, 2)); return JSON.parse(JSON.stringify(DEFAULT_DATA)); }
-  const d = JSON.parse(fs.readFileSync(DB_FILE, "utf-8"));
+  let d = null;
+  // 1. Volume-Daten (Railway) haben Vorrang
+  if (process.env.DATA_PATH) {
+    try {
+      const volumeFile = path.join(process.env.DATA_PATH, "db.json");
+      if (fs.existsSync(volumeFile)) d = JSON.parse(fs.readFileSync(volumeFile, "utf-8"));
+    } catch (e) { d = null; }
+  }
+  // 2. Sonst: lokale db.json
+  if (!d) {
+    try {
+      if (fs.existsSync(DB_FILE)) d = JSON.parse(fs.readFileSync(DB_FILE, "utf-8"));
+    } catch (e) { d = null; }
+  }
+  // 3. Nur wenn NIRGENDS eine db.json existiert: DEFAULT_DATA und neu anlegen
+  if (!d) {
+    d = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    save(d);
+    return d;
+  }
+  // Migrationen für bestehende Datenbestände
   let changed = false;
   // Migrate: add werbeflaechen if missing
-  if (!d.werbeflaechen) { d.werbeflaechen = DEFAULT_DATA.werbeflaechen; d._nextId.werbeflaechen = 4; changed = true; }
+  if (!d.werbeflaechen) { d.werbeflaechen = DEFAULT_DATA.werbeflaechen; if (!d._nextId) d._nextId = {}; d._nextId.werbeflaechen = 4; changed = true; }
   // Migrate: add missing Gesetzbücher (ids 3–5: SchulSiG, Kultur, Finanzen)
   if (!d.gesetze) { d.gesetze = []; changed = true; }
   [3, 4, 5].forEach(function(bid) {
@@ -2433,7 +2457,7 @@ function load() {
   if (changed) save(d);
   return d;
 }
-function save(data) { fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2)); }
+function save(data) { fs.writeFileSync(DB_TARGET, JSON.stringify(data, null, 2)); }
 
 const db = {
   all(table)         { const d=load(); return [...(d[table]||[])].sort((a,b)=>a.id-b.id); },
